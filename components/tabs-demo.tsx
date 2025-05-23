@@ -104,3 +104,5 @@ export function TabsDemo() {
     </div>
   )
 }
+
+export { TabsDemo }
