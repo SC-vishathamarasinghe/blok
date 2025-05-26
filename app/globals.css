@@ -5,10 +5,7 @@
 
 @import "./colors.css";
 @import "./typography.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "./breakpoints.css";
 
 :root {
   --radius: 0.625rem;
