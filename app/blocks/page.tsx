@@ -6,6 +6,7 @@ import {
 } from "@/registry/new-york/ui/tabs"
 
 import { TopBarBlocks } from "./topbar"
+import { FilterDemo } from "@/components/filter-demo"
 
 export default function BlocksPage() {
   return (
@@ -20,9 +21,13 @@ export default function BlocksPage() {
         <Tabs defaultValue="topBar" className="w-full">
           <TabsList>
             <TabsTrigger value="topBar">TopBar</TabsTrigger>
+            <TabsTrigger value="filter">Filter</TabsTrigger>
           </TabsList>
           <TabsContent value="topBar" className="mt-4">
             <TopBarBlocks />
+          </TabsContent>
+          <TabsContent value="filter" className="mt-4">
+            <FilterDemo />
           </TabsContent>
         </Tabs>
       </div>
