@@ -1,8 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CheckIcon } from "lucide-react"
-import { mdiClose } from "@mdi/js"
+import { mdiClose, mdiCheck, mdiChevronDown, mdiChevronUp } from "@mdi/js"
 import Icon from "@mdi/react"
 
 import { cn } from "@/lib/utils"
@@ -80,7 +79,7 @@ export function Filter<T extends { value: string; label: string }>({
     }
   }
 
-  const isActive = open || selectedItemsArray.length > 0
+  const isActive = open
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -91,13 +90,15 @@ export function Filter<T extends { value: string; label: string }>({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "border-input border-1 data-[state=open]:border-2 data-[state=open]:border-primary rounded-md text-md data-[placeholder]:text-muted-foreground flex w-fit items-center justify-between gap-2 bg-white px-3 py-2 whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 h-10",
-            isActive && "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg border-primary",
+            "border-input border-1 rounded-md text-md data-[placeholder]:text-muted-foreground flex w-fit items-center justify-between gap-2 bg-white px-3 py-2 whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 h-10",
+            isActive && "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg",
             className
           )}
         >
           <span className={cn("flex items-center gap-2", isActive ? "text-primary-fg" : "text-black")}>
-            <span className={cn(isActive ? "text-primary-fg" : "text-neutral-fg")}>{placeholder}:</span>
+            <span className={cn(isActive ? "text-primary-fg" : "text-neutral-fg")}>
+              {placeholder}{selectedItemsArray.length > 0 && ":"}
+            </span>
             {selectedItemsArray.length > 0 && (
               <span className="font-medium flex items-center gap-1.5">
                 {variant === "badge" ? (
@@ -133,7 +134,7 @@ export function Filter<T extends { value: string; label: string }>({
               </span>
             )}
           </span>
-          {selectedItemsArray.length > 0 && onClear && (
+          {selectedItemsArray.length > 0 && onClear ? (
             <div
               role="button"
               tabIndex={0}
@@ -153,9 +154,15 @@ export function Filter<T extends { value: string; label: string }>({
               <Icon
                 path={mdiClose}
                 size={0.9}
-                className="text-primary-fg"
+                className={cn("text-neutral-fg", isActive && "text-primary-fg")}
               />
             </div>
+          ) : (
+            <Icon
+              path={open ? mdiChevronUp : mdiChevronDown}
+              size={0.9}
+              className="text-neutral-fg"
+            />
           )}
         </Button>
       </PopoverTrigger>
@@ -177,12 +184,14 @@ export function Filter<T extends { value: string; label: string }>({
                         colorScheme="neutral" 
                         className={cn(
                           "text-xs",
-                          selectedItemsArray.some((i) => i.value === item.value) && "bg-primary text-primary-foreground"
+                          selectedItemsArray.some((i) => i.value === item.value) && "bg-neutral-100"
                         )}
                       >
                         {item.label}
                       </Badge>
-                      <CheckIcon
+                      <Icon
+                        path={mdiCheck}
+                        size={0.7}
                         className={cn(
                           "ml-2",
                           selectedItemsArray.some((i) => i.value === item.value)
@@ -194,18 +203,24 @@ export function Filter<T extends { value: string; label: string }>({
                   ) : variant === "multi" ? (
                     <div
                       className={cn(
-                        "border-input data-[selected=true]:border-primary data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground pointer-events-none size-4 shrink-0 rounded-[4px] border transition-all select-none *:[svg]:opacity-0 data-[selected=true]:*:[svg]:opacity-100",
+                        "border-input data-[selected=true]:border-primary data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground pointer-events-none size-4 shrink-0 rounded-[4px] border transition-all select-none *:[svg]:opacity-0 data-[selected=true]:*:[svg]:opacity-100 flex items-center justify-center",
                         selectedItemsArray.some((i) => i.value === item.value) &&
                           "border-primary bg-primary text-primary-foreground"
                       )}
                       data-selected={selectedItemsArray.some((i) => i.value === item.value)}
                     >
-                      <CheckIcon className="size-3.5 text-current" />
+                      <Icon
+                        path={mdiCheck}
+                        size={0.7}
+                        className="size-3.5 text-current"
+                      />
                     </div>
                   ) : null}
                   {variant !== "badge" && item.label}
                   {variant === "single" && (
-                    <CheckIcon
+                    <Icon
+                      path={mdiCheck}
+                      size={0.7}
                       className={cn(
                         "ml-auto",
                         selectedItemsArray.some((i) => i.value === item.value)
