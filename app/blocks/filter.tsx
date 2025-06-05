@@ -90,13 +90,13 @@ export function Filter<T extends { value: string; label: string }>({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "border-input border-1 rounded-md text-md data-[placeholder]:text-muted-foreground flex w-fit items-center justify-between gap-2 bg-white px-3 py-2 whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 h-10",
-            isActive && "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg",
+            "border-input border-1 data-[state=open]:border-2 data-[state=open]:border-primary rounded-md text-md data-[placeholder]:text-muted-foreground flex w-fit items-center justify-between gap-2 bg-white px-3 py-2 whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[1px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 h-10",
+            isActive && "border-2 border-primary",
             className
           )}
         >
-          <span className={cn("flex items-center gap-2", isActive ? "text-primary-fg" : "text-black")}>
-            <span className={cn(isActive ? "text-primary-fg" : "text-neutral-fg")}>
+          <span className={cn("flex items-center gap-2", isActive ? "text-neutral-fg" : "text-black")}>
+            <span className="text-neutral-fg">
               {placeholder}{selectedItemsArray.length > 0 && ":"}
             </span>
             {selectedItemsArray.length > 0 && (
@@ -154,7 +154,7 @@ export function Filter<T extends { value: string; label: string }>({
               <Icon
                 path={mdiClose}
                 size={0.9}
-                className={cn("text-neutral-fg", isActive && "text-primary-fg")}
+                className={cn("text-neutral-fg", isActive && "text-neutral-fg")}
               />
             </div>
           ) : (

@@ -7,6 +7,8 @@ import {
 
 import { TopBarBlocks } from "./topbar"
 import { FilterDemo } from "@/components/filter-demo"
+import { SidebarBlocks } from "./sidebar-demo"
+import { CircularProgressDemo } from "./circular-progress-demo"
 
 export default function BlocksPage() {
   return (
@@ -22,12 +24,20 @@ export default function BlocksPage() {
           <TabsList>
             <TabsTrigger value="topBar">TopBar</TabsTrigger>
             <TabsTrigger value="filter">Filter</TabsTrigger>
+            <TabsTrigger value="sidebar">Sidebar</TabsTrigger>
+            <TabsTrigger value="circularProgress">Circular Progress</TabsTrigger>
           </TabsList>
           <TabsContent value="topBar" className="mt-4">
             <TopBarBlocks />
           </TabsContent>
           <TabsContent value="filter" className="mt-4">
             <FilterDemo />
+          </TabsContent>
+          <TabsContent value="sidebar" className="mt-4">
+            <SidebarBlocks />
+          </TabsContent>
+          <TabsContent value="circularProgress" className="mt-4">
+            <CircularProgressDemo />
           </TabsContent>
         </Tabs>
       </div>
