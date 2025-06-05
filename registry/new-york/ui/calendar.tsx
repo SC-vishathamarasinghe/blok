@@ -26,7 +26,7 @@ function Calendar({
         caption_label: "text-sm font-medium",
         nav: "flex items-center gap-1",
         nav_button: cn(
-          buttonVariants({ variant: "ghost", colorScheme: "primary" }),
+          buttonVariants({ variant: "ghost", colorScheme: "neutral", size: "icon" }),
           "size-icon bg-transparent p-0 opacity-50 hover:opacity-100"
         ),
         nav_button_previous: "absolute left-1",
@@ -44,7 +44,7 @@ function Calendar({
         ),
         day: cn(
           buttonVariants({ variant: "ghost", colorScheme: "neutral" }),
-          "size-8 p-0 font-normal aria-selected:opacity-100 border border-transparent hover:border-primary hover:bg-transparent text-body-text rounded-md"
+          "hover:rounded-md size-8 p-0 font-normal aria-selected:opacity-100 border border-transparent hover:border-primary text-body-text hover:bg-white"
         ),
         day_range_start:
           "day-range-start aria-selected:bg-primary-500 aria-selected:text-primary-foreground rounded-l-md rounded-r-none",
