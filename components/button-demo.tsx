@@ -110,6 +110,20 @@ export function ButtonDemo() {
           Please wait
         </Button>
       </div>
+      <div className="flex flex-wrap items-center gap-2 md:flex-row">
+        <Button size="icon">
+          <SendIcon />
+        </Button>
+        <Button size="icon" colorScheme="success" variant="outline">
+          <SendIcon />
+        </Button>
+        <Button size="icon" colorScheme="danger" variant="outline">
+          <SendIcon />
+        </Button>
+        <Button size="icon" colorScheme="neutral" variant="outline">
+          <SendIcon />
+        </Button>
+      </div>
     </div>
   )
 }
