@@ -211,6 +211,38 @@ export function StreamBlocks() {
         </Card>
       </div>
 
+      {/* Hooks */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Stream Hooks</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            React hooks for managing brandkit data and API interactions
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium">useBrandkits</h4>
+              <p className="text-xs text-muted-foreground">
+                Hook for fetching and managing brandkit lists with pagination, filtering, and utilities.
+              </p>
+              <div className="bg-muted p-2 rounded text-xs">
+                <code>npx shadcn@latest add use-brandkits</code>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium">useBrandkitById</h4>
+              <p className="text-xs text-muted-foreground">
+                Hook for fetching a single brandkit by ID with computed properties and utilities.
+              </p>
+              <div className="bg-muted p-2 rounded text-xs">
+                <code>npx shadcn@latest add use-brandkit-by-id</code>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Usage Information */}
       <Card>
         <CardHeader>
@@ -229,7 +261,9 @@ export function StreamBlocks() {
                   npx shadcn@latest add brandkit-list<br/>
                   npx shadcn@latest add brandkit-item<br/>
                   npx shadcn@latest add spinner<br/>
-                  npx shadcn@latest add icon
+                  npx shadcn@latest add icon<br/>
+                  npx shadcn@latest add use-brandkits<br/>
+                  npx shadcn@latest add use-brandkit-by-id
                 </code>
               </div>
             </div>

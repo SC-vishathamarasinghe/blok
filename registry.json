@@ -2783,6 +2783,52 @@
       ]
     },
     {
+      "name": "use-mobile",
+      "type": "registry:hook",
+      "files": [
+        {
+          "path": "registry/new-york/hooks/use-mobile.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-brandkits",
+      "type": "registry:hook",
+      "dependencies": [
+        "@sitecore/stream-ui-core"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/hooks/use-brandkits.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "stream",
+        "hooks",
+        "brandkit"
+      ]
+    },
+    {
+      "name": "use-brandkit-by-id",
+      "type": "registry:hook",
+      "dependencies": [
+        "@sitecore/stream-ui-core"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/hooks/use-brandkit-by-id.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "categories": [
+        "stream",
+        "hooks",
+        "brandkit"
+      ]
+    },
+    {
       "name": "utils",
       "type": "registry:lib",
       "dependencies": [
@@ -2793,16 +2839,6 @@
         {
           "path": "registry/new-york/lib/utils.ts",
           "type": "registry:lib"
-        }
-      ]
-    },
-    {
-      "name": "use-mobile",
-      "type": "registry:hook",
-      "files": [
-        {
-          "path": "registry/new-york/hooks/use-mobile.ts",
-          "type": "registry:hook"
         }
       ]
     },
