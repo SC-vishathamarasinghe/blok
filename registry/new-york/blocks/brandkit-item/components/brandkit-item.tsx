@@ -1,4 +1,5 @@
-'use client'
+"use client"
+
 import React from "react"
 import { Brandkit } from "@sitecore/stream-ui-core"
 

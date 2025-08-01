@@ -1,4 +1,5 @@
-'use client'
+"use client"
+
 import React, { useEffect, useState } from "react"
 import { mdiChevronDown } from "@mdi/js"
 import { type Brandkit } from "@sitecore/stream-ui-core"
