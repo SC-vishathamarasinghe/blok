@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
-  type Brandkit,
   brandkitListFromApiResponse,
   brands,
   getBrandkitDisplayName,
@@ -12,11 +11,12 @@ import {
   // Domain model utilities
   isDraftBrandkit,
   isPublishedBrandkit,
-  type ListBrandKitsModelResponse,
+  type Brandkit,
   // Domain types
   type BrandkitStatus,
   // HeyAPI generated types
   type ListBrandKitsApiBrandsV1OrganizationsOrganizationIdBrandkitsGetData,
+  type ListBrandKitsModelResponse,
 } from "@sitecore/stream-ui-core"
 
 // Hook options type - using HeyAPI generated types

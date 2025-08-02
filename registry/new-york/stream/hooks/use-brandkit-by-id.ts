@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
-  type Brandkit,
   brandkitFromApiResponse,
   brandkitToPlainObject,
   brands,
   getBrandkitDisplayName,
-  type GetBrandKitModelResponse,
   getBrandkitTagsByCategory,
   hasBrandkitLogo,
   // HTTP error types
@@ -15,8 +13,10 @@ import {
   isDraftBrandkit,
   isLockedBrandkit,
   isPublishedBrandkit,
+  type Brandkit,
   // HeyAPI generated types
   type GetBrandKitApiBrandsV1OrganizationsOrganizationIdBrandkitsBrandkitIdGetData,
+  type GetBrandKitModelResponse,
 } from "@sitecore/stream-ui-core"
 
 // Hook options type - using HeyAPI generated types
