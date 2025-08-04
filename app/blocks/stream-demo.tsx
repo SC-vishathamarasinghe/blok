@@ -2,6 +2,7 @@
 
 import { createBrandkit } from "@sitecore/stream-ui-core"
 
+import { StreamMessagesDemo } from "@/components/stream-messages-demo"
 import { StreamBrandkitItem } from "@/registry/new-york/stream/blocks/stream-brandkit-picker/components/stream-brandkit-item"
 import { StreamBrandkitList } from "@/registry/new-york/stream/blocks/stream-brandkit-picker/components/stream-brandkit-list"
 import { StreamBrandkitPicker } from "@/registry/new-york/stream/blocks/stream-brandkit-picker/components/stream-brandkit-picker"
@@ -61,6 +62,19 @@ const mockRecentBrandkit = createBrandkit({
 export function StreamBlocks() {
   return (
     <div className="space-y-6">
+      {/* Chat Messages */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Brandkit Chat Messages</CardTitle>
+          <p className="text-muted-foreground text-sm">
+            Messages component for displaying brandkit chat messages
+          </p>
+        </CardHeader>
+        <CardContent>
+          <StreamMessagesDemo />
+        </CardContent>
+      </Card>
+
       <div className="grid gap-6 md:grid-cols-2">
         {/* Brandkit Picker */}
         <Card>
