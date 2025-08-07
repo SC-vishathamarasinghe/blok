@@ -77,7 +77,7 @@ export default function UseContentHubBrandkitsPage() {
             <h3 className="mb-3 text-lg font-semibold">Import</h3>
             <div className="bg-muted rounded-lg p-4">
               <code className="text-sm">
-                {"import { useContentHubBrandkits } from '@sitecore/stream-ui-blok';"}
+                {"import { useContentHubBrandkits } from '@/registry/new-york/stream/hooks/use-contenthub-brandkits';"}
               </code>
             </div>
           </div>
