@@ -188,7 +188,7 @@ const client = brandsClient.setConfig({
                 <h4 className="text-sm font-medium mb-2">Standard Stream API</h4>
                 <div className="bg-muted rounded-lg p-4">
                   <code className="text-sm block whitespace-pre-wrap">
-{`import { useBrandkits } from '@sitecore/stream-ui-blok';
+{`import { useBrandkits } from '@/registry/new-york/stream/hooks/use-brandkits';
 
 // Requires organizationId (string)
 const { brandkits, isLoading, error, utils } = useBrandkits({
@@ -208,7 +208,7 @@ const summary = utils.summary();`}
                 <h4 className="text-sm font-medium mb-2">ContentHub API</h4>
                 <div className="bg-muted rounded-lg p-4">
                   <code className="text-sm block whitespace-pre-wrap">
-{`import { useContentHubBrandkits } from '@sitecore/stream-ui-blok';
+{`import { useContentHubBrandkits } from '@/registry/new-york/stream/hooks/use-contenthub-brandkits';
 
 // Requires brandId (number)
 const { brandkits, isLoading, error, utils } = useContentHubBrandkits({
