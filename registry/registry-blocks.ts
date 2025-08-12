@@ -731,6 +731,25 @@ export const blocks: Registry["items"] = [
     categories: ["stream", "ui", "brandkit", "picker"],
   },
   {
+    name: "stream-chat-history",
+    type: "registry:block",
+    description: "Stream chat history component",
+    dependencies: ["@mdi/js"],
+    registryDependencies: ["icon"],
+    files: [
+      {
+        path: "stream/blocks/stream-chat-history/chat-history.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "stream/blocks/stream-chat-history/page.tsx",
+        type: "registry:page",
+        target: "app/blocks/stream-chat-history/page.tsx",
+      },
+    ],
+    categories: ["stream", "ui", "chat", "history"],
+  },
+  {
     name: "stream-messages",
     type: "registry:block",
     description: "Stream team's chat messages for rendering in a chat window",
