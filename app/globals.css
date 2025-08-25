@@ -318,6 +318,7 @@
 }
 
 .stream-bg-ai-400 {
+    background-image: var(--ai-400);
     background-color: var(--ai-400);
 }
 

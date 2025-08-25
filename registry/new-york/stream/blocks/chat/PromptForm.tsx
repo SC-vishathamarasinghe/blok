@@ -29,7 +29,7 @@ import {
   isBrainstormingActiveAtom,
   isChatActionPendingAtom,
   isLoadingAtom,
-  useChatBodyAtom,
+  postChatGenerateBodyAtom,
 } from "../chat/store/atoms"
 import { useEnterSubmit } from "./hooks/useEnterSubmit"
 import { useLocalStorage } from "./hooks/useLocalStorage"
@@ -95,7 +95,7 @@ export function PromptForm({
   const [isBrainstormingActive, setIsBrainstormingActive] = useAtom(
     isBrainstormingActiveAtom
   )
-  const setChatBodyAtom = useSetAtom(useChatBodyAtom)
+  const setChatBodyAtom = useSetAtom(postChatGenerateBodyAtom)
 
   /* Computed */
   const isProcessingAllChanges = Object.values(isProcessing).some((v) => v)
@@ -281,7 +281,6 @@ export function PromptForm({
   return (
     <form ref={formRef} className="w-full space-y-2" onSubmit={handleOnSubmit}>
       <div
-        id="tour-chat"
         className={cn(
           "stream-bg-ai-400 w-full rounded-full p-[2px]",
           isMultiline ? "rounded-2xl" : "rounded-full"

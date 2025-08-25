@@ -46,7 +46,7 @@ export const artifactsAtom = atom(
 
 export const tokenAtom = atom<string>("")
 
-export const useChatBodyAtom = atom({})
+export const postChatGenerateBodyAtom = atom({})
 
 export const messagesIdsAtom = atom<string[]>([])
 

@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useCallback, useEffect, useState } from "react"
 import { UIMessage } from "@ai-sdk/ui-utils"
 import {
@@ -22,7 +24,7 @@ import {
   chatIdAtom,
   isAnyArtifactOpenAtom,
   orgIdAtom,
-  useChatBodyAtom,
+  postChatGenerateBodyAtom,
   userIdAtom,
 } from "./store/atoms"
 import { ToolInvocations } from "./tools/ToolInvocations"
@@ -52,7 +54,7 @@ function StreamMessages({
   const setUserId = useSetAtom(userIdAtom)
   const setBrandkitId = useSetAtom(brandkitIdAtom)
   const setChatId = useSetAtom(chatIdAtom)
-  const chatBodyAtom = useAtomValue(useChatBodyAtom)
+  const chatBodyAtom = useAtomValue(postChatGenerateBodyAtom)
 
   /* Hooks */
   const chat = useChat({
@@ -101,8 +103,8 @@ function StreamMessages({
   ])
 
   return (
-    <div className="flex h-lvh max-w-full overflow-hidden">
-      <div className="relative flex flex-1 basis-1/2 flex-col gap-4 px-6 pt-2 pb-2">
+    <div className="flex h-lvh max-w-full justify-center overflow-hidden">
+      <div className="relative flex flex-col gap-4 px-6 pt-2 pb-2">
         <div className="group relative flex-1 overflow-hidden">
           <div
             className="flex h-full flex-col gap-4 overflow-auto"
@@ -165,6 +167,10 @@ function StreamMessages({
                   </div>
                 )
               })}
+              <div
+                className="stream-chat-container space-y-4"
+                id="followupQuestions"
+              />
             </div>
           </div>
         </div>

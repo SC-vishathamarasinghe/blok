@@ -1,3 +1,5 @@
+import { UseChatHelpers } from "ai/react"
+
 export interface ArtifactsProperties {
   open: boolean
 }
@@ -26,3 +28,13 @@ export type BrainstormingOptions =
 export type BrandKitDetailsModalStateOptions = "create" | "edit" | "idle"
 
 export type IsMessageAlreadyGeneratedProps = (message: string) => boolean
+
+export type UserChatParams = UseChatHelpers & {
+  addToolResult: ({
+    toolCallId,
+    result,
+  }: {
+    toolCallId: string
+    result: unknown
+  }) => void
+}
