@@ -6,8 +6,8 @@
     {
       "name": "theme",
       "type": "registry:theme",
-      "title": "Nature Theme",
-      "description": "A nature theme and styles with greens and browns using Tailwind and shadcn/ui variable names",
+      "title": "Blokcn Theme",
+      "description": "A custom Blokcn theme providing reusable UI components styled with Tailwind CSS and shadcn/ui variables, designed for consistency and efficiency across projects.",
       "cssVars": {
         "light": {
           "background": "oklch(0.97 0.01 80.72)",
@@ -85,6 +85,26 @@
           "path": "src/app/globals.css",
           "type": "registry:style",
           "target": "app/globals.css"
+        },
+        {
+          "path": "src/app/colors.css",
+          "type": "registry:style",
+          "target": "app/colors.css"
+        },
+        {
+          "path": "src/app/shadows.css",
+          "type": "registry:style",
+          "target": "app/shadows.css"
+        },
+        {
+          "path": "src/app/borderRadius.css",
+          "type": "registry:style",
+          "target": "app/borderRadius.css"
+        },
+        {
+          "path": "src/app/typography.css",
+          "type": "registry:style",
+          "target": "app/typography.css"
         },
         {
           "path": "postcss.config.mjs",
@@ -374,16 +394,20 @@
       "name": "alert",
       "type": "registry:ui",
       "title": "Alert",
-      "description": "Displays a callout for user attention.",
+      "description": "Displays Alert Variants.",
+      "dependencies": [
+        "@mdi/react",
+        "@mdi/js",
+        "class-variance-authority"
+      ],
       "registryDependencies": [
-        "alert",
-        "https://registry-starter.vercel.app/r/theme.json"
+        "https://blok-shadcn.vercel.app/r/theme.json"
       ],
       "files": [
         {
-          "path": "src/layouts/minimal-layout.tsx",
-          "type": "registry:file",
-          "target": "app/layout.tsx"
+          "path": "src/components/ui/alert.tsx",
+          "type": "registry:ui",
+          "target": "src/components/ui/alert.tsx"
         }
       ]
     },
