@@ -1,7 +1,4 @@
 import { useEffect, useRef } from "react"
-import { useAtomValue } from "jotai"
-
-import { tokenAtom } from "@/registry/new-york/stream/blocks/chat/store/atoms"
 
 /**
  * Provides a utility method for fetching a document from a URL and transforming it into a proxy URL using a blob object.
@@ -15,15 +12,11 @@ export function useGetDocumentProxyUrl(): (arg0: string) => string | undefined {
   const objectUrlsRef = useRef<string[]>([])
 
   /* Atoms */
-  const token = useAtomValue(tokenAtom)
-
   async function _getDocument(url: string): Promise<string | undefined> {
     if (!url?.startsWith("https://mms-delivery")) return url
 
     const res = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: "include",
     })
 
     if (!res.ok) return undefined

@@ -16,8 +16,9 @@ import {
   ToolInvocationUIPart,
 } from "@sitecore/stream-ui-core"
 import { useChat, UseChatHelpers } from "ai/react"
-import { useAtomValue, useSetAtom } from "jotai"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { isEmpty } from "lodash"
+import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 
@@ -29,6 +30,8 @@ import { useScrollAnchor } from "./hooks/useScrollAnchor"
 import { PromptForm } from "./PromptForm"
 import {
   isAnyArtifactOpenAtom,
+  isLoadingAtom,
+  messagesIdsAtom,
   postChatGenerateBodyAtom,
   sessionAtom,
 } from "./store/atoms"
@@ -66,27 +69,39 @@ const baseUrlEnv = {
 }
 
 function StreamMessages({ session }: MessagesProps) {
-  const { orgId, userId, chatId, token, region, env } = session
+  const { orgId, userId, chatId, region, env } = session
 
   /* Atoms */
   const chatBodyAtom = useAtomValue(postChatGenerateBodyAtom)
+  const setMessageIds = useSetAtom(messagesIdsAtom)
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
 
-  const chat = useChat({
+  const { isLoading: _isLoading, ...chat } = useChat({
     api: `https://ai-chat-api-${region}${baseUrlEnv[env]}/api/chats/v1/organizations/${orgId}/users/${userId}/chats/${chatId}/generatemessage`,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
     body: chatBodyAtom,
     experimental_throttle: 200,
+    onFinish: async (message) => {
+      const messageId = (
+        message?.annotations?.[0] as unknown as MessageAnnotation
+      )?.id
+      setMessageIds((prev) => [...prev, messageId])
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
   })
 
   const context = useMemo(
     () => ({
       ...chat,
+      isLoading,
     }),
-    [chat]
+    [chat, isLoading]
   )
+
+  useEffect(() => {
+    if (_isLoading !== isLoading) setIsLoading(_isLoading)
+  }, [_isLoading, isLoading, setIsLoading])
 
   return (
     <VercelAiUiContext.Provider value={context}>

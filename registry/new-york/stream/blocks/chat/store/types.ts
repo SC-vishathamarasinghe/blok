@@ -44,7 +44,6 @@ export interface Session {
   userId: string
   brandkitId: string
   chatId: string
-  token: string
   region: string
   env: "dev" | "qa" | "staging" | "preprod" | "prod"
 }
