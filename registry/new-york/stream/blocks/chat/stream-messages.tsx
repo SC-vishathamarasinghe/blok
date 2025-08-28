@@ -38,8 +38,7 @@ import { Session } from "./store/types"
 import { ToolInvocations } from "./tools/ToolInvocations"
 import { MessageAnnotation } from "./types"
 import { UserMessage } from "./UserMessage"
-
-export { streamMessagesClientsConfig } from "./utils"
+import { streamMessagesClientsConfig } from "./utils"
 
 export type VercelAiUiProviderType = UseChatHelpers & {
   addToolResult: ({
@@ -247,4 +246,4 @@ function Messages({ session }: MessagesProps): React.ReactNode {
   )
 }
 
-export { StreamMessages, type MessagesProps }
+export { StreamMessages, type MessagesProps, streamMessagesClientsConfig }
