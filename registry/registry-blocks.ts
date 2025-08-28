@@ -783,11 +783,6 @@ export const blocks: Registry["items"] = [
         target: "components/stream-components/blocks/chat/Icon.tsx",
       },
       {
-        path: "stream/blocks/chat/index.tsx",
-        type: "registry:component",
-        target: "components/stream-components/blocks/chat/index.tsx",
-      },
-      {
         path: "stream/blocks/chat/LightBox.tsx",
         type: "registry:component",
         target: "components/stream-components/blocks/chat/LightBox.tsx",
