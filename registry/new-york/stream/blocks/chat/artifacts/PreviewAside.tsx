@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/registry/new-york/ui/select"
 
-import { cn } from "../../lib/utils"
+import { cn } from "../../../lib/utils"
 import { Icon } from "../Icon"
 import { RectangleStar } from "../icons/RectangleStar"
 import { Spinner } from "../Spinner"
