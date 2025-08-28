@@ -20,9 +20,8 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { isEmpty } from "lodash"
 import { toast } from "sonner"
 
-import { cn } from "@/lib/utils"
-
 import { useGetChatMessages } from "../../hooks/use-get-chat-messages"
+import { cn } from "../../lib/utils"
 import { ButtonScrollToBottom } from "./ButtonScrollToBottom"
 import { Feedback } from "./Feedback"
 import { useAiChatProvider } from "./hooks/useAiChatProvider"

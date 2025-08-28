@@ -764,19 +764,184 @@ export const blocks: Registry["items"] = [
       "popover",
       "card",
       "select",
-      "stream-icon",
-      "stream-spinner",
       "dialog",
     ],
     files: [
       {
-        path: "stream/blocks/chat/stream-messages.tsx",
+        path: "registry/new-york/stream/blocks/chat/stream-messages.tsx",
+        type: "registry:component",
+        target: "stream-components/chat/stream-messages.tsx",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/Anchors.tsx",
         type: "registry:component",
       },
       {
-        path: "stream/blocks/chat/page.tsx",
-        type: "registry:page",
-        target: "app/blocks/chat/page.tsx",
+        path: "registry/new-york/stream/blocks/chat/Icon.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/index.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/LightBox.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/Markdown.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/MessageFeedback.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/MessageSubtitle.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/PromptForm.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/SourceItem.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/Spinner.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/stream-messages.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/ActionModal.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/UserMessage.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/EditCommands.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/Feedback.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/Workflow.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/ButtonScrollToBottom.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/types.ts",
+        type: "registry:file",
+        target: "stream-components/chat/types.ts",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/hooks/useNewChat.tsx",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/hooks/useAutoScroll.tsx",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/hooks/useEnterSubmit.tsx",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/hooks/useLocalStorage.ts",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/hooks/useScrollAnchor.tsx",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/hooks/useAiChatProvider.tsx",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/hooks/useGetDocumentProxyUrl.tsx",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/icons/RectangleStar.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/store/atoms.ts",
+        type: "registry:file",
+        target: "stream-components/chat/store/atoms.ts",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/store/types.ts",
+        type: "registry:file",
+        target: "stream-components/chat/types.ts",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/Tool.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/Answer.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/Sources.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/ThinkingTool.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/ToolInvocations.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/FollowupQuestions.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/utils/createTool.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/brief/Brief.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/brief/useBriefLogic.tsx",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/brainstorming/Blog.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/brainstorming/utils.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/brainstorming/useBlogLogic.tsx",
+        type: "registry:hook",
+      },
+      {
+        path: "registry/new-york/stream/blocks/chat/tools/brainstorming/Brainstorming.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "registry/new-york/stream/blocks/stream-chat-history/chat-history.tsx",
+        type: "registry:component",
       },
     ],
     categories: ["stream", "ui", "chat", "messages"],

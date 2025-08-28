@@ -2,9 +2,8 @@ import React from "react"
 import { mdiArrowRight, mdiLinkVariant } from "@mdi/js"
 import { uniqueId } from "lodash"
 
-import { cn } from "@/lib/utils"
-import { StreamIcon } from "@/registry/new-york/stream/ui/stream-icon"
-
+import { cn } from "../../lib/utils"
+import { StreamIcon } from "../../ui/stream-icon"
 import { useGetDocumentProxyUrl } from "./hooks/useGetDocumentProxyUrl"
 import { Source } from "./types"
 

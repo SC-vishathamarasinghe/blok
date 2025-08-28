@@ -1,8 +1,6 @@
 import React, { Fragment } from "react"
 import { mdiLinkVariant, mdiOpenInNew } from "@mdi/js"
 
-import { cn } from "@/lib/utils"
-import { StreamIcon } from "@/registry/new-york/stream/ui/stream-icon"
 import { Button } from "@/registry/new-york/ui/button"
 import {
   Popover,
@@ -15,6 +13,8 @@ import {
   TooltipTrigger,
 } from "@/registry/new-york/ui/tooltip"
 
+import { cn } from "../../lib/utils"
+import { StreamIcon } from "../../ui/stream-icon"
 import { useGetDocumentProxyUrl } from "./hooks/useGetDocumentProxyUrl"
 import type { Source } from "./types"
 

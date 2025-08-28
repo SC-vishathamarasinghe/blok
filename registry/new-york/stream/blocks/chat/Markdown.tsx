@@ -3,8 +3,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 
-import { cn } from "@/lib/utils"
-
+import { cn } from "../../lib/utils"
 import { useGetDocumentProxyUrl } from "./hooks/useGetDocumentProxyUrl"
 
 export interface MarkdownProps {
