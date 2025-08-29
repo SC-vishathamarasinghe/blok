@@ -15,7 +15,7 @@ import {
 
 import { cn } from "../../lib/utils"
 import { StreamIcon } from "../../ui/stream-icon"
-import { useGetDocumentProxyUrl } from "./hooks/useGetDocumentProxyUrl"
+import { GetDocumentProxyUrl } from "./GetDocumentProxyUrl"
 import type { Source } from "./types"
 
 export interface AnchorsProps {
@@ -33,9 +33,6 @@ export function Anchors({
   className,
   buttonClassName,
 }: AnchorsProps): React.ReactNode {
-  /* Hooks */
-  const getDocumentProxyUrl = useGetDocumentProxyUrl()
-
   if (!items?.length) return null
 
   const button = ({
@@ -55,16 +52,23 @@ export function Anchors({
               buttonClassName
             )}
           >
-            <a
-              href={getDocumentProxyUrl(url)}
-              className="flex h-full w-full items-center justify-center space-x-2 px-3"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <StreamIcon path={mdiLinkVariant} />
-              <span className="truncate">{name || title}</span>
-              <StreamIcon path={mdiOpenInNew} />
-            </a>
+            <GetDocumentProxyUrl
+              url={url}
+              item={(url) => {
+                return (
+                  <a
+                    href={url}
+                    className="flex h-full w-full items-center justify-center space-x-2 px-3"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <StreamIcon path={mdiLinkVariant} />
+                    <span className="truncate">{name || title}</span>
+                    <StreamIcon path={mdiOpenInNew} />
+                  </a>
+                )
+              }}
+            />
           </Button>
         </TooltipTrigger>
         <TooltipContent>{name || title}</TooltipContent>

@@ -708,19 +708,32 @@ export const blocks: Registry["items"] = [
     description:
       "Stream team's comprehensive brandkit picker with all brandkit components",
     dependencies: ["@sitecore/stream-ui-core", "@mdi/js"],
-    registryDependencies: ["button", "popover", "input", "separator", "avatar"],
+    registryDependencies: [
+      "button",
+      "popover",
+      "input",
+      "separator",
+      "avatar",
+      "stream-messages",
+    ],
     files: [
       {
         path: "stream/blocks/stream-brandkit-picker/components/stream-brandkit-picker.tsx",
         type: "registry:component",
+        target:
+          "components/stream-components/blocks/stream-brandkit-picker/stream-brandkit-picker.tsx",
       },
       {
         path: "stream/blocks/stream-brandkit-picker/components/stream-brandkit-list.tsx",
         type: "registry:component",
+        target:
+          "components/stream-components/blocks/stream-brandkit-picker/stream-brandkit-list.tsx",
       },
       {
         path: "stream/blocks/stream-brandkit-picker/components/stream-brandkit-item.tsx",
         type: "registry:component",
+        target:
+          "components/stream-components/blocks/stream-brandkit-picker/stream-brandkit-item.tsx",
       },
       {
         path: "stream/blocks/stream-brandkit-picker/page.tsx",
@@ -740,6 +753,8 @@ export const blocks: Registry["items"] = [
       {
         path: "stream/blocks/stream-chat-history/chat-history.tsx",
         type: "registry:component",
+        target:
+          "components/stream-components/blocks/stream-chat-history/chat-history.tsx",
       },
       {
         path: "stream/blocks/stream-chat-history/page.tsx",
@@ -836,6 +851,12 @@ export const blocks: Registry["items"] = [
         path: "stream/blocks/chat/EditCommands.tsx",
         type: "registry:component",
         target: "components/stream-components/blocks/chat/EditCommands.tsx",
+      },
+      {
+        path: "stream/blocks/chat/GetDocumentProxyUrl.tsx",
+        type: "registry:component",
+        target:
+          "components/stream-components/blocks/chat/GetDocumentProxyUrl.tsx",
       },
       {
         path: "stream/blocks/chat/Feedback.tsx",
