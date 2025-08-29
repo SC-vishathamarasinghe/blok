@@ -51,6 +51,7 @@ import { tabs } from "@/app/demo/[name]/ui/tabs";
 import { textarea } from "@/app/demo/[name]/ui/textarea";
 import { toggleGroup } from "@/app/demo/[name]/ui/toggle-group";
 import { tooltip } from "@/app/demo/[name]/ui/tooltip";
+import { toggle } from "@/app/demo/[name]/ui/toggle";
 import { pagination } from "@/app/demo/[name]/ui/pagination";
 import { scrollArea } from "@/app/demo/[name]/ui/scroll-area";
 import { popover } from "@/app/demo/[name]/ui/popover";
@@ -116,6 +117,7 @@ export const demos: { [name: string]: Demo } = {
   textarea,
   "toggle-group": toggleGroup,
   tooltip,
+  toggle,
   pagination,
   popover,
   "hover-card": hoverCard,
