@@ -57,6 +57,7 @@ import { pagination } from "@/app/demo/[name]/ui/pagination";
 import { scrollArea } from "@/app/demo/[name]/ui/scroll-area";
 import { popover } from "@/app/demo/[name]/ui/popover";
 import { hoverCard } from "@/app/demo/[name]/ui/hover-card";
+import { collapsible } from "@/app/demo/[name]/ui/collapsible";
 
 interface Demo {
   name: string; // this must match the `registry.json` name
@@ -94,6 +95,7 @@ export const demos: { [name: string]: Demo } = {
   carousel,
   chart,
   checkbox,
+  collapsible,
   "context-menu": contextMenu,
   dialog,
   "date-picker": datePicker,
