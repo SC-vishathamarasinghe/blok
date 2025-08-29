@@ -40,6 +40,8 @@ import { MessageAnnotation } from "./types"
 import { UserMessage } from "./UserMessage"
 import { streamMessagesClientsConfig } from "./utils"
 
+import "../../stream.css"
+
 export type VercelAiUiProviderType = UseChatHelpers & {
   addToolResult: ({
     toolCallId,

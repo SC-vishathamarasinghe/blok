@@ -43,6 +43,7 @@ export function StreamMessagesDemo() {
         chatId: "e092c859-fce8-49be-b916-bf84477659d8",
         region: "euw",
         env: "dev",
+        token,
       }}
     />
   )
