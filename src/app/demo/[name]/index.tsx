@@ -32,14 +32,17 @@ import { contextMenu } from "@/app/demo/[name]/ui/context-menu";
 import { dataTable } from "@/app/demo/[name]/ui/data-table";
 import { datePicker } from "@/app/demo/[name]/ui/date-picker";
 import { dialog } from "@/app/demo/[name]/ui/dialog";
+import {drawer} from "@/app/demo/[name]/ui/drawer";
 import { dropdownMenu } from "@/app/demo/[name]/ui/dropdown-menu";
 import { input } from "@/app/demo/[name]/ui/input";
 import { inputOtp } from "@/app/demo/[name]/ui/inputOtp";
 import { label } from "@/app/demo/[name]/ui/label";
 import { menuBar } from "@/app/demo/[name]/ui/menu-bar";
 import { radioGroup } from "@/app/demo/[name]/ui/radio-group";
+import { resizable } from "@/app/demo/[name]/ui/resizable";
 import { select } from "@/app/demo/[name]/ui/select";
 import { separator } from "@/app/demo/[name]/ui/separator";
+import {sheet} from "@/app/demo/[name]/ui/sheet";
 import { skeleton } from "@/app/demo/[name]/ui/skeleton";
 import { slider } from "@/app/demo/[name]/ui/slider";
 import { sonner } from "@/app/demo/[name]/ui/sonner";
@@ -49,9 +52,13 @@ import { tabs } from "@/app/demo/[name]/ui/tabs";
 import { textarea } from "@/app/demo/[name]/ui/textarea";
 import { toggleGroup } from "@/app/demo/[name]/ui/toggle-group";
 import { tooltip } from "@/app/demo/[name]/ui/tooltip";
+import { toggle } from "@/app/demo/[name]/ui/toggle";
 import { pagination } from "@/app/demo/[name]/ui/pagination";
+import { scrollArea } from "@/app/demo/[name]/ui/scroll-area";
 import { popover } from "@/app/demo/[name]/ui/popover";
 import { hoverCard } from "@/app/demo/[name]/ui/hover-card";
+import { collapsible } from "@/app/demo/[name]/ui/collapsible";
+import { progress } from "@/app/demo/[name]/ui/progress";
 
 interface Demo {
   name: string; // this must match the `registry.json` name
@@ -89,18 +96,24 @@ export const demos: { [name: string]: Demo } = {
   carousel,
   chart,
   checkbox,
+  collapsible,
   "context-menu": contextMenu,
   dialog,
   "date-picker": datePicker,
   "data-table": dataTable,
+   drawer,
   "dropdown-menu": dropdownMenu,
   input,
   inputOtp,
   label,
   "menu-bar": menuBar,
+  progress,
+  "scroll-area" :scrollArea,
   "radio-group": radioGroup,
+  resizable,
   select,
   separator,
+  sheet,
   skeleton,
   slider,
   switch: switchComponent,
@@ -110,6 +123,7 @@ export const demos: { [name: string]: Demo } = {
   textarea,
   "toggle-group": toggleGroup,
   tooltip,
+  toggle,
   pagination,
   popover,
   "hover-card": hoverCard,
