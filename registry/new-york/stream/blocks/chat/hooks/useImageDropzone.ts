@@ -1,69 +1,93 @@
-import { useCallback, useMemo } from 'react';
-import { useDropzone, DropzoneInputProps, DropzoneRootProps } from 'react-dropzone';
-import { toast } from 'sonner';
+import { useCallback, useMemo } from "react"
+import {
+  DropzoneInputProps,
+  DropzoneRootProps,
+  useDropzone,
+} from "react-dropzone"
+import { toast } from "sonner"
 
 type UseImageDropzoneOptions = {
-  enabled: boolean;
-  currentCount: number;
-  maxTotal?: number; // default 10
-  maxSizeBytes?: number; // default 5MB
-  onFilesAccepted?: (files: File[]) => void;
-};
+  enabled: boolean
+  currentCount: number
+  maxTotal?: number // default 10
+  maxSizeBytes?: number // default 5MB
+  onFilesAccepted?: (files: File[]) => void
+}
 
 type UseImageDropzoneResult = {
-  getRootProps: () => DropzoneRootProps;
-  getInputProps: () => DropzoneInputProps;
-  isDragActive: boolean;
-  open: () => void;
-  remainingSlots: number;
-};
+  getRootProps: () => DropzoneRootProps
+  getInputProps: () => DropzoneInputProps
+  isDragActive: boolean
+  open: () => void
+  remainingSlots: number
+}
 
-export function useImageDropzone(options: UseImageDropzoneOptions): UseImageDropzoneResult {
-  const { enabled, currentCount, maxTotal = 10, maxSizeBytes = 5 * 1024 * 1024, onFilesAccepted } = options;
+export function useImageDropzone(
+  options: UseImageDropzoneOptions
+): UseImageDropzoneResult {
+  const {
+    enabled,
+    currentCount,
+    maxTotal = 10,
+    maxSizeBytes = 5 * 1024 * 1024,
+    onFilesAccepted,
+  } = options
 
-  const remainingSlots = useMemo(() => Math.max(0, maxTotal - (currentCount || 0)), [currentCount, maxTotal]);
+  const remainingSlots = useMemo(
+    () => Math.max(0, maxTotal - (currentCount || 0)),
+    [currentCount, maxTotal]
+  )
 
   const fileValidator = useCallback(() => {
-    if (!enabled) return null;
+    if (!enabled) return null
     if (remainingSlots === 0) {
-      return { code: 'too-many-files', message: `You can only upload up to ${maxTotal} files.` } as any;
+      return {
+        code: "too-many-files",
+        message: `You can only upload up to ${maxTotal} files.`,
+      } as any
     }
-    return null;
-  }, [enabled, remainingSlots, maxTotal]);
+    return null
+  }, [enabled, remainingSlots, maxTotal])
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      if (!acceptedFiles?.length) return;
-      const addCount = Math.max(0, remainingSlots);
-      const filesToAdd = acceptedFiles.slice(0, addCount);
+      if (!acceptedFiles?.length) return
+      const addCount = Math.max(0, remainingSlots)
+      const filesToAdd = acceptedFiles.slice(0, addCount)
       if (filesToAdd.length) {
-        onFilesAccepted?.(filesToAdd);
+        onFilesAccepted?.(filesToAdd)
       }
       if (acceptedFiles.length > filesToAdd.length) {
-        toast.error(`You can only upload up to ${maxTotal} files.`);
+        toast.error(`You can only upload up to ${maxTotal} files.`)
       }
     },
-    [onFilesAccepted, remainingSlots, maxTotal],
-  );
+    [onFilesAccepted, remainingSlots, maxTotal]
+  )
 
   const onDropRejected = useCallback(
     (rejectedFiles: any[]) => {
-      const hasTooManyFilesError = rejectedFiles.some((f) => f.errors.some((e: any) => e.code === 'too-many-files'));
-      const hasFileSizeError = rejectedFiles.some((f) => f.errors.some((e: any) => e.code === 'file-too-large'));
-      const hasFileTypeError = rejectedFiles.some((f) => f.errors.some((e: any) => e.code === 'file-invalid-type'));
+      const hasTooManyFilesError = rejectedFiles.some((f) =>
+        f.errors.some((e: any) => e.code === "too-many-files")
+      )
+      const hasFileSizeError = rejectedFiles.some((f) =>
+        f.errors.some((e: any) => e.code === "file-too-large")
+      )
+      const hasFileTypeError = rejectedFiles.some((f) =>
+        f.errors.some((e: any) => e.code === "file-invalid-type")
+      )
 
       if (hasTooManyFilesError) {
-        toast.error(`You can only upload up to ${maxTotal} files.`);
+        toast.error(`You can only upload up to ${maxTotal} files.`)
       }
       if (hasFileSizeError) {
-        toast.error('You can only upload files up to 5MB each.');
+        toast.error("You can only upload files up to 5MB each.")
       }
       if (hasFileTypeError) {
-        toast.error('You can only upload JPG and PNG files.');
+        toast.error("You can only upload JPG and PNG files.")
       }
     },
-    [maxTotal],
-  );
+    [maxTotal]
+  )
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone(
     enabled
@@ -72,8 +96,8 @@ export function useImageDropzone(options: UseImageDropzoneOptions): UseImageDrop
           noKeyboard: true,
           multiple: true,
           accept: {
-            'image/jpeg': ['.jpg', '.jpeg'],
-            'image/png': ['.png'],
+            "image/jpeg": [".jpg", ".jpeg"],
+            "image/png": [".png"],
           },
           maxSize: maxSizeBytes,
           // Avoid 0 = unlimited; leave validator to handle 0-slot case.
@@ -82,8 +106,8 @@ export function useImageDropzone(options: UseImageDropzoneOptions): UseImageDrop
           onDrop,
           onDropRejected,
         }
-      : ({ disabled: true } as any),
-  );
+      : ({ disabled: true } as any)
+  )
 
   return {
     getRootProps,
@@ -91,5 +115,5 @@ export function useImageDropzone(options: UseImageDropzoneOptions): UseImageDrop
     isDragActive,
     open,
     remainingSlots,
-  };
+  }
 }

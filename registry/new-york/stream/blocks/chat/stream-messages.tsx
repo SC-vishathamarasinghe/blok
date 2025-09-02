@@ -204,7 +204,7 @@ function Messages(): React.ReactNode {
 
   return (
     <div
-      className="flex h-lvh max-w-full justify-center overflow-hidden"
+      className="relative flex h-full max-w-full flex-1 overflow-hidden"
       {...getRootProps()}
     >
       <input {...getInputProps()} />
@@ -215,6 +215,8 @@ function Messages(): React.ReactNode {
               <img
                 src="https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/spot-drag-items"
                 alt="Drag items illustration"
+                width={400}
+                height={400}
               />
             </div>
             <h2 className="text-2xl font-bold">Drag & drop</h2>
@@ -224,7 +226,7 @@ function Messages(): React.ReactNode {
           </div>
         </div>
       )}
-      <div className="relative flex h-lvh flex-1 basis-1/2 flex-col gap-4 px-6 pt-14 pb-2">
+      <div className="relative flex h-full flex-1 basis-1/2 flex-col gap-4 px-6 pt-14 pb-2">
         <Dialog>
           <DialogTrigger
             id="tour-chat-brainstorming-tools-settings"
@@ -304,71 +306,68 @@ function Messages(): React.ReactNode {
             </div>
           </DialogContent>
         </Dialog>
-        <div className="relative flex flex-col gap-4 px-6 pt-2 pb-2">
-          <div className="group relative flex-1">
-            <div
-              className="flex flex-col gap-4"
-              ref={scrollRef}
-              data-testid="scroll-contain-base-chat"
-            >
-              <div className="h-lvh space-y-4 overflow-auto" ref={messagesRef}>
-                {messages?.map((message, messageIndex, messagesArray) => {
-                  /* The message ID is found in the annotation array. The id you see in the response object is the db id */
-                  const messageId = (
-                    message?.annotations?.[0] as unknown as MessageAnnotation
-                  )?.id
+        <div className="group relative flex-1 overflow-hidden">
+          <div
+            className="flex h-full flex-col gap-4 overflow-auto"
+            ref={scrollRef}
+            data-testid="scroll-contain-base-chat"
+          >
+            <div className="space-y-4" ref={messagesRef}>
+              {messages?.map((message, messageIndex, messagesArray) => {
+                /* The message ID is found in the annotation array. The id you see in the response object is the db id */
+                const messageId = (
+                  message?.annotations?.[0] as unknown as MessageAnnotation
+                )?.id
 
-                  const isLastMessage =
-                    messageIndex === messagesArray.length - 1
+                const isLastMessage = messageIndex === messagesArray.length - 1
 
-                  const toolInvocations = (
-                    message.parts as ToolInvocationUIPart[] | undefined
+                const toolInvocations = (
+                  message.parts as ToolInvocationUIPart[] | undefined
+                )
+                  ?.filter(
+                    (part: ToolInvocationUIPart) =>
+                      part.type === "tool-invocation"
                   )
-                    ?.filter(
-                      (part: ToolInvocationUIPart) =>
-                        part.type === "tool-invocation"
-                    )
-                    .map(
-                      (part: ToolInvocationUIPart) => part.toolInvocation
-                    ) as (ToolInvocation & {
-                    reference: ReferenceModel
-                  })[]
+                  .map(
+                    (part: ToolInvocationUIPart) => part.toolInvocation
+                  ) as (ToolInvocation & {
+                  reference: ReferenceModel
+                })[]
 
-                  const areToolInvocationsAvailable = !!toolInvocations?.length
+                const areToolInvocationsAvailable = !!toolInvocations?.length
 
-                  return (
-                    <div
-                      key={`${message.id}_${messageIndex}`}
-                      className={cn("stream-chat-container space-y-4", {
-                        "pb-4": messageIndex % 2 !== 0 && !isLastMessage,
-                      })}
-                    >
-                      {message.role === "user" && (
-                        <UserMessage>{message.content}</UserMessage>
-                      )}
-                      {message.role === "assistant" && (
-                        <>
-                          {areToolInvocationsAvailable && (
-                            <>
-                              <ToolInvocations
-                                messageId={messageId}
-                                message={message}
-                                toolInvocations={toolInvocations}
-                                isLastMessage={isLastMessage}
-                              />
-                              <Feedback
-                                messageId={messageId}
-                                message={message}
-                                isLastMessage={isLastMessage}
-                              />
-                            </>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
+                return (
+                  <div
+                    key={`${message.id}_${messageIndex}`}
+                    className={cn("stream-chat-container space-y-4", {
+                      "pb-4": messageIndex % 2 !== 0 && !isLastMessage,
+                    })}
+                  >
+                    {message.role === "user" && (
+                      <UserMessage>{message.content}</UserMessage>
+                    )}
+                    {message.role === "assistant" && (
+                      <>
+                        {areToolInvocationsAvailable && (
+                          <>
+                            <ToolInvocations
+                              messageId={messageId}
+                              message={message}
+                              toolInvocations={toolInvocations}
+                              isLastMessage={isLastMessage}
+                            />
+                            <Feedback
+                              messageId={messageId}
+                              message={message}
+                              isLastMessage={isLastMessage}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </div>
           <div className="relative flex flex-col gap-4">
