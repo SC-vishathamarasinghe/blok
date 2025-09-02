@@ -370,25 +370,25 @@ function Messages(): React.ReactNode {
               })}
             </div>
           </div>
-          <div className="relative flex flex-col gap-4">
-            <ButtonScrollToBottom
-              isAtBottom={isAtBottom}
-              scrollToBottom={scrollToBottom}
+        </div>
+        <div className="relative flex flex-col gap-4">
+          <ButtonScrollToBottom
+            isAtBottom={isAtBottom}
+            scrollToBottom={scrollToBottom}
+          />
+          <div className="stream-chat-container">
+            <PromptForm
+              uploadedFiles={uploadedFiles}
+              onFileRemove={(file) => {
+                setUploadedFiles((prevFiles) =>
+                  prevFiles.filter((f) => f !== file)
+                )
+              }}
+              onFileUpload={(files) => {
+                setUploadedFiles((prevFiles) => [...prevFiles, ...files])
+              }}
+              onClearFiles={onClearFiles}
             />
-            <div className="stream-chat-container">
-              <PromptForm
-                uploadedFiles={uploadedFiles}
-                onFileRemove={(file) => {
-                  setUploadedFiles((prevFiles) =>
-                    prevFiles.filter((f) => f !== file)
-                  )
-                }}
-                onFileUpload={(files) => {
-                  setUploadedFiles((prevFiles) => [...prevFiles, ...files])
-                }}
-                onClearFiles={onClearFiles}
-              />
-            </div>
           </div>
         </div>
       </div>
