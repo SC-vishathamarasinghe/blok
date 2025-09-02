@@ -768,7 +768,7 @@ export const blocks: Registry["items"] = [
     name: "stream-messages",
     type: "registry:block",
     description: "Stream team's chat messages for rendering in a chat window",
-    dependencies: ["@sitecore/stream-ui-core", "@mdi/js"],
+    dependencies: ["@sitecore/stream-ui-core", "@mdi/js", "react-dropzone"],
     registryDependencies: [
       "button",
       "popover",
@@ -895,6 +895,12 @@ export const blocks: Registry["items"] = [
         type: "registry:hook",
         target:
           "components/stream-components/blocks/chat/hooks/useEnterSubmit.tsx",
+      },
+      {
+        path: "stream/blocks/chat/hooks/useImageDropzone.tsx",
+        type: "registry:hook",
+        target:
+          "components/stream-components/blocks/chat/hooks/useImageDropzone.tsx",
       },
       {
         path: "stream/blocks/chat/hooks/useLocalStorage.ts",
