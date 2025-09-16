@@ -498,7 +498,6 @@ export function PromptForm({
               {isLoading || isChatActionPending ? (
                 <Button
                   data-testid="prompt_form_stop_button"
-                  disabled={isPromptDisabled || isChatActionPending}
                   size="icon"
                   variant="outline"
                   colorScheme="neutral"
