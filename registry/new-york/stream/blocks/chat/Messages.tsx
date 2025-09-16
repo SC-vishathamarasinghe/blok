@@ -93,7 +93,7 @@ export function Messages(): React.ReactNode {
 
   return (
     <div
-      className="relative flex h-lvh flex-1 overflow-hidden"
+      className="relative flex h-screen flex-1 overflow-hidden bg-[#FBFBFB]"
       {...getRootProps()}
     >
       <input {...getInputProps()} />
@@ -115,7 +115,7 @@ export function Messages(): React.ReactNode {
           </div>
         </div>
       )}
-      <div className="relative flex h-lvh flex-1 flex-col gap-4">
+      <div className="relative flex h-screen flex-1 flex-col gap-4 px-6">
         <Dialog>
           <DialogTrigger
             id="tour-chat-brainstorming-tools-settings"
@@ -124,8 +124,8 @@ export function Messages(): React.ReactNode {
           >
             <Button
               data-testid="brainstorming_button_tool_configuration"
-              variant={"ghost"}
-              colorScheme={"neutral"}
+              variant="ghost"
+              colorScheme="neutral"
               size={"icon-sm"}
               title="Tool configuration"
             >
@@ -196,7 +196,7 @@ export function Messages(): React.ReactNode {
           </DialogContent>
         </Dialog>
         <div
-          className="relative flex basis-full flex-col gap-4 overflow-auto"
+          className="relative z-0 flex min-h-0 flex-grow flex-col gap-4 overflow-auto"
           ref={scrollRef}
           data-testid="scroll-contain-base-chat"
         >
@@ -227,7 +227,11 @@ export function Messages(): React.ReactNode {
               const previousMessageContent = Array.isArray(
                 messages[messages.length - 2]?.content
               )
-                ? (messages[messages.length - 2]?.content as any)?.[0]?.value
+                ? (
+                    messages[messages.length - 2]?.content as unknown as {
+                      value: string
+                    }[]
+                  )?.[0]?.value
                 : messages[messages.length - 2]?.content
 
               return (
@@ -265,7 +269,7 @@ export function Messages(): React.ReactNode {
             })}
           </div>
         </div>
-        <div className="relative flex basis-[27%] flex-col gap-4">
+        <div className="relative bottom-[125px] z-10 flex flex-shrink-0 flex-col gap-4 bg-[#FBFBFB]">
           <ButtonScrollToBottom
             isAtBottom={isAtBottom}
             scrollToBottom={scrollToBottom}

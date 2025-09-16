@@ -245,7 +245,7 @@ export function PreviewAside({
         <div className="relative">{children}</div>
       </CardContent>
       {!_isPreview && (
-        <CardFooter className="flex items-center justify-between px-0">
+        <CardFooter className="relative bottom-[105px] flex items-center justify-between bg-white px-0">
           <div className="flex items-center gap-4 self-start">{start}</div>
           <div className="flex items-center gap-4 self-end">{end}</div>
         </CardFooter>
