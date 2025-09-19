@@ -14,26 +14,36 @@ import { toast } from "sonner"
 
 import { Messages } from "./Messages"
 import {
+  apiQueueAtom,
+  artifactsAtom,
   brainstormingAtom,
   configAtom,
+  hasErrorAtom,
   isBrainstormingActiveAtom,
+  isChatActionPendingAtom,
   isLoadingAtom,
   messagesIdsAtom,
   postChatGenerateBodyAtom,
+  selectedChatWithIdAtom,
   sessionAtom,
 } from "./store/atoms"
 import { Session } from "./store/types"
-import { MessageAnnotation } from "./types"
+import { MessageAnnotation, ResetSelections, SelectionValues } from "./types"
 import { useStreamMessagesClientsConfig } from "./utils"
 
 import "../../stream.css"
 
 import {
+  chat as chatApi,
   dbMessagesToAIMessages,
+  HTTPError,
   ListUserChatMessagesModelResponseV2,
 } from "@sitecore/stream-ui-core"
+import { Message } from "ai"
+import { last } from "lodash"
 
 import { useGetChatMessages } from "../../hooks/use-get-chat-messages"
+import { Artifacts } from "../chat/store/types"
 
 export type VercelAiUiProviderType = UseChatHelpers & {
   addToolResult: ({
@@ -43,6 +53,11 @@ export type VercelAiUiProviderType = UseChatHelpers & {
     toolCallId: string
     result: unknown
   }) => void
+  rollbackChatChanges: (callbacks?: {
+    onRemoveChat?: () => void
+    onDeleteMessage?: () => void
+  }) => void
+  reset: (selections: ResetSelections) => void
 }
 
 export const VercelAiUiContext = createContext<
@@ -190,7 +205,6 @@ export interface StreamMessagesProps {
  * before it can function properly. It manages chat state through Jotai atoms and integrates
  * with the Vercel AI SDK for chat functionality.
  */
-
 function StreamMessages({
   session,
   prompt,
@@ -207,8 +221,19 @@ function StreamMessages({
 
   /* Hooks */
   const getChatMessages = useGetChatMessages(_session.orgId, _session.userId)
+  const setApiQueue = useSetAtom(apiQueueAtom)
+  const setArtifacts = useSetAtom(artifactsAtom)
+  const setSelectedChatWithId = useSetAtom(selectedChatWithIdAtom)
+  const setIsChatActionPending = useSetAtom(isChatActionPendingAtom)
+  const setHasError = useSetAtom(hasErrorAtom)
 
-  const { isLoading: _isLoading, ...chat } = useChat({
+  const {
+    isLoading: _isLoading,
+    messages,
+    setMessages,
+    setInput,
+    ...chat
+  } = useChat({
     api: `https://ai-chat-api-${_session.region}${baseUrlEnv[_session.env]}/api/chats/v1/organizations/${_session.orgId}/users/${_session.userId}/chats/${_session.chatId}/generatemessage`,
     body: chatBodyAtom,
     initialInput: prompt ?? "",
@@ -224,16 +249,41 @@ function StreamMessages({
       setMessageIds((prev) => [...prev, messageId])
     },
     onError: (error) => {
-      toast.error(error.message)
+      console.error("Error:", error)
     },
   })
 
-  const context = useMemo(
-    () => ({
-      ...chat,
-      isLoading,
-    }),
-    [chat, isLoading]
+  const reset = useCallback(
+    (selections: ResetSelections) => {
+      const actions = {
+        messages: (value?: Message[]) => {
+          setMessages(value ?? [])
+          setMessageIds([])
+          setSelectedChatWithId("")
+        },
+        artifacts: (value?: Artifacts) => setArtifacts(value ?? {}),
+        isChatActionPending: (value?: boolean) =>
+          setIsChatActionPending(value ?? false),
+        hasError: (value?: boolean) => setHasError(value ?? false),
+        input: (value?: string) => setInput(value ?? ""),
+      }
+
+      selections.forEach((selection) => {
+        if (Array.isArray(selection)) {
+          const [key, value] = selection as SelectionValues
+          actions[key](value as never)
+        } else actions[selection]()
+      })
+    },
+    [
+      setArtifacts,
+      setHasError,
+      setInput,
+      setIsChatActionPending,
+      setMessageIds,
+      setMessages,
+      setSelectedChatWithId,
+    ]
   )
 
   const initMessages = useCallback(async (): Promise<void> => {
@@ -242,38 +292,141 @@ function StreamMessages({
       await getChatMessages(_session.chatId)
     const dbMessages = dbMessagesToAIMessages(messages) as UIMessage[]
 
-    chat.setMessages(dbMessages)
+    setMessages(dbMessages)
     setMessageIds(
       dbMessages.map((message) => {
         return (message?.annotations?.[0] as unknown as MessageAnnotation)?.id
       })
     )
-  }, [chat, _session.chatId, getChatMessages, setMessageIds])
+  }, [_session.chatId, getChatMessages, setMessageIds, setMessages])
+
+  const rollbackChatChanges = useCallback(
+    async (callbacks?: {
+      onRemoveChat?: () => void
+      onDeleteMessage?: () => void
+    }) => {
+      const { onRemoveChat, onDeleteMessage } = callbacks ?? {}
+
+      const messageAssistant = (last(messages) as Message)?.role === "assistant"
+      const messageId = (
+        (last(messages) as Message)
+          ?.annotations?.[0] as unknown as MessageAnnotation
+      )?.id
+
+      const isMessageAssistantInvalid = !messageAssistant || !messageId
+      const isFirstMessage = messages.length && messages.length <= 2
+
+      stop()
+
+      setApiQueue({})
+      reset(["hasError", "artifacts"])
+
+      /* If there are two or fewer messages, then delete the chat */
+      if (isFirstMessage) {
+        try {
+          await chatApi.deleteUserChatApiChatsV1OrganizationsOrganizationIdUsersUserIdChatsChatIdDelete(
+            {
+              path: {
+                userId: _session.userId,
+                chatId: _session.chatId,
+                organizationId: _session.orgId,
+              },
+            }
+          )
+          await initMessages()
+
+          if (onRemoveChat) {
+            onRemoveChat()
+            return
+          }
+        } catch (error: unknown) {
+          const { response } = error as HTTPError
+          const { detail } = (await response.json()) as {
+            type: string
+            detail: string
+          }
+          toast.error(detail)
+        }
+        return
+      }
+
+      if (isMessageAssistantInvalid) {
+        if (onDeleteMessage) {
+          onDeleteMessage()
+          return
+        }
+        await initMessages()
+        return
+      }
+
+      try {
+        await chatApi.deleteUserChatMessageApiChatsV1OrganizationsOrganizationIdUsersUserIdChatsChatIdMessagesMessageIdDelete(
+          {
+            path: {
+              userId: _session.userId,
+              chatId: _session.chatId,
+              organizationId: _session.orgId,
+              messageId,
+            },
+          }
+        )
+        if (onDeleteMessage) {
+          onDeleteMessage()
+          return
+        }
+      } catch (error: unknown) {
+        const { response } = error as HTTPError
+        const { detail } = (await response.json()) as {
+          type: string
+          detail: string
+        }
+        toast.error(detail)
+      }
+    },
+    [
+      _session.chatId,
+      _session.orgId,
+      _session.userId,
+      initMessages,
+      messages,
+      reset,
+      setApiQueue,
+    ]
+  )
 
   useEffect(
     function () {
-      if (session) {
-        const apiEnv = `${_session.region}${baseUrlEnv[_session.env]}`
+      const apiEnv = `${_session.region}${baseUrlEnv[_session.env]}`
 
-        if (
-          _session.brandkitId !== session.brandkitId ||
-          !session.brandkitId ||
-          !session.chatId
-        ) {
-          setBrainstormingData(undefined)
-          setIsBrainstormingActive(false)
+      if (
+        _session.brandkitId !== session.brandkitId ||
+        !session.brandkitId ||
+        !session.chatId
+      ) {
+        setBrainstormingData(undefined)
+        setIsBrainstormingActive(false)
+
+        if (isLoading) {
+          rollbackChatChanges({
+            onDeleteMessage: () => {
+              setMessages([])
+            },
+          })
         }
-
-        setSession((prev) => ({ ...prev, ...session, apiEnv }))
       }
+
+      setSession((prev) => ({ ...prev, ...session, apiEnv }))
     },
     [
       _session.brandkitId,
       _session.env,
       _session.region,
+      isLoading,
+      rollbackChatChanges,
       session,
       setBrainstormingData,
       setIsBrainstormingActive,
+      setMessages,
       setSession,
     ]
   )
@@ -291,7 +444,7 @@ function StreamMessages({
           setSession((prev) => ({ ...prev, isNewChat: false }))
           chat.handleSubmit()
         } else {
-          if (!chat.messages.length) {
+          if (!messages.length) {
             initMessages()
           }
         }
@@ -302,7 +455,7 @@ function StreamMessages({
       _session.isNewChat,
       chat,
       initMessages,
-      session,
+      messages.length,
       setSession,
     ]
   )
@@ -333,6 +486,27 @@ function StreamMessages({
       setBrainstormingData,
       setIsBrainstormingActive,
       setSession,
+    ]
+  )
+
+  const context = useMemo(
+    () => ({
+      ...chat,
+      setInput,
+      reset,
+      rollbackChatChanges,
+      setMessages,
+      messages,
+      isLoading,
+    }),
+    [
+      chat,
+      isLoading,
+      messages,
+      reset,
+      rollbackChatChanges,
+      setInput,
+      setMessages,
     ]
   )
 

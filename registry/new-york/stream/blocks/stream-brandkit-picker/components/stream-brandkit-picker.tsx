@@ -92,7 +92,6 @@ export function StreamBrandkitPicker({
               variant="outline"
               brandkit={selectedBrandkit}
               className="max-w-[240px] rounded-full"
-              onSelect={handleBrandkitOnSelect}
               testId="stream-brandkit-picker"
             />
           ) : (

@@ -69,8 +69,6 @@ const MemoizedEmptyScreenBoxes = memo(function MemoizedEmptyScreenBoxes({
 }: MemoizedEmptyScreenBoxes) {
   const [config] = useAtom(configAtom)
 
-  console.log("config in EmptyScreenBoxes", { config })
-
   const isBrandkitIdAvailable = !!brandKitStateId?.length
 
   const onClick = (content: string) => {
