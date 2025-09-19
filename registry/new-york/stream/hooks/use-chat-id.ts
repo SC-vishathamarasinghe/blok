@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export function useChatId() {
   const [chatId, _setChatId] = useState<string>("")

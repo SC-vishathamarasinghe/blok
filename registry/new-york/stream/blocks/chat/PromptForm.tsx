@@ -61,7 +61,8 @@ export function PromptForm({
   onFileUpload,
   onClearFiles,
 }: PromptFormProps) {
-  const { input, handleSubmit, handleInputChange } = useAiChatProvider()
+  const { input, handleSubmit, handleInputChange, rollbackChatChanges } =
+    useAiChatProvider()
   const [session, setSession] = useAtom(sessionAtom)
   const { formRef, onKeyDown } = useEnterSubmit()
   const [isMultiline, setIsMultiline] = useState(false)
@@ -208,7 +209,7 @@ export function PromptForm({
   const onStopGeneration = () => {
     if (!session.chatId) return
 
-    stop()
+    rollbackChatChanges()
   }
 
   const handleBrainstormingOnClick = () => {

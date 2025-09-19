@@ -92,7 +92,7 @@ export function Messages(): React.ReactNode {
     }
   }, [messages, scrollRef])
 
-  const shouldShowExamplePropmts = !messages?.length
+  const shouldShowExamplePrompts = !messages?.length
 
   return (
     <div
@@ -127,8 +127,8 @@ export function Messages(): React.ReactNode {
           >
             <Button
               data-testid="brainstorming_button_tool_configuration"
-              variant="ghost"
-              colorScheme="neutral"
+              variant={"ghost"}
+              colorScheme={"neutral"}
               size={"icon-sm"}
               title="Tool configuration"
             >
@@ -199,11 +199,11 @@ export function Messages(): React.ReactNode {
           </DialogContent>
         </Dialog>
         <div
-          className="relative z-0 flex min-h-0 flex-grow flex-col gap-4 overflow-auto"
+          className="relative z-0 mb-[125px] flex min-h-0 flex-grow flex-col gap-4 overflow-auto"
           ref={scrollRef}
           data-testid="scroll-contain-base-chat"
         >
-          {shouldShowExamplePropmts && <EmptyScreen />}
+          {shouldShowExamplePrompts && <EmptyScreen />}
           <div className="space-y-4" ref={messagesRef}>
             {messages?.map((message, messageIndex, messagesArray) => {
               /* The message ID is found in the annotation array. The id you see in the response object is the db id */
@@ -278,6 +278,7 @@ export function Messages(): React.ReactNode {
             isAtBottom={isAtBottom}
             scrollToBottom={scrollToBottom}
           />
+
           <div className="stream-chat-container">
             <PromptForm
               uploadedFiles={uploadedFiles}

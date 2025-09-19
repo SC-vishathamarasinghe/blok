@@ -1,8 +1,9 @@
 import { FunctionComponent } from "react"
 import { UIMessage } from "@ai-sdk/ui-utils"
 import { ReferenceModel, ToolInvocation } from "@sitecore/stream-ui-core"
-import { UseChatHelpers } from "ai/react"
+import { Message } from "ai"
 
+import { Artifacts } from "../chat/store/types"
 import { TOOLS_SOURCES_TITLES } from "./utils"
 
 export type ExtractSourceRecordProps = Record<
@@ -90,3 +91,18 @@ export interface DBMessage {
   timestamp: number
   feedback?: MessageFeedback
 }
+
+export type SelectionTypes =
+  | "messages"
+  | "artifacts"
+  | "isChatActionPending"
+  | "hasError"
+  | "input"
+export type SelectionValues =
+  | ["messages", Message[]]
+  | ["artifacts", Artifacts]
+  | ["isChatActionPending", boolean]
+  | ["hasError", boolean]
+  | ["input", string]
+export type Selections = SelectionTypes | SelectionValues
+export type ResetSelections = Selections[]
