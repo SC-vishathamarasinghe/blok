@@ -1,13 +1,18 @@
 import { useState } from "react"
 
 export function useChatId() {
-  const [chatId, _setChatId] = useState<string>("")
-  const [, setNewChat] = useState<number>(0)
+  const [chatId, setChatId] = useState<string>("")
+  const [isNewChat, setNewChat] = useState<boolean>(false)
 
-  function setChatId(id: string) {
-    _setChatId(id)
-    if (!id) setNewChat((prev) => prev + 1)
+  function newChat(cb?: () => void) {
+    setNewChat(true)
+    setChatId("")
+
+    queueMicrotask(function () {
+      setNewChat(false)
+      cb?.()
+    })
   }
 
-  return { chatId, setChatId }
+  return { chatId, setChatId, isNewChat, newChat }
 }

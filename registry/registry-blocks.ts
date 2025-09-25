@@ -921,6 +921,12 @@ export const blocks: Registry["items"] = [
           "components/stream-components/blocks/chat/hooks/useScrollAnchor.tsx",
       },
       {
+        path: "stream/blocks/chat/hooks/useChatProvider.tsx",
+        type: "registry:hook",
+        target:
+          "components/stream-components/blocks/chat/hooks/useChatProvider.tsx",
+      },
+      {
         path: "stream/blocks/chat/hooks/useAiChatProvider.tsx",
         type: "registry:hook",
         target:
