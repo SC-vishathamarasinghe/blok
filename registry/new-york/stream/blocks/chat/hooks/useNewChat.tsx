@@ -1,20 +1,15 @@
 import { useSetAtom } from "jotai"
 
-import {
-  brainstormingAtom,
-  brandkitIdAtom,
-  isBrainstormingActiveAtom,
-} from "../store/atoms"
+import { brandkitIdAtom } from "../store/atoms"
+import { TOOL_ACTIONS, useToolDispatch } from "../store/tools"
 
 export function useNewChat() {
   /* Atoms */
-  const setBrainstormingData = useSetAtom(brainstormingAtom)
   const setBrandKitStateId = useSetAtom(brandkitIdAtom)
-  const setIsBrainstormingActive = useSetAtom(isBrainstormingActiveAtom)
+  const [, dispatchToolAction] = useToolDispatch()
 
   return (): void => {
     setBrandKitStateId("")
-    setIsBrainstormingActive(false)
-    setBrainstormingData(undefined)
+    dispatchToolAction({ type: TOOL_ACTIONS.RESET_ALL_TOOLS })
   }
 }

@@ -5,7 +5,6 @@ import { ExtractSourceRecordProps } from "../types"
 import {
   Artifacts,
   ArtifactsProperties,
-  BrainstormingOptions,
   BrandKitDetailsModalStateOptions,
   Config,
   IsMessageAlreadyGeneratedProps,
@@ -49,9 +48,6 @@ export const postChatGenerateBodyAtom = atom({})
 
 export const messagesIdsAtom = atom<string[]>([])
 
-export const brainstormingAtom = atom<BrainstormingOptions>()
-
-export const isBrainstormingActiveAtom = atom<boolean>(false)
 
 export const isChatActionPendingAtom = atom<boolean>(false)
 

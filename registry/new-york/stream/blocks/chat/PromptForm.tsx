@@ -6,7 +6,6 @@ import {
   mdiSend,
   mdiStop,
   mdiStopCircleOutline,
-  mdiTextLong,
 } from "@mdi/js"
 import { chat as chatApi, HTTPError } from "@sitecore/stream-ui-core"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
@@ -24,10 +23,8 @@ import { useBrandkitById } from "../../hooks/use-brandkit-by-id"
 import { cn } from "../../lib/utils"
 import {
   addedContextAtom,
-  brainstormingAtom,
   chatIdAtom,
   configAtom,
-  isBrainstormingActiveAtom,
   isChatActionPendingAtom,
   isLoadingAtom,
   isNewChatAtom,
@@ -40,6 +37,14 @@ import { useImageDropzone } from "./hooks/useImageDropzone"
 import { useLocalStorage } from "./hooks/useLocalStorage"
 import { Icon } from "./Icon"
 import { ReferencesBuilder } from "./utils/referencesBuilder"
+import { toolList } from "./store/toolDefinitions"
+import {
+  useToolDispatch,
+  isAnyToolActiveAtom,
+  activeToolNameAtom,
+  activeToolDataAtom,
+  ToolAction,
+} from "./store/tools"
 
 export type PromptFormProps = {
   uploadedFiles?: File[]
@@ -73,6 +78,13 @@ export function PromptForm({
   } = useAiChatProvider()
   const { formRef, onKeyDown } = useEnterSubmit()
   const [isMultiline, setIsMultiline] = useState(false)
+  // All tools available in stream components without feature flag filtering
+  const availableTools = toolList
+
+  const [, dispatchToolAction] = useToolDispatch()
+  const isAnyToolActive = useAtomValue(isAnyToolActiveAtom)
+  const activeToolName = useAtomValue(activeToolNameAtom)
+  const activeToolData = useAtomValue(activeToolDataAtom)
   const { brandkit } = useBrandkitById(brandkitId, {
     organizationId: session.orgId,
     includeDeleted: true,
@@ -82,16 +94,11 @@ export function PromptForm({
   const btnRef = useRef<HTMLButtonElement>(null)
 
   /* Atoms */
-  const [brainstormingData, setBrainstormingData] = useAtom(brainstormingAtom)
   const [isChatActionPending, setIsChatActionPending] = useAtom(
     isChatActionPendingAtom
   )
   const isLoading = useAtomValue(isLoadingAtom)
-  const [isBrainstormingActive, setIsBrainstormingActive] = useAtom(
-    isBrainstormingActiveAtom
-  )
   const setChatBodyAtom = useSetAtom(postChatGenerateBodyAtom)
-  const [addedContext, setAddedContext] = useAtom(addedContextAtom)
   const config = useAtomValue(configAtom)
   const [chatId, setChatId] = useAtom(chatIdAtom)
   const setIsNewChat = useSetAtom(isNewChatAtom)
@@ -140,6 +147,9 @@ export function PromptForm({
       })
     )
 
+    // Get current tool data for submission from any active tool
+    const toolData = activeToolData
+
     // Now that all files are uploaded and we have their IDs, call handleSubmit
     const data = {
       content: input,
@@ -149,7 +159,7 @@ export function PromptForm({
           .build(),
         ...referencesArr.current,
       ],
-      ...brainstormingData,
+      ...(toolData || {}),
       addedContext: filesToUpload,
     }
 
@@ -218,25 +228,10 @@ export function PromptForm({
     rollbackChatChanges()
   }
 
-  const handleBrainstormingOnClick = () => {
-    setIsBrainstormingActive((prev) => !prev)
-    setHasClickedBrainstormingButton(true)
-    setBrainstormingData((prev) =>
-      !isBrainstormingActive
-        ? {
-            ...prev,
-            mode: "brainstorming",
-            params: {
-              searchType: "knowledge_web",
-            },
-          }
-        : undefined
-    )
+  const handleToolClick = (action: ToolAction) => {
+    dispatchToolAction(action)
   }
 
-  const [, setHasClickedBrainstormingButton] = useLocalStorage<boolean>(
-    "hasClickedBrainstormingButton"
-  )
 
   // Memoize object URLs for previews so typing doesn't recreate them every render
   const filePreviews = useMemo(
@@ -312,53 +307,68 @@ export function PromptForm({
             )}
           >
             <div className="flex flex-grow flex-wrap gap-1">
-              {!isBrainstormingActive && (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      id="tour-chat-brainstorming-tools"
-                      variant="ghost"
-                      colorScheme="neutral"
-                    >
-                      <Icon path={mdiPlus} /> <span>Tools</span>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    side="top"
-                    align="start"
-                    className="flex w-56 flex-col gap-2 p-2"
-                  >
-                    <button
-                      className="flex gap-2 rounded-md p-2 text-left transition-colors hover:bg-gray-50"
-                      onClick={handleBrainstormingOnClick}
-                    >
-                      <Icon
-                        path={mdiTextLong}
-                        size={"2xs"}
-                        className="text-blackAlpha-500"
-                      />
-                      <div>
-                        <h3 className="text-sm font-semibold">Brainstorming</h3>
-                        <p className="text-blackAlpha-300 text-sm">
-                          Create long form content (e.g. blogs, articles)
+              {availableTools.length > 0 && (
+                <>
+                  {!isAnyToolActive && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          id="tour-chat-brainstorming-tools"
+                          variant="ghost"
+                          colorScheme="neutral"
+                        >
+                          <Icon path={mdiPlus} /> <span>Tools</span>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        side="top"
+                        align="start"
+                        className="flex w-56 flex-col gap-2 p-2"
+                      >
+                        {availableTools.map((tool) => (
+                          <button
+                            key={tool.key}
+                            className="flex gap-2 rounded-md p-2 text-left transition-colors hover:bg-gray-50"
+                            onClick={() => handleToolClick({ type: tool.action })}
+                          >
+                            <Icon
+                              path={tool.icon}
+                              size={"2xs"}
+                              className="text-blackAlpha-500"
+                            />
+                            <div>
+                              <h3 className="text-sm font-semibold">{tool.name}</h3>
+                              <p className="text-blackAlpha-300 text-sm">
+                                {tool.description}
+                              </p>
+                            </div>
+                          </button>
+                        ))}
+
+                        <p className="text-muted-fg px-2 py-0.5 text-sm">
+                          More tools coming soon
                         </p>
-                      </div>
-                    </button>
-                    <p className="text-muted-fg px-2 py-0.5 text-sm">
-                      More tools coming soon
-                    </p>
-                  </PopoverContent>
-                </Popover>
-              )}
-              {isBrainstormingActive && (
-                <Button
-                  onClick={handleBrainstormingOnClick}
-                  variant={"outline"}
-                  className={cn("", isBrainstormingActive && "bg-primary-200")}
-                >
-                  <Icon path={mdiTextLong} size={"2xs"} />{" "}
-                  <span>Brainstorming</span>
-                </Button>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                  {isAnyToolActive &&
+                    activeToolName &&
+                    (() => {
+                      const activeTool = availableTools.find(
+                        (tool) => tool.key === activeToolName
+                      )
+                      return activeTool ? (
+                        <Button
+                          onClick={() => handleToolClick({ type: activeTool.action })}
+                          variant={"outline"}
+                          className={cn("", "bg-primary-200")}
+                        >
+                          <Icon path={activeTool.icon} size={"2xs"} />{" "}
+                          <span>{activeTool.name}</span>
+                        </Button>
+                      ) : null
+                    })()}
+                </>
               )}
               <div className="mr-1 flex flex-grow items-center justify-end gap-2">
                 {filePreviews.slice(0, 2).map((p) => {
