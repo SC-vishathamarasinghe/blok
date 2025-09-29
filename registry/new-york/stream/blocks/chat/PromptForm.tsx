@@ -22,7 +22,6 @@ import {
 import { useBrandkitById } from "../../hooks/use-brandkit-by-id"
 import { cn } from "../../lib/utils"
 import {
-  addedContextAtom,
   chatIdAtom,
   configAtom,
   isChatActionPendingAtom,
@@ -36,15 +35,15 @@ import { useEnterSubmit } from "./hooks/useEnterSubmit"
 import { useImageDropzone } from "./hooks/useImageDropzone"
 import { useLocalStorage } from "./hooks/useLocalStorage"
 import { Icon } from "./Icon"
-import { ReferencesBuilder } from "./utils/referencesBuilder"
 import { toolList } from "./store/toolDefinitions"
 import {
-  useToolDispatch,
-  isAnyToolActiveAtom,
-  activeToolNameAtom,
   activeToolDataAtom,
+  activeToolNameAtom,
+  isAnyToolActiveAtom,
   ToolAction,
+  useToolDispatch,
 } from "./store/tools"
+import { ReferencesBuilder } from "./utils/referencesBuilder"
 
 export type PromptFormProps = {
   uploadedFiles?: File[]
@@ -78,7 +77,7 @@ export function PromptForm({
   } = useAiChatProvider()
   const { formRef, onKeyDown } = useEnterSubmit()
   const [isMultiline, setIsMultiline] = useState(false)
-  // All tools available in stream components without feature flag filtering
+  // Stream components use all tools without feature flag filtering
   const availableTools = toolList
 
   const [, dispatchToolAction] = useToolDispatch()
@@ -228,10 +227,10 @@ export function PromptForm({
     rollbackChatChanges()
   }
 
+  // Universal tool handler using useReducerAtom
   const handleToolClick = (action: ToolAction) => {
     dispatchToolAction(action)
   }
-
 
   // Memoize object URLs for previews so typing doesn't recreate them every render
   const filePreviews = useMemo(
@@ -329,7 +328,9 @@ export function PromptForm({
                           <button
                             key={tool.key}
                             className="flex gap-2 rounded-md p-2 text-left transition-colors hover:bg-gray-50"
-                            onClick={() => handleToolClick({ type: tool.action })}
+                            onClick={() =>
+                              handleToolClick({ type: tool.action })
+                            }
                           >
                             <Icon
                               path={tool.icon}
@@ -337,7 +338,9 @@ export function PromptForm({
                               className="text-blackAlpha-500"
                             />
                             <div>
-                              <h3 className="text-sm font-semibold">{tool.name}</h3>
+                              <h3 className="text-sm font-semibold">
+                                {tool.name}
+                              </h3>
                               <p className="text-blackAlpha-300 text-sm">
                                 {tool.description}
                               </p>
@@ -359,9 +362,11 @@ export function PromptForm({
                       )
                       return activeTool ? (
                         <Button
-                          onClick={() => handleToolClick({ type: activeTool.action })}
+                          onClick={() =>
+                            handleToolClick({ type: activeTool.action })
+                          }
                           variant={"outline"}
-                          className={cn("", "bg-primary-200")}
+                          className={cn("", activeToolName && "bg-primary-200")}
                         >
                           <Icon path={activeTool.icon} size={"2xs"} />{" "}
                           <span>{activeTool.name}</span>

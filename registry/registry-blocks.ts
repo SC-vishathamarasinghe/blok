@@ -896,11 +896,6 @@ export const blocks: Registry["items"] = [
         target: "components/stream-components/blocks/chat/types.ts",
       },
       {
-        path: "stream/blocks/chat/hooks/useNewChat.tsx",
-        type: "registry:hook",
-        target: "components/stream-components/blocks/chat/hooks/useNewChat.tsx",
-      },
-      {
         path: "stream/blocks/chat/hooks/useAutoScroll.tsx",
         type: "registry:hook",
         target:
@@ -952,6 +947,17 @@ export const blocks: Registry["items"] = [
         path: "stream/blocks/chat/store/atoms.ts",
         type: "registry:component",
         target: "components/stream-components/blocks/chat/store/atoms.ts",
+      },
+      {
+        path: "stream/blocks/chat/store/tools.ts",
+        type: "registry:component",
+        target: "components/stream-components/blocks/chat/store/tools.ts",
+      },
+      {
+        path: "stream/blocks/chat/store/toolDefinitions.ts",
+        type: "registry:component",
+        target:
+          "components/stream-components/blocks/chat/store/toolDefinitions.ts",
       },
       {
         path: "stream/blocks/chat/store/types.ts",
