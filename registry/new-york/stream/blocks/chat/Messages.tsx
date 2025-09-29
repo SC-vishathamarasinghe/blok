@@ -62,7 +62,9 @@ export function Messages(): React.ReactNode {
     setUploadedFiles([])
   }, [])
 
-
+  // Remaining upload slots; note: react-dropzone treats maxFiles=0 as "unlimited",
+  // so we clamp to at least 1 and explicitly disable when no slots remain.
+  const remainingSlots = Math.max(0, 10 - uploadedFiles.length)
 
   const { getRootProps, getInputProps, isDragActive } = useImageDropzone({
     enabled: true,
@@ -114,8 +116,8 @@ export function Messages(): React.ReactNode {
           >
             <Button
               data-testid="brainstorming_button_tool_configuration"
-              variant="ghost"
-              colorScheme="neutral"
+              variant={"ghost"}
+              colorScheme={"neutral"}
               size={"icon-sm"}
               title="Tool configuration"
             >

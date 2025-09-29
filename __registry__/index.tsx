@@ -2289,11 +2289,6 @@ export const Index: Record<string, any> = {
         target: "components/stream-components/blocks/chat/types.ts",
       },
       {
-        path: "registry/stream/blocks/chat/hooks/useNewChat.tsx",
-        type: "registry:hook",
-        target: "components/stream-components/blocks/chat/hooks/useNewChat.tsx",
-      },
-      {
         path: "registry/stream/blocks/chat/hooks/useAutoScroll.tsx",
         type: "registry:hook",
         target:
