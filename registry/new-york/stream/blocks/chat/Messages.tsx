@@ -5,7 +5,7 @@ import {
   ToolInvocation,
   ToolInvocationUIPart,
 } from "@sitecore/stream-ui-core"
-import { useAtom, useAtomValue } from "jotai"
+import { useAtomValue } from "jotai"
 
 import { Button } from "@/registry/new-york/ui/button"
 import {
@@ -27,7 +27,8 @@ import { useImageDropzone } from "./hooks/useImageDropzone"
 import { useScrollAnchor } from "./hooks/useScrollAnchor"
 import { Icon } from "./Icon"
 import { PromptForm } from "./PromptForm"
-import { brainstormingAtom, isAnyArtifactOpenAtom } from "./store/atoms"
+import { isAnyArtifactOpenAtom } from "./store/atoms"
+import { TOOL_ACTIONS, useToolDispatch } from "./store/tools"
 import { BrainstormingSearchTypeOptions } from "./store/types"
 import { ToolInvocations } from "./tools/ToolInvocations"
 import { MessageAnnotation } from "./types"
@@ -36,7 +37,7 @@ import { UserMessage } from "./UserMessage"
 export function Messages(): React.ReactNode {
   /* Atoms */
   const isAnyArtifactOpen = useAtomValue(isAnyArtifactOpenAtom)
-  const [brainstormingData, setBrainstormingData] = useAtom(brainstormingAtom)
+  const [toolState, dispatchToolAction] = useToolDispatch()
 
   /* Hooks */
   const { messages } = useAiChatProvider()
@@ -47,9 +48,9 @@ export function Messages(): React.ReactNode {
   const handleSaveToolConfigurationOnClick = (
     value: BrainstormingSearchTypeOptions
   ) => {
-    setBrainstormingData({
-      mode: "brainstorming",
-      params: { searchType: value },
+    dispatchToolAction({
+      type: TOOL_ACTIONS.CONFIGURE_BRAINSTORMING,
+      payload: { searchType: value },
     })
   }
 
@@ -61,21 +62,7 @@ export function Messages(): React.ReactNode {
     setUploadedFiles([])
   }, [])
 
-  // Remaining upload slots; note: react-dropzone treats maxFiles=0 as "unlimited",
-  // so we clamp to at least 1 and explicitly disable when no slots remain.
-  const remainingSlots = Math.max(0, 10 - uploadedFiles.length)
 
-  // Keep dropzone enabled even when no slots remain so we can surface validation errors.
-  // Use a validator to force a "too-many-files" reject when remainingSlots === 0.
-  const fileValidator = useCallback(() => {
-    if (remainingSlots === 0) {
-      return {
-        code: "too-many-files",
-        message: "You can only upload up to 10 files.",
-      }
-    }
-    return null
-  }, [remainingSlots])
 
   const { getRootProps, getInputProps, isDragActive } = useImageDropzone({
     enabled: true,
@@ -164,7 +151,8 @@ export function Messages(): React.ReactNode {
                   <Tabs
                     className="w-fit"
                     defaultValue={
-                      brainstormingData?.params?.searchType ?? "knowledge_web"
+                      toolState.brainstorming.data?.params?.searchType ??
+                      "knowledge_web"
                     }
                     onValueChange={(value) =>
                       handleSaveToolConfigurationOnClick(

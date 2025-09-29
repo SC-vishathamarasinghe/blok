@@ -22,12 +22,10 @@ import { Messages } from "./Messages"
 import {
   apiQueueAtom,
   artifactsAtom,
-  brainstormingAtom,
   brandkitIdAtom,
   chatIdAtom,
   configAtom,
   hasErrorAtom,
-  isBrainstormingActiveAtom,
   isChatActionPendingAtom,
   isLoadingAtom,
   isNewChatAtom,
@@ -35,6 +33,7 @@ import {
   postChatGenerateBodyAtom,
   selectedChatWithIdAtom,
 } from "./store/atoms"
+import { TOOL_ACTIONS, useToolDispatch } from "./store/tools"
 import { Session } from "./store/types"
 import { MessageAnnotation, ResetSelections, SelectionValues } from "./types"
 import { useStreamMessagesClientsConfig } from "./utils"
@@ -237,8 +236,7 @@ function StreamMessages({
   const chatBodyAtom = useAtomValue(postChatGenerateBodyAtom)
   const setMessageIds = useSetAtom(messagesIdsAtom)
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
-  const setBrainstormingData = useSetAtom(brainstormingAtom)
-  const setIsBrainstormingActive = useSetAtom(isBrainstormingActiveAtom)
+  const [, dispatchToolAction] = useToolDispatch()
   const setConfig = useSetAtom(configAtom)
 
   /* Hooks */
@@ -427,8 +425,7 @@ function StreamMessages({
 
   const handleNewChat = useCallback(() => {
     setIsNewChat(false)
-    setBrainstormingData(undefined)
-    setIsBrainstormingActive(false)
+    dispatchToolAction({ type: TOOL_ACTIONS.RESET_ALL_TOOLS })
     setArtifacts({})
     setMessages([])
     setChatId("")
@@ -444,9 +441,8 @@ function StreamMessages({
     isLoading,
     rollbackChatChanges,
     setArtifacts,
-    setBrainstormingData,
+    dispatchToolAction,
     setChatId,
-    setIsBrainstormingActive,
     setIsNewChat,
     setMessages,
   ])
