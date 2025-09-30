@@ -761,6 +761,7 @@ export const blocks: Registry["items"] = [
     type: "registry:block",
     description: "Stream team's chat messages for rendering in a chat window",
     dependencies: [
+      "react-markdown",
       "@sitecore/stream-ui-core",
       "@mdi/js",
       "react-dropzone",
@@ -779,6 +780,8 @@ export const blocks: Registry["items"] = [
       "strip-markdown",
       "class-variance-authority",
       "lucide-react",
+      "clsx",
+      "tailwind-merge",
     ],
     registryDependencies: [
       "button",
@@ -791,6 +794,7 @@ export const blocks: Registry["items"] = [
       "card",
       "select",
       "dialog",
+      "tabs",
     ],
     files: [
       {
