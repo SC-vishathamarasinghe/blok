@@ -778,6 +778,7 @@ export const blocks: Registry["items"] = [
       "remark-stringify",
       "strip-markdown",
       "class-variance-authority",
+      "lucide-react",
     ],
     registryDependencies: [
       "button",
