@@ -707,8 +707,6 @@ export const blocks: Registry["items"] = [
     type: "registry:block",
     description:
       "Stream team's comprehensive brandkit picker with all brandkit components",
-    dependencies: ["@sitecore/stream-ui-core", "@mdi/js"],
-    registryDependencies: ["button", "popover", "input", "separator", "avatar"],
     files: [
       {
         path: "stream/blocks/stream-brandkit-picker/components/stream-brandkit-picker.tsx",
@@ -740,7 +738,6 @@ export const blocks: Registry["items"] = [
     name: "stream-chat-history",
     type: "registry:block",
     description: "Stream chat history component",
-    dependencies: ["@mdi/js"],
     files: [
       {
         path: "stream/blocks/stream-chat-history/chat-history.tsx",
