@@ -771,6 +771,7 @@ export const blocks: Registry["items"] = [
       "@m2d/remark-docx",
       "rehype-parse",
       "rehype-remark",
+      "remark-gfm",
       "remark",
       "remark-html",
       "remark-stringify",
