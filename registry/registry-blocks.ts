@@ -777,6 +777,7 @@ export const blocks: Registry["items"] = [
       "remark-html",
       "remark-stringify",
       "strip-markdown",
+      "class-variance-authority",
     ],
     registryDependencies: [
       "button",
@@ -791,6 +792,11 @@ export const blocks: Registry["items"] = [
       "dialog",
     ],
     files: [
+      {
+        path: "lib/utils.ts",
+        type: "registry:component",
+        target: "components/lib/utils.ts",
+      },
       {
         path: "stream/blocks/chat/stream-messages.tsx",
         type: "registry:component",
