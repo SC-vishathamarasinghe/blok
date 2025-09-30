@@ -780,6 +780,7 @@ export const blocks: Registry["items"] = [
       "lucide-react",
       "clsx",
       "tailwind-merge",
+      "tw-animate-css",
     ],
     registryDependencies: [
       "button",
