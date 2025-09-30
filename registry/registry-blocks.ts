@@ -769,6 +769,14 @@ export const blocks: Registry["items"] = [
       "lodash",
       "react-textarea-autosize",
       "ai@4.1.20",
+      "@types/lodash",
+      "@m2d/remark-docx",
+      "rehype-parse",
+      "rehype-remark",
+      "remark",
+      "remark-html",
+      "remark-stringify",
+      "strip-markdown",
     ],
     registryDependencies: [
       "button",
@@ -812,6 +820,11 @@ export const blocks: Registry["items"] = [
         path: "stream/blocks/chat/Markdown.tsx",
         type: "registry:component",
         target: "components/stream-components/blocks/chat/Markdown.tsx",
+      },
+      {
+        path: "stream/blocks/chat/streamContexts.tsx",
+        type: "registry:component",
+        target: "components/stream-components/blocks/chat/streamContexts.tsx",
       },
       {
         path: "stream/blocks/chat/MessageFeedback.tsx",

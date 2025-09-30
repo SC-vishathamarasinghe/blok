@@ -1,14 +1,6 @@
-"use client"
-
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  type JSX,
-} from "react"
+import React, { useCallback, useEffect, useMemo, type JSX } from "react"
 import { type UIMessage } from "@ai-sdk/ui-utils"
-import { useChat, type UseChatHelpers } from "ai/react"
+import { useChat } from "ai/react"
 import {
   Provider as JotaiProvider,
   useAtom,
@@ -40,7 +32,6 @@ import {
   type ResetSelections,
   type SelectionValues,
 } from "./types"
-import { useStreamMessagesClientsConfig } from "./utils"
 
 import "../../stream.css"
 
@@ -55,32 +46,7 @@ import { last } from "lodash"
 
 import { useGetChatMessages } from "../../hooks/use-get-chat-messages"
 import { type Artifacts } from "./store/types"
-
-export type ChatContextType = {
-  session: Session
-}
-
-export type VercelAiUiProviderType = UseChatHelpers & {
-  brandkitId: string
-  chatId: string
-  addToolResult: ({
-    toolCallId,
-    result,
-  }: {
-    toolCallId: string
-    result: unknown
-  }) => void
-  rollbackChatChanges: (callbacks?: {
-    onRemoveChat?: () => void
-    onDeleteMessage?: () => void
-  }) => void
-  reset: (selections: ResetSelections) => void
-}
-
-export const ChatContext = createContext<ChatContextType | undefined>(undefined)
-export const VercelAiUiContext = createContext<
-  VercelAiUiProviderType | undefined
->(undefined)
+import { ChatContext, VercelAiUiContext } from "./streamContexts"
 
 const baseUrlEnv = {
   dev: "-dev.sitecore-staging.cloud",
@@ -564,4 +530,4 @@ function StreamMessages({
   )
 }
 
-export { StreamMessages, useStreamMessagesClientsConfig }
+export { StreamMessages }

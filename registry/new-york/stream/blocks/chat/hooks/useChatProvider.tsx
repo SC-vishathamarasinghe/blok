@@ -1,6 +1,6 @@
 import { useContext } from "react"
 
-import { ChatContext } from "../stream-messages"
+import { ChatContext } from "../streamContexts"
 
 export const useChatProvider = () => {
   const context = useContext(ChatContext)
