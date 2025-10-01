@@ -88,6 +88,7 @@ export function StreamBrandkitPicker({
           const brandkitId = firstChat.references?.[0]?.id ?? ""
           if (!brandkitId) return
           setRecentBrandkitId(brandkitId)
+          onSelect?.(firstChat as unknown as Brandkit)
         }
       } catch (err) {
         // Swallow errors to avoid breaking the picker; recent brandkit is optional
@@ -98,7 +99,7 @@ export function StreamBrandkitPicker({
     return () => {
       isMounted = false
     }
-  }, [getChats, session?.orgId, session?.userId])
+  }, [getChats, onSelect, session?.orgId, session?.userId])
 
   /* Events */
   const handleBrandkitOnSelect = (brandkit: Brandkit): void => {
