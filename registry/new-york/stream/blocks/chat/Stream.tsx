@@ -1,20 +1,9 @@
 "use client"
 
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  type JSX,
-} from "react"
+import React, { useCallback, useEffect, useMemo, type JSX } from "react"
 import { type UIMessage } from "@ai-sdk/ui-utils"
-import { useChat, type UseChatHelpers } from "ai/react"
-import {
-  Provider as JotaiProvider,
-  useAtom,
-  useAtomValue,
-  useSetAtom,
-} from "jotai"
+import { useChat } from "ai/react"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { toast } from "sonner"
 
 import { useChatProvider } from "./hooks/useChatProvider"
@@ -34,13 +23,12 @@ import {
   selectedChatWithIdAtom,
 } from "./store/atoms"
 import { TOOL_ACTIONS, useToolDispatch } from "./store/tools"
-import { type Session } from "./store/types"
+import { VercelAiUiContext } from "./streamContexts"
 import {
   type MessageAnnotation,
   type ResetSelections,
   type SelectionValues,
 } from "./types"
-import { useStreamMessagesClientsConfig } from "./utils"
 
 import "../../stream.css"
 
@@ -55,32 +43,6 @@ import { last } from "lodash"
 
 import { useGetChatMessages } from "../../hooks/use-get-chat-messages"
 import { type Artifacts } from "./store/types"
-
-export type ChatContextType = {
-  session: Session
-}
-
-export type VercelAiUiProviderType = UseChatHelpers & {
-  brandkitId: string
-  chatId: string
-  addToolResult: ({
-    toolCallId,
-    result,
-  }: {
-    toolCallId: string
-    result: unknown
-  }) => void
-  rollbackChatChanges: (callbacks?: {
-    onRemoveChat?: () => void
-    onDeleteMessage?: () => void
-  }) => void
-  reset: (selections: ResetSelections) => void
-}
-
-export const ChatContext = createContext<ChatContextType | undefined>(undefined)
-export const VercelAiUiContext = createContext<
-  VercelAiUiProviderType | undefined
->(undefined)
 
 const baseUrlEnv = {
   dev: "-dev.sitecore-staging.cloud",
@@ -107,15 +69,10 @@ type ExamplePrompt = {
   content: string
 }
 
-export interface ChatProps {
-  session: Omit<Session, "apiEnv">
-  children?: React.ReactNode
-}
-
 /**
  * Props for the StreamMessages component.
  */
-export interface StreamMessagesProps {
+export interface StreamProps {
   brandkitId: string
   chatId: string
   isNewChat: boolean
@@ -160,16 +117,6 @@ export interface StreamMessagesProps {
      */
     examplePrompts?: ExamplePrompt[]
   }
-}
-
-export function Chat({ session, children }: ChatProps) {
-  const apiEnv = `${session.region}${baseUrlEnv[session.env]}`
-
-  return (
-    <ChatContext.Provider value={{ session: { ...session, apiEnv } }}>
-      <JotaiProvider>{children}</JotaiProvider>
-    </ChatContext.Provider>
-  )
 }
 
 /**
@@ -232,14 +179,14 @@ export function Chat({ session, children }: ChatProps) {
  * before it can function properly. It manages chat state through Jotai atoms and integrates
  * with the Vercel AI SDK for chat functionality.
  */
-function StreamMessages({
+export function Stream({
   brandkitId,
   chatId,
   prompt,
   config,
   isNewChat,
   onStream,
-}: StreamMessagesProps): JSX.Element {
+}: StreamProps): JSX.Element {
   /* Atoms */
   const chatBodyAtom = useAtomValue(postChatGenerateBodyAtom)
   const setMessageIds = useSetAtom(messagesIdsAtom)
@@ -564,5 +511,3 @@ function StreamMessages({
     </VercelAiUiContext.Provider>
   )
 }
-
-export { StreamMessages, useStreamMessagesClientsConfig }

@@ -6,7 +6,7 @@ export const useAiChatProvider = () => {
   const context = useContext(VercelAiUiContext)
 
   if (context === undefined) {
-    throw new Error("useChatProvider must be used within a VercelAiProvider")
+    throw new Error("useAiChatProvider must be used within a VercelAiProvider")
   }
 
   return context

@@ -3,7 +3,7 @@
 import { createBrandkit } from "@sitecore/stream-ui-core"
 
 import { ChatHistoryDemo } from "@/components/chat-history-demo"
-import { Chat } from "@/registry/new-york/stream/blocks/chat/stream-messages"
+import { Chat } from "@/registry/new-york/stream/blocks/chat"
 import { StreamBrandkitItem } from "@/registry/new-york/stream/blocks/stream-brandkit-picker/components/stream-brandkit-item"
 import { StreamBrandkitList } from "@/registry/new-york/stream/blocks/stream-brandkit-picker/components/stream-brandkit-list"
 import { StreamBrandkitPicker } from "@/registry/new-york/stream/blocks/stream-brandkit-picker/components/stream-brandkit-picker"
