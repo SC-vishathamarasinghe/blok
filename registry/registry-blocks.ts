@@ -802,9 +802,14 @@ export const blocks: Registry["items"] = [
         target: "components/lib/utils.ts",
       },
       {
-        path: "stream/blocks/chat/stream-messages.tsx",
+        path: "stream/blocks/chat/index.tsx",
         type: "registry:component",
-        target: "components/stream-components/blocks/chat/stream-messages.tsx",
+        target: "components/stream-components/blocks/chat/index.tsx",
+      },
+      {
+        path: "stream/blocks/chat/Stream.tsx",
+        type: "registry:component",
+        target: "components/stream-components/blocks/chat/Stream.tsx",
       },
       {
         path: "stream/blocks/chat/Anchors.tsx",
@@ -876,11 +881,6 @@ export const blocks: Registry["items"] = [
         path: "stream/blocks/chat/Spinner.tsx",
         type: "registry:component",
         target: "components/stream-components/blocks/chat/Spinner.tsx",
-      },
-      {
-        path: "stream/blocks/chat/stream-messages.tsx",
-        type: "registry:component",
-        target: "components/stream-components/blocks/chat/stream-messages.tsx",
       },
       {
         path: "stream/blocks/chat/ActionModal.tsx",

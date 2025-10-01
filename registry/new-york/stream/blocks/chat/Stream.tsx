@@ -9,12 +9,7 @@ import React, {
 } from "react"
 import { type UIMessage } from "@ai-sdk/ui-utils"
 import { useChat, type UseChatHelpers } from "ai/react"
-import {
-  Provider as JotaiProvider,
-  useAtom,
-  useAtomValue,
-  useSetAtom,
-} from "jotai"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { toast } from "sonner"
 
 import { useChatProvider } from "./hooks/useChatProvider"
@@ -40,7 +35,6 @@ import {
   type ResetSelections,
   type SelectionValues,
 } from "./types"
-import { useStreamMessagesClientsConfig } from "./utils"
 
 import "../../stream.css"
 
@@ -107,11 +101,6 @@ type ExamplePrompt = {
   content: string
 }
 
-export interface ChatProps {
-  session: Omit<Session, "apiEnv">
-  children?: React.ReactNode
-}
-
 /**
  * Props for the StreamMessages component.
  */
@@ -160,16 +149,6 @@ export interface StreamMessagesProps {
      */
     examplePrompts?: ExamplePrompt[]
   }
-}
-
-export function Chat({ session, children }: ChatProps) {
-  const apiEnv = `${session.region}${baseUrlEnv[session.env]}`
-
-  return (
-    <ChatContext.Provider value={{ session: { ...session, apiEnv } }}>
-      <JotaiProvider>{children}</JotaiProvider>
-    </ChatContext.Provider>
-  )
 }
 
 /**
@@ -232,7 +211,7 @@ export function Chat({ session, children }: ChatProps) {
  * before it can function properly. It manages chat state through Jotai atoms and integrates
  * with the Vercel AI SDK for chat functionality.
  */
-function StreamMessages({
+export function Stream({
   brandkitId,
   chatId,
   prompt,
@@ -564,5 +543,3 @@ function StreamMessages({
     </VercelAiUiContext.Provider>
   )
 }
-
-export { StreamMessages, useStreamMessagesClientsConfig }

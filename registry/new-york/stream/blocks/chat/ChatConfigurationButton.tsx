@@ -1,4 +1,5 @@
-import React from "react"
+"use client"
+
 import { mdiTextLong, mdiTuneVariant } from "@mdi/js"
 
 import { Button } from "@/registry/new-york/ui/button"
@@ -46,7 +47,7 @@ export function ChatConfigurationButton({
           data-testid="brainstorming_button_tool_configuration"
           variant={"ghost"}
           colorScheme={"neutral"}
-          size={"icon-sm"}
+          size="sm"
           title="Tool configuration"
         >
           <Icon path={mdiTuneVariant} />
