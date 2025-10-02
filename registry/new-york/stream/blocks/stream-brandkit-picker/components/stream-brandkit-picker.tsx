@@ -88,7 +88,6 @@ export function StreamBrandkitPicker({
           const brandkitId = firstChat.references?.[0]?.id ?? ""
           if (!brandkitId) return
           setRecentBrandkitId(brandkitId)
-          onSelect?.(firstChat as unknown as Brandkit)
         }
       } catch (err) {
         // Swallow errors to avoid breaking the picker; recent brandkit is optional
