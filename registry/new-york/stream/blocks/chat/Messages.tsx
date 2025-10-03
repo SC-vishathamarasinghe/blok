@@ -183,7 +183,7 @@ export function Messages(): React.ReactNode {
       <aside
         id="artifactsPortalPlaceholder"
         className={cn(
-          "z-10 basis-1/2 overflow-hidden transition-all duration-300",
+          "z-10 h-screen basis-1/2 overflow-hidden transition-all duration-300",
           {
             "mr-0": isAnyArtifactOpen,
             "-mr-[50%]": !isAnyArtifactOpen,
