@@ -2,11 +2,14 @@ import React from "react"
 
 export function RectangleStar({
   fill = "black",
+  className,
 }: {
   fill?: string
+  className?: string
 }): React.ReactNode {
   return (
     <svg
+      className={className}
       xmlns="http://www.w3.org/2000/svg"
       width="29"
       height="29"

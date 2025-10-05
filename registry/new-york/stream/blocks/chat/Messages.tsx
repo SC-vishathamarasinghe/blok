@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react"
 import {
-  type ReferenceModel,
-  type ToolInvocation,
-  type ToolInvocationUIPart,
+  ReferenceModel,
+  ToolInvocation,
+  ToolInvocationUIPart,
 } from "@sitecore/stream-ui-core"
 import { useAtomValue } from "jotai"
 
@@ -16,7 +16,7 @@ import { useScrollAnchor } from "./hooks/useScrollAnchor"
 import { PromptForm } from "./PromptForm"
 import { isAnyArtifactOpenAtom } from "./store/atoms"
 import { ToolInvocations } from "./tools/ToolInvocations"
-import { type MessageAnnotation } from "./types"
+import { MessageAnnotation } from "./types"
 import { UserMessage } from "./UserMessage"
 
 export function Messages(): React.ReactNode {
@@ -60,7 +60,7 @@ export function Messages(): React.ReactNode {
 
   return (
     <div
-      className="relative flex h-screen flex-1 overflow-hidden bg-[#FBFBFB]"
+      className="messages__container relative flex h-screen flex-1 overflow-hidden bg-[#FBFBFB]"
       {...getRootProps()}
     >
       <input {...getInputProps()} />
@@ -116,11 +116,7 @@ export function Messages(): React.ReactNode {
               const previousMessageContent = Array.isArray(
                 messages[messages.length - 2]?.content
               )
-                ? (
-                    messages[messages.length - 2]?.content as unknown as {
-                      value: string
-                    }[]
-                  )?.[0]?.value
+                ? (messages[messages.length - 2]?.content as any)?.[0]?.value
                 : messages[messages.length - 2]?.content
 
               return (
@@ -183,7 +179,7 @@ export function Messages(): React.ReactNode {
       <aside
         id="artifactsPortalPlaceholder"
         className={cn(
-          "z-10 basis-1/2 overflow-hidden transition-all duration-300",
+          "messages__container__aside z-10 basis-1/2 overflow-hidden transition-all duration-300",
           {
             "mr-0": isAnyArtifactOpen,
             "-mr-[50%]": !isAnyArtifactOpen,

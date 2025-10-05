@@ -1,15 +1,8 @@
 "use client"
 
-import { memo, type JSX } from "react"
-import {
-  mdiAccountBadgeOutline,
-  mdiArrowBottomRight,
-  mdiChatOutline,
-  mdiFileDocument,
-  mdiHeadLightbulb,
-  mdiLightbulbOnOutline,
-} from "@mdi/js"
-import { useAtom } from "jotai"
+import { type JSX } from "react"
+import { mdiArrowBottomRight } from "@mdi/js"
+import { useAtomValue } from "jotai"
 
 import { cn } from "@/lib/utils"
 
@@ -25,59 +18,53 @@ export type ExamplePrompt = {
 const ExamplePrompts: ExamplePrompt[] = [
   {
     icon: (
-      <Icon
-        path={mdiAccountBadgeOutline}
-        className="text-3xl text-purple-500"
-      />
+      <Icon path={mdiArrowBottomRight} className="text-md neutral-fg ml-auto" />
     ),
     content: "Who is our target consumer?",
   },
   {
-    icon: <Icon path={mdiChatOutline} className="text-3xl text-rose-600" />,
+    icon: (
+      <Icon path={mdiArrowBottomRight} className="text-md neutral-fg ml-auto" />
+    ),
     content: "Can you describe to me our brand tone of voice?",
   },
   {
     icon: (
-      <Icon path={mdiLightbulbOnOutline} className="text-3xl text-green-300" />
+      <Icon path={mdiArrowBottomRight} className="text-md neutral-fg ml-auto" />
     ),
     content: "What is our brand big idea?",
   },
   {
-    icon: <Icon path={mdiHeadLightbulb} className="text-3xl text-blue-400" />,
+    icon: (
+      <Icon path={mdiArrowBottomRight} className="text-md neutral-fg ml-auto" />
+    ),
     content: "Brainstorm some headline ideas for my new campaign",
   },
   {
-    icon: <Icon path={mdiFileDocument} className="text-3xl text-yellow-400" />,
+    icon: (
+      <Icon path={mdiArrowBottomRight} className="text-md neutral-fg ml-auto" />
+    ),
     content: "Create a brief for my new campaign targeting my consumers",
   },
 ]
 
-export type MemoizedEmptyScreenBoxes = {
-  setInput: React.Dispatch<React.SetStateAction<string>>
-  brandKitStateId: string
-}
+export type MemoizedEmptyScreenBoxes = {}
 
-export const EmptyScreenBoxes = () => {
+export function EmptyScreenBoxes({}: MemoizedEmptyScreenBoxes) {
+  /* Hooks */
   const { setInput } = useAiChatProvider()
 
-  return <MemoizedEmptyScreenBoxes {...{ setInput, brandKitStateId: "" }} />
-}
+  /* Atoms */
+  const config = useAtomValue(configAtom)
 
-const MemoizedEmptyScreenBoxes = memo(function MemoizedEmptyScreenBoxes({
-  setInput,
-  brandKitStateId,
-}: MemoizedEmptyScreenBoxes) {
-  const [config] = useAtom(configAtom)
-
-  const isBrandkitIdAvailable = !!brandKitStateId?.length
+  /* Computed */
+  const Prompts = !!config?.examplePrompts?.length
+    ? config.examplePrompts
+    : ExamplePrompts
 
   const onClick = (content: string) => {
     setInput(content)
   }
-
-  const Prompts = config?.examplePrompts?.length
-    ? config.examplePrompts
-    : ExamplePrompts
 
   return (
     <div className="grid grid-cols-3 items-stretch gap-4 p-1">
@@ -110,4 +97,4 @@ const MemoizedEmptyScreenBoxes = memo(function MemoizedEmptyScreenBoxes({
       ))}
     </div>
   )
-})
+}
