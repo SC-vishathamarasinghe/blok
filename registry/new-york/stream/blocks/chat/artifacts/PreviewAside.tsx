@@ -1,11 +1,11 @@
 import React, {
+  ReactNode,
+  SyntheticEvent,
   useEffect,
   useId,
   useRef,
-  type ReactNode,
-  type SyntheticEvent,
 } from "react"
-import { mdiArrowExpand, mdiClose } from "@mdi/js"
+import { mdiArrowExpand, mdiArrowLeft, mdiClose } from "@mdi/js"
 import { useAtom, useAtomValue } from "jotai"
 import { createPortal } from "react-dom"
 
@@ -166,7 +166,7 @@ export function PreviewAside({
     <Card
       data-testid={`preview_aside_${id}`}
       className={cn(
-        "border-blackAlpha-100 hover:border-blackAlpha-200 relative h-[175px] rounded-lg border bg-white px-5 py-2 transition-all",
+        "preview-aside__container border-blackAlpha-100 hover:border-blackAlpha-200 relative h-[175px] rounded-lg border bg-white px-5 py-2 transition-all",
         _isPreview
           ? 'after:content-[" "] cursor-pointer after:absolute after:right-0 after:bottom-0 after:left-0 after:h-[50px] after:rounded-b-lg'
           : "h-full rounded-none border-none",
@@ -175,12 +175,25 @@ export function PreviewAside({
       )}
       onClick={_isPreview ? handleOpenOnClick : undefined}
     >
-      <CardHeader className="flex flex-row justify-between space-y-0 p-0">
+      <CardHeader
+        className={cn(
+          "flex flex-row justify-between space-y-0 p-0",
+          !_isPreview && "preview-aside__header"
+        )}
+      >
         <div
           data-testid={`preview_aside_versions_${id}`}
-          className="flex items-center gap-2"
+          className={cn(
+            "flex items-center gap-2",
+            !_isPreview && "preview-aside__content__version-container"
+          )}
         >
-          <RectangleStar />
+          <RectangleStar
+            className={cn(
+              "",
+              !_isPreview && "preview-aside__content__star-icon"
+            )}
+          />
           {!_isPreview && areVersionsAvailable && handleVersionOnSelect && (
             <Select
               data-testid={`preview_aside_version_select_${id}}`}
@@ -215,13 +228,19 @@ export function PreviewAside({
           )}
           {isActionPending && <Spinner size="xs" />}
         </div>
-        <div className="flex items-center gap-2">
+        <div
+          className={cn(
+            "flex items-center gap-2",
+            !_isPreview && "preview-aside__content__close-container"
+          )}
+        >
           {_isPreview && areVersionsAvailable && (
             <span className="text-neutral-fg text-md h-6 w-min gap-1 border-none px-1 font-semibold">
               v{versions?.selected}
             </span>
           )}
           <Button
+            className="preview-aside__content__close-button"
             data-testid={`preview_aside_close_button_${id}`}
             variant={"ghost"}
             colorScheme="neutral"
@@ -229,11 +248,15 @@ export function PreviewAside({
             onClick={!_isPreview ? handleCloseOnClick : undefined}
           >
             <Icon path={!_isPreview ? mdiClose : mdiArrowExpand} />
+            <Icon path={!_isPreview ? mdiArrowLeft : mdiArrowExpand} />
           </Button>
         </div>
       </CardHeader>
       <CardContent
-        className={cn("overflow-hidden px-0", !_isPreview && "overflow-y-auto")}
+        className={cn(
+          "preview-aside__content overflow-hidden px-0",
+          !_isPreview && "overflow-y-auto"
+        )}
         data-testid="scroll-contain-artifact"
       >
         <CardTitle className="pt-5 pb-3.5 text-lg font-semibold">
@@ -242,7 +265,7 @@ export function PreviewAside({
         <div className="relative mb-[125px]">{children}</div>
       </CardContent>
       {!_isPreview && (
-        <CardFooter className="relative mb-[110px] flex items-center justify-between bg-white px-0">
+        <CardFooter className="preview-aside__footer relative mb-[110px] flex items-center justify-between bg-white px-0">
           <div className="flex items-center gap-4 self-start">{start}</div>
           <div className="flex items-center gap-4 self-end">{end}</div>
         </CardFooter>
