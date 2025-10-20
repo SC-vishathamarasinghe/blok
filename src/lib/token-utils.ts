@@ -25,3 +25,58 @@ export function convertCssVariablesToObject(
 
   return colorObject;
 }
+
+type ThemeColors = {
+  default: Record<string, string>;
+  dark: Record<string, string>;
+}
+
+export function parseCssVariablesByTheme(
+  cssString: string,
+  prefix: string = "--color-"
+): ThemeColors {
+  const lines = cssString.split("\n").map((line) => line.trim());
+  
+  const defaultColors: Record<string, string> = {};
+  const darkColors: Record<string, string> = {};
+
+  let currentTheme: 'default' | 'dark' | null = 'default';
+
+  for (let rawline of lines) {
+    const line = rawline.trim();
+
+    // Detect dark mode block
+    if (line.startsWith(".dark {") || line.includes("prefers-color-scheme: dark")) {
+      currentTheme = 'dark';
+      continue;
+    }
+
+    // Detect end of block
+    if (line === "}" || line === "};") {
+      currentTheme = 'default';
+      continue;
+    }
+
+    // Pass variable lines
+    if (line.startsWith(prefix)) {
+      const [fullKey, value] = line.split(":").map(part => part.trim().replace(";", ""));
+      const key = fullKey.replace(/^--/, "");
+
+      if (currentTheme === 'default') {
+        defaultColors[key] = value;
+      } else {
+        darkColors[key] = value;
+      }
+    }
+  }
+
+  return { default: defaultColors, dark: darkColors };
+}
+
+export function formatColorValue(value: string): string {
+  const varMatch = value.match(/^var\(--color-([a-zA-Z0-9\-]+)\)$/);
+  if (varMatch) {
+    return varMatch[1].replace(/-/g, ".");
+  }
+  return value;
+}
