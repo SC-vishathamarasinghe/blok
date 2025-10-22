@@ -49,7 +49,11 @@ export function BarChartComponent() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart 
+            accessibilityLayer 
+            data={chartData}
+            aria-label="Bar chart showing desktop and mobile visitors from January to June 2024"
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -62,8 +66,8 @@ export function BarChartComponent() {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} aria-label="Desktop visitors" />
+            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} aria-label="Mobile visitors" />
           </BarChart>
         </ChartContainer>
       </CardContent>

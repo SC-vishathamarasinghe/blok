@@ -70,6 +70,7 @@ export function BarMixedChartComponent() {
             margin={{
               left: 0,
             }}
+            aria-label="Vertical bar chart showing browser usage distribution by visitors"
           >
             <YAxis
               dataKey="browser"
@@ -86,7 +87,7 @@ export function BarMixedChartComponent() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="visitors" layout="vertical" radius={5} />
+            <Bar dataKey="visitors" layout="vertical" radius={5} aria-label="Browser visitors distribution" />
           </BarChart>
         </ChartContainer>
       </CardContent>

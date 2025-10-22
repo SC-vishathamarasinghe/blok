@@ -56,6 +56,7 @@ export function LineChartComponent() {
               left: 12,
               right: 12,
             }}
+            aria-label="Line chart showing desktop and mobile visitors from January to June 2024"
           >
             <CartesianGrid vertical={false} />
             <XAxis
@@ -72,6 +73,7 @@ export function LineChartComponent() {
               stroke="var(--color-desktop)"
               strokeWidth={2}
               dot={false}
+              aria-label="Desktop visitors trend"
             />
             <Line
               dataKey="mobile"
@@ -79,6 +81,7 @@ export function LineChartComponent() {
               stroke="var(--color-mobile)"
               strokeWidth={2}
               dot={false}
+              aria-label="Mobile visitors trend"
             />
           </LineChart>
         </ChartContainer>
