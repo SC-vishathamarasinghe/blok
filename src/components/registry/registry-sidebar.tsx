@@ -98,6 +98,7 @@ export function RegistrySidebar() {
             variant="ghost"
             className="md:hidden"
             onClick={() => setOpenMobile(false)}
+            aria-label="Close sidebar"
           >
             <X />
           </Button>
