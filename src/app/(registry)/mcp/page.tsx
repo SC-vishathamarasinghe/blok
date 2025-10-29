@@ -21,7 +21,7 @@ const CursorConfigurationCode = `{
 export default function MCPPage() {
     return (
         <main className="w-full">
-            <div className="bg-body-bg p-6">
+            <div className="p-6">
                 <div className="flex flex-col space-y-5 mt-4 p-5 md:mt-8 md:p-10">
                     <h1 className="font-bold text-4xl tracking-tight md:text-4xl">
                         Blok MCP Server
