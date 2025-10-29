@@ -42,7 +42,7 @@ export default function MCPPage() {
                     <Alert variant="primary">
                         <AlertDescription className="inline">
                             For complete shadcn MCP documentation, see the{" "}
-                            <Link href="https://ui.shadcn.com/docs/cli/mcp" target="_blank" className="underline hover:no-underline" rel="noopener noreferrer">official shadcn MCP guide</Link>.
+                            <Link href="https://ui.shadcn.com/docs/mcp" target="_blank" className="underline hover:no-underline" rel="noopener noreferrer">official shadcn MCP guide</Link>.
                         </AlertDescription>
                     </Alert>
                 </div>
@@ -135,7 +135,7 @@ args = ["shadcn@latest", "mcp"]`} />
                 </div>
 
                 <div className="flex flex-col space-y-2 mt-4 p-5 md:mt-2 md:px-10">
-                    <h2 className="font-bold text-3xl tracking-tight md:text-4xl">Configure MCP in Cursor</h2>
+                    <h2 id="configuration" className="font-bold text-3xl tracking-tight md:text-4xl">Configure MCP in Cursor</h2>
                     <p>
                         To configure MCP in Cursor, add the shadcn server to your project's <code className="inline text-sm tabular-nums bg-muted px-1 rounded">.cursor/mcp.json</code> configuration file:
                     </p>
