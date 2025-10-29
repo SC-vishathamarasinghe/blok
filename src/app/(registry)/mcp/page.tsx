@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const BlockRegistryCode = `{
   "registries": {
-    "@blok": "https://blok.example.com/r/{name}.json"
+    "@blok": "https://blok.sitecore.com/r/{name}.json"
   }
 }`
 
