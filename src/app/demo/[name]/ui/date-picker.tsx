@@ -3,7 +3,11 @@ import { DatePickerSimple, DatePickerWithRange } from "@/components/ui/date-pick
 export const datePicker = {
   name: "date-picker",
   components: {
-    DatePickerSimple: <DatePickerSimple />,
-    DatePickerWithRange: <DatePickerWithRange />,
+    DatePickerSimple: (
+      <DatePickerSimple />
+    ),
+    DatePickerWithRange: (
+      <DatePickerWithRange />
+    ),
   },
 };
