@@ -1,4 +1,4 @@
-import { Codeblocks } from "@/components/registry/code-block";
+import { Codeblocks } from "@/components/docsite/code-block";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
@@ -10,6 +10,7 @@ const BlockRegistryCode = `{
 }`
 
 const CursorConfigurationCode = `{
+
   "mcpServers": {
     "shadcn": {
       "command": "npx",
@@ -70,11 +71,11 @@ export default function MCPPage() {
                         <Link href="#configuration" className="underline hover:no-underline">Configuration</Link> section.
                     </p>
                     <Tabs defaultValue="claude">
-                        <TabsList className="flex flex-wrap">
-                            <TabsTrigger value="claude" className="whitespace-normal text-center px-3 py-2">Claude Code</TabsTrigger>
-                            <TabsTrigger value="cursor" className="whitespace-normal text-center px-3 py-2">Cursor</TabsTrigger>
-                            <TabsTrigger value="vscode" className="whitespace-normal text-center px-3 py-2">VS Code</TabsTrigger>
-                            <TabsTrigger value="codex" className="whitespace-normal text-center px-3 py-2">Codex</TabsTrigger>
+                        <TabsList>
+                            <TabsTrigger value="claude" className="whitespace-normal">Claude Code</TabsTrigger>
+                            <TabsTrigger value="cursor" className="whitespace-normal">Cursor</TabsTrigger>
+                            <TabsTrigger value="vscode" className="whitespace-normal">VS Code</TabsTrigger>
+                            <TabsTrigger value="codex" className="whitespace-normal">Codex</TabsTrigger>
                         </TabsList>
                         <TabsContent value="claude" className="space-y-2">
                             <p>To initialize an MCP project for Claude using the shadCN CLI, run the following command:</p>

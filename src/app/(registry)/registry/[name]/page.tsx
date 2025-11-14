@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ComponentCard } from "@/components/registry/component-card";
+import { ComponentCard } from "@/components/docsite/component-card";
 import { Button } from "@/components/ui/button";
 import { getRegistryItem, getRegistryItems } from "@/lib/registry";
 import { getPrompt } from "@/lib/utils";
@@ -37,7 +37,7 @@ export default async function RegistryItemPage({
               Back to Home
             </Link>
           </Button>
-          <h2 className="font-bold text-3xl tracking-tight break-words">
+          <h2 className="font-bold text-3xl tracking-tight">
             {component.title}
           </h2>
         </div>
