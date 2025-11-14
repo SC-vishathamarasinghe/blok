@@ -29,3 +29,28 @@ export const graphicsItems = [
   { title: "Logos", path: "/graphics/logos" },
 ];
 
+// Searchable items
+export const searchableItems = [
+  // Theming items
+  ...themingItems.map(item => ({
+    title: item.title,
+    href: item.path,
+    type: 'theming' as const,
+    description: `Theming: ${item.title}`
+  })),
+  // Graphics items
+  ...graphicsItems.map(item => ({
+    title: item.title,
+    href: item.path,
+    type: 'graphics' as const,
+    description: `Graphics: ${item.title}`
+  })),
+  // MCP Server
+  {
+    title: "MCP Server",
+    href: "/mcp",
+    type: 'page' as const,
+    description: "Blok MCP Server configuration and setup"
+  },
+];
+

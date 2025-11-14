@@ -103,9 +103,9 @@ export function RegistrySidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="ml-4">
         <ScrollArea className="h-full w-full pr-2">
-          <SidebarMenu>
+          <SidebarMenu >
             {sidebarType === "components" &&
               componentItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
