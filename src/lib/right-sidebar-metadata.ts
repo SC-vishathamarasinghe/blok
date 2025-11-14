@@ -1,4 +1,4 @@
-import type { TocSection, RightSidebarLinks } from "@/components/docsite/right-sidebar";
+import type { TocSection, RightSidebarLinks } from "@/components/layout/right-sidebar";
 
 export interface RightSidebarMetadata {
   links?: RightSidebarLinks;

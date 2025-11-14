@@ -1,4 +1,4 @@
-import { RightSidebar } from "@/components/docsite/right-sidebar";
+import { RightSidebar } from "@/components/layout/right-sidebar";
 import { getRightSidebarMetadata } from "@/lib/right-sidebar-metadata";
 
 export default function EmptyStatesPage() {

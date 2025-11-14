@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ComponentCard } from "@/components/docsite/component-card";
-import { RightSidebar } from "@/components/docsite/right-sidebar";
+import { RightSidebar } from "@/components/layout/right-sidebar";
 import { Button } from "@/components/ui/button";
 import { getRightSidebarMetadata } from "@/lib/right-sidebar-metadata";
 import { getRegistryItem, getRegistryItems } from "@/lib/registry";
