@@ -10,6 +10,7 @@ const BlockRegistryCode = `{
 }`
 
 const CursorConfigurationCode = `{
+
   "mcpServers": {
     "shadcn": {
       "command": "npx",

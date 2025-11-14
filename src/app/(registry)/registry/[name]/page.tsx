@@ -29,7 +29,7 @@ export default async function RegistryItemPage({
 
   return (
     <div className="container p-5 md:p-10">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap gap-4 items-center justify-between">
         <div>
           <Button variant="ghost" size="sm" asChild className="mb-4">
             <Link href="/">
