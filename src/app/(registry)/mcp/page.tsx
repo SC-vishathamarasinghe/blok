@@ -1,4 +1,4 @@
-import { Codeblocks } from "@/components/registry/code-block";
+import { Codeblocks } from "@/components/docsite/code-block";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
@@ -10,6 +10,7 @@ const BlockRegistryCode = `{
 }`
 
 const CursorConfigurationCode = `{
+
   "mcpServers": {
     "shadcn": {
       "command": "npx",
