@@ -5,7 +5,7 @@ import InstallationCodeBlock from "@/components/registry/installation-code-block
 import { Codeblocks } from "@/components/registry/code-block";
 import { getRegistryItem } from "@/lib/registry";
 import path from "path";
-import DemoTab from "@/components/demo-tab";
+// import DemoTab from "@/components/demo-tab";
 import { ReactNode } from "react";
 import fs from "fs";
 
@@ -40,7 +40,10 @@ export default async function DemoPage({
   return (
       <div className="flex min-h-[100vh] w-full flex-col gap-12 bg-body-bg">
         <div className="flex flex-col">
-          <DemoTab code={demoCodes.default} component={componentDemo(defaultComponent)} />
+          {/* <DemoTab code={demoCodes.default} component={componentDemo(defaultComponent)} /> */}
+          <div className="relative rounded-lg overflow-hidden">
+            <Renderer>{defaultComponent}</Renderer>
+          </div>
         </div>
 
         <div className="flex flex-col gap-3">
@@ -66,11 +69,14 @@ export default async function DemoPage({
               return (
                 <div className="flex flex-col gap-6">
                   <h3 className="font-semibold text-xl tracking-tight">{key}</h3>
-                  <DemoTab 
+                  {/* <DemoTab 
                     key={key} 
                     code={demoCodes[key]} 
                     component={componentDemo(node)} 
-                  />
+                  /> */}
+                  <div className="relative rounded-lg overflow-hidden">
+                    <Renderer>{node}</Renderer>
+                  </div>
                 </div>
               );
           })}
