@@ -14,7 +14,7 @@ import {
 } from "@mdi/js"
 import Icon from "@mdi/react"
 import { externalLinks } from "@/config/links"
-import { navItems } from "@/config/nav"
+import { navItems, searchableItems } from "@/config/nav"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -35,7 +35,7 @@ import registry from '@/registry'
 
 interface SearchResult {
   name: string
-  type: 'ui' | 'block'
+  type: 'ui' | 'block' | 'theming' | 'graphics' | 'page'
   href: string
   description?: string
   categories?: string[]
@@ -49,8 +49,16 @@ export default function TopBar() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([])
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [clickedHref, setClickedHref] = useState<string | null>(null)
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Sync clickedHref with pathname when it updates
+  useEffect(() => {
+    if (clickedHref && pathname.startsWith(clickedHref)) {
+      setClickedHref(null)
+    }
+  }, [pathname, clickedHref])
 
   // Check initial theme and listen for changes
   useEffect(() => {
@@ -161,6 +169,25 @@ export default function TopBar() {
             })
           }
         })
+
+      // Search through searchable items (theming, graphics, MCP server, etc.)
+      searchableItems.forEach(item => {
+        const title = item.title || ""
+        const description = item.description || ""
+        
+        if (
+          title.toLowerCase().includes(query) ||
+          description.toLowerCase().includes(query)
+        ) {
+          results.push({
+            name: title,
+            type: item.type,
+            href: item.href,
+            description: description,
+            title: title
+          })
+        }
+      })
 
       setSearchResults(results.slice(0, 8))
       setShowSearchResults(results.length > 0)
@@ -296,13 +323,15 @@ export default function TopBar() {
                 const normalizedPathname = pathname.replace(/\/$/, "") || "/"
                 const normalizedHref = item.href.replace(/\/$/, "") || "/"
                 const isActive = normalizedPathname === normalizedHref || 
-                                 (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref + "/"))
+                                 (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref + "/")) ||
+                                 clickedHref === item.href
                 return (
                   <NavigationMenuItem key={item.name}>
                     <Link 
-                      href={item.href} 
-                      className={`${navigationMenuTriggerStyle()} hover:bg-muted hover:text-foreground active:bg-primary-background active:text-primary-fg ${
-                        isActive ? "bg-primary-background text-primary-fg" : ""
+                      href={item.href}
+                      onClick={() => setClickedHref(item.href)}
+                      className={`${navigationMenuTriggerStyle()} ${
+                        isActive ? "active" : ""
                       }`}
                     >
                       {item.name}
@@ -326,13 +355,17 @@ export default function TopBar() {
                   const normalizedPathname = pathname.replace(/\/$/, "") || "/"
                   const normalizedHref = item.href.replace(/\/$/, "") || "/"
                   const isActive = normalizedPathname === normalizedHref || 
-                                   (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref + "/"))
+                                   (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref + "/")) ||
+                                   clickedHref === item.href
                   return (
                     <DropdownMenuItem asChild key={item.name}>
                       <Link 
-                        href={item.href} 
-                        className={`hover:bg-muted hover:text-foreground active:bg-primary-background active:text-primary-fg ${
-                          isActive ? "bg-primary-background text-primary-fg" : ""
+                        href={item.href}
+                        onClick={() => setClickedHref(item.href)}
+                        className={`${
+                          isActive 
+                            ? "bg-primary-background text-primary-fg hover:bg-primary-background hover:text-primary-fg" 
+                            : "hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         {item.name}
@@ -384,12 +417,26 @@ export default function TopBar() {
                         <div className="flex-1 min-w-0 space-y-2">
                           <div className="flex items-start gap-2 flex-wrap">
                             <div className="flex-1 min-w-0">
-                              <span 
-                                className="font-medium text-foreground break-words leading-tight block"
-                                title={result.title || formatSearchResultName(result.name)}
-                              >
-                                {getDisplayName(result)}
-                              </span>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span 
+                                  className="font-medium text-foreground break-words leading-tight block"
+                                  title={result.title || formatSearchResultName(result.name)}
+                                >
+                                  {getDisplayName(result)}
+                                </span>
+                                <Badge 
+                                  variant="default" 
+                                  colorScheme="neutral"
+                                  size="sm"
+                                  className="text-xs capitalize flex-shrink-0"
+                                >
+                                  {result.type === 'ui' ? 'UI' : 
+                                   result.type === 'block' ? 'Block' :
+                                   result.type === 'theming' ? 'Theming' :
+                                   result.type === 'graphics' ? 'Graphics' :
+                                   result.type === 'page' ? 'Page' : result.type}
+                                </Badge>
+                              </div>
                               {result.name.length > 40 && (
                                 <span className="text-xs text-muted-foreground block mt-1 break-all">
                                   {result.name}
