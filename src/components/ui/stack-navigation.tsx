@@ -51,7 +51,7 @@ function DefaultNavItem({
             "h-14 min-w-14 min-h-14",
             "p-1.5 gap-1",
             "rounded-md transition-colors",
-            "text-3xs text-neutral-fg font-normal",
+            "text-3xs text-neutral-fg font-semibold",
             "hover:bg-sidebar-accent cursor-pointer",
             "relative opacity-100",
             isActive &&
@@ -64,7 +64,7 @@ function DefaultNavItem({
           cn(
             "flex flex-col items-center justify-center",
             "min-w-14 w-fit h-14 p-1.5 gap-1 rounded-md cursor-pointer overflow-hidden",
-            "text-neutral-fg hover:bg-sidebar-accent transition-colors",
+            "text-neutral-fg hover:bg-sidebar-accent transition-colors font-semibold",
             isActive &&
               "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg font-semibold",
             item.className
@@ -135,12 +135,12 @@ export function StackNavigation({
         !isHorizontal &&
           cn(
             width,
-            "bg-sidebar p-1.5 text-sidebar-foreground min-h-full flex flex-col opacity-100",
+            "bg-background p-1.5 text-sidebar-foreground min-h-full flex flex-col opacity-100 shadow-base",
             className
           ),
         isHorizontal &&
           cn(
-            "w-full p-1.5 bg-sidebar text-sidebar-foreground",
+            " bg-background w-full p-1.5 text-sidebar-foreground shadow-base",
             "flex flex-row items-center p-1.5 overflow-x-auto",
             className
           )
