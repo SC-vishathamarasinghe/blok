@@ -58,29 +58,31 @@ export default async function DemoPage({
           ))}
         </div>
 
-        <div className="flex flex-col gap-9">
-          <div className="flex flex-col gap-6">
-            <h2 className="font-semibold text-3xl tracking-tight">Examples</h2>
-            <p className="text-sm text-muted-foreground">The following are examples of our {name} classes.</p>
-          </div>
+        {components && (
+          <div className="flex flex-col gap-9">
+            <div className="flex flex-col gap-6">
+              <h2 className="font-semibold text-3xl tracking-tight">Examples</h2>
+              <p className="text-sm text-muted-foreground">The following are examples of our {name} classes.</p>
+            </div>
 
-          {components &&
-            Object.entries(components).map(([key, node]) => {
-              return (
-                <div className="flex flex-col gap-6">
-                  <h3 className="font-semibold text-xl tracking-tight">{key}</h3>
-                  {/* <DemoTab 
-                    key={key} 
-                    code={demoCodes[key]} 
-                    component={componentDemo(node)} 
-                  /> */}
-                  <div className="relative rounded-lg overflow-hidden min-h-[200px] py-8 bg-subtle-bg flex items-center justify-center">
-                    <Renderer>{node}</Renderer>
+            {components &&
+              Object.entries(components).map(([key, node]) => {
+                return (
+                  <div className="flex flex-col gap-6">
+                    <h3 className="font-semibold text-xl tracking-tight">{key}</h3>
+                    {/* <DemoTab 
+                      key={key} 
+                      code={demoCodes[key]} 
+                      component={componentDemo(node)} 
+                    /> */}
+                    <div className="relative rounded-lg overflow-hidden min-h-[200px] py-8 bg-subtle-bg flex items-center justify-center">
+                      <Renderer>{node}</Renderer>
+                    </div>
                   </div>
-                </div>
-              );
-          })}
-        </div>
+                );
+            })}
+          </div>
+        )}
       </div>
   );
 }
