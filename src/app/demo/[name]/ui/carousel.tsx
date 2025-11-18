@@ -32,7 +32,7 @@ export const carousel = {
   ),
   usage: [
     `import {\n  Carousel,\n  CarouselContent,\n  CarouselItem,\n  CarouselNext,\n  CarouselPrevious,\n} from "@/components/ui/carousel"`,
-    `<div className="w-full max-w-sm mx-auto">\n  <Carousel className="w-full" aria-label="Number cards carousel with 5 slides">\n    <CarouselContent>\n      {Array.from({ length: 5 }).map((_, index) => (\n        <CarouselItem key={index}>\n          <div className="p-1">\n            <Card className="bg-subtle-bg border-subtle-bg">\n              <CardContent className="flex aspect-square items-center justify-center p-6">\n                <span className="text-4xl font-semibold text-body-text">{index + 1}</span>\n              </CardContent>\n            </Card>\n          </div>\n        </CarouselItem>\n      ))}\n    </CarouselContent>\n    <CarouselPrevious/>\n    <CarouselNext/>\n  </Carousel>\n</div>`
+    `<Carousel>\n <CarouselContent>\n  <CarouselItem>...</CarouselItem>\n  <CarouselItem>...</CarouselItem>\n  <CarouselItem>...</CarouselItem>\n </CarouselContent>\n <CarouselPrevious />\n <CarouselNext />\n</Carousel>`
   ],
   components: {
 
