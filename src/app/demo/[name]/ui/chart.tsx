@@ -6,11 +6,18 @@ import { LineChartComponent } from "@/app/demo/[name]/ui/line-chart";
 
 export const chart = {
   name: "chart",
+  defaultComponent: (
+    <AreaChartComponent />
+  ),
+  usage: [
+    `import { AreaChartComponent } from "@/app/demo/[name]/ui/area-chart"`,
+    `<AreaChartComponent />`
+  ],
   components: {
-    AreaChart: <AreaChartComponent />,
-    BarChart: <BarChartComponent />,
-    MixedBarChart: <BarMixedChartComponent/>,
-    LineChart: <LineChartComponent/>,
-    PieChart: <PieChartComponent />,
+    "Area Chart": <AreaChartComponent />,
+    "Bar Chart": <BarChartComponent />,
+    "Mixed Bar Chart": <BarMixedChartComponent/>,
+    "Line Chart": <LineChartComponent/>,
+    "Pie Chart": <PieChartComponent />,
   },
 };
