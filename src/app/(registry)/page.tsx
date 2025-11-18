@@ -182,7 +182,7 @@ export default function Home() {
           </Alert>
         </div>
 
-        <div id="step-1" className="flex flex-col space-y-2 p-5 md:pt-10 md:px-10 scroll-mt-20">
+        <div id="step-1" className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10 scroll-mt-20">
           <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
             Step 1: Initialize shadcn/ui
           </h2>
