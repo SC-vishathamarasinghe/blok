@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Codeblocks } from "@/components/docsite/code-block";
 import {
@@ -9,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -24,8 +27,18 @@ export default function Home() {
             that anyone can easily build software in the Sitecore product design language.
           </p>
           <div className="flex space-x-4">
-            <Button size="lg">Get started</Button>
-            <Button size="lg" variant="outline">Browse blocks</Button>
+            <Button 
+              size="lg"
+              onClick={() => {
+                const element = document.getElementById('step-1');
+                element?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Get started
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/bloks">Browse bloks</Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -164,7 +177,7 @@ export default function Home() {
           </Alert>
         </div>
 
-        <div className="flex flex-col space-y-2 p-5 md:pt-10 md:px-10">
+        <div id="step-1" className="flex flex-col space-y-2 p-5 md:pt-10 md:px-10 scroll-mt-20">
           <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
             Step 1: Initialize shadcn/ui
           </h2>
