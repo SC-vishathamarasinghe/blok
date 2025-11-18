@@ -54,7 +54,7 @@ export default async function DemoPage({
         <div className="flex flex-col gap-3">
           <h2 className="font-semibold text-3xl tracking-tight">Usage</h2>
           {usage.map((code: string) => (
-            <Codeblocks code={code} showLineNumbers={false} />
+            <Codeblocks variant="filled" code={code} showLineNumbers={false} />
           ))}
         </div>
 
