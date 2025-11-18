@@ -296,12 +296,12 @@ export default function LogosPage() {
               </CardContent>
             </Card>
 
-            <div className="overflow-auto">
-              <Table>
+            <div className="w-full overflow-x-auto -mx-5 px-5 md:-mx-10 md:px-10">
+              <Table className="min-w-full">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="px-4">SVG (Normal)</TableHead>
-                    <TableHead className="px-4">SVG (Dark)</TableHead>
+                    <TableHead className="px-4 min-w-[200px]">SVG (Normal)</TableHead>
+                    <TableHead className="px-4 min-w-[200px]">SVG (Dark)</TableHead>
                     <TableHead className="px-4">Brand</TableHead>
                     <TableHead className="px-4">Type</TableHead>
                     <TableHead className="px-4">URL (Normal)</TableHead>
@@ -311,7 +311,7 @@ export default function LogosPage() {
                 <TableBody>
                   {logosData.map(({ filename, brand, type }, index) => (
                     <TableRow key={`${filename}-${index}`}>
-                      <TableCell className="px-4 min-w-[320px]">
+                      <TableCell className="px-4 min-w-[200px]">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div
@@ -332,7 +332,7 @@ export default function LogosPage() {
                           <TooltipContent>Copy URL</TooltipContent>
                         </Tooltip>
                       </TableCell>
-                      <TableCell className="px-4 min-w-[320px]">
+                      <TableCell className="px-4 min-w-[200px]">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div
@@ -353,7 +353,7 @@ export default function LogosPage() {
                           <TooltipContent>Copy URL</TooltipContent>
                         </Tooltip>
                       </TableCell>
-                      <TableCell className="px-4 text-sm">{brand}</TableCell>
+                      <TableCell className="px-4 text-sm whitespace-nowrap">{brand}</TableCell>
                       <TableCell className="px-4">
                         <Badge colorScheme="neutral" size="sm">
                           {type}
@@ -364,7 +364,7 @@ export default function LogosPage() {
                           href={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80 no-underline text-sm transition-colors truncate block"
+                          className="text-primary hover:text-primary/80 no-underline text-sm transition-colors whitespace-nowrap"
                         >
                           URL (Normal)
                         </a>
@@ -374,7 +374,7 @@ export default function LogosPage() {
                           href={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80 no-underline text-sm transition-colors truncate block"
+                          className="text-primary hover:text-primary/80 no-underline text-sm transition-colors whitespace-nowrap"
                         >
                           URL (Dark)
                         </a>
