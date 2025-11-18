@@ -27,7 +27,7 @@ export default async function RegistryItemPage({
   }
 
   return (
-    <div className="w-full bg-body-bg px-5 md:px-10">
+    <div className="w-full bg-body-bg px-5 pb-10 md:px-10">
       <div className="flex items-center justify-between">
         <div>
           {/* <Button variant="ghost" size="sm" asChild className="mb-4">
