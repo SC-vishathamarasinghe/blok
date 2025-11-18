@@ -87,18 +87,27 @@ const timezones = [
 
 export const combobox = {
   name: "combobox",
+  defaultComponent: (
+    <div className="p-1">
+      <FrameworkCombobox frameworks={[...frameworks]} />
+    </div>
+  ),
+  usage: [
+    `import {\n  Command,\n  CommandEmpty,\n  CommandGroup,\n  CommandInput,\n  CommandItem,\n  CommandList,\n} from "@/components/ui/command"\nimport {\n  Popover,\n  PopoverContent,\n  PopoverTrigger,\n} from "@/components/ui/popover"`,
+    `<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button\n      variant="outline"\n      role="combobox"\n      aria-expanded={open}\n      className="w-[200px] justify-between"\n    >\n      {value\n        ? frameworks.find((framework) => framework.value === value)?.label\n        : "Select framework..."}\n      <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />\n    </Button>\n  </PopoverTrigger>\n  <PopoverContent className="w-[200px] p-0">\n    <Command>\n      <CommandInput placeholder="Search framework..." />\n      <CommandList>\n        <CommandEmpty>No framework found.</CommandEmpty>\n        <CommandGroup>\n          {frameworks.map((framework) => (\n            <CommandItem\n              key={framework.value}\n              value={framework.value}\n              onSelect={(currentValue) => {\n                setValue(currentValue === value ? "" : currentValue)\n                setOpen(false)\n              }}\n            >\n              {framework.label}\n            </CommandItem>\n          ))}\n        </CommandGroup>\n      </CommandList>\n    </Command>\n  </PopoverContent>\n</Popover>`,
+  ],
   components: {
-    FrameworkCombobox: (
+    "Framework Combobox": (
       <div className="p-1">
         <FrameworkCombobox frameworks={[...frameworks]} />
       </div>
     ),
-    UserCombobox: (
+    "User Combobox": (
       <div className="p-1">
         <UserCombobox users={[...users]} selectedUserId={users[0].id} />
       </div>
     ),
-    TimezoneCombobox: (
+    "Timezone Combobox": (
       <div className="p-1">
         <TimezoneCombobox
           timezones={[...timezones]}
@@ -106,7 +115,7 @@ export const combobox = {
         />
       </div>
     ),
-    ComboboxWithCheckbox: (
+    "Combobox With Checkbox": (
       <div className="p-1">
         <ComboboxWithCheckbox frameworks={[...frameworks]} />
       </div>
