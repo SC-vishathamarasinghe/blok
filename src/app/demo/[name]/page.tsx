@@ -66,9 +66,9 @@ export default async function DemoPage({
             </div>
 
             {components &&
-              Object.entries(components).map(([key, node]) => {
+              Object.entries(components).map(([key, node], index: number) => {
                 return (
-                  <div className="flex flex-col gap-6">
+                  <div key={index} className="flex flex-col gap-6">
                     <h3 className="font-semibold text-xl tracking-tight">{key}</h3>
                     {/* <DemoTab 
                       key={key} 
