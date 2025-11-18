@@ -18,13 +18,12 @@ export default function Home() {
     <main className="w-full bg-subtle-bg">
       <div className="bg-body-bg px-32">
         <div className="flex flex-col space-y-5 p-5 md:p-10">
-          <h1 className="font-bold text-5xl">
-            Build better products faster
-          </h1>
+          <h1 className="font-bold text-5xl">Build better products faster</h1>
           <p className="text-muted-foreground w-full text-lg">
             Blok is Sitecore's product design system: the UI framework and style
-            guide we use to build great apps.  <br/> It's publicly available, so
-            that anyone can easily build software in the Sitecore product design language.
+            guide we use to build great apps. <br /> It's publicly available, so
+            that anyone can easily build software in the Sitecore product design
+            language.
           </p>
           <div className="flex space-x-4">
             <Button 
@@ -44,7 +43,13 @@ export default function Home() {
       </div>
 
       <div className="px-32">
-        <div className="flex flex-col space-y-4 p-5 md:pt-10 md:px-10">
+        <div className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10">
+          <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
+            Prerequisites
+          </h2>
+          <p className="text-muted-foreground">
+            Make sure you have these tools installed before proceeding:
+          </p>
           <div className="grid gap-4 md:grid-cols-3">
             <Card className="group hover:shadow-md transition-shadow">
               <CardHeader className="pb-0">
@@ -185,7 +190,11 @@ export default function Home() {
             Run the shadcn/ui initialization command in your project's root
             folder:
           </p>
-          <Codeblocks code="npx shadcn@latest init" showLineNumbers={false} bgColor="bg-body-bg" />
+          <Codeblocks
+            code="npx shadcn@latest init"
+            showLineNumbers={false}
+            bgColor="bg-body-bg"
+          />
           <p>
             During initialization, choose a base color when prompted. The CLI
             will then:
@@ -212,13 +221,11 @@ export default function Home() {
           </ul>
         </div>
 
-        <div className="flex flex-col space-y-2 p-5 md:pt-10 md:px-10">
+        <div className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10">
           <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
             Step 2: Install Blok components
           </h2>
-          <p>
-            You can now start adding the Blok components to your project.
-          </p>
+          <p>You can now start adding the Blok components to your project.</p>
           <Codeblocks
             bgColor="bg-body-bg"
             code={`npx shadcn@latest add https://${process.env.NEXT_PUBLIC_REGISTRY_URL}/r/button.json`}
@@ -251,7 +258,7 @@ export default function Home() {
           </Alert>
         </div>
 
-        <div className="flex flex-col space-y-2 p-5 md:pt-10 md:px-10">
+        <div className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10">
           <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
             Step 3: Test your setup
           </h2>
@@ -284,12 +291,16 @@ export default function MyComponent() {
           />
         </div>
 
-        <div className="flex flex-col space-y-2 mb-10 p-5 md:pt-10 md:px-10 md:pb-10">
+        <div className="flex flex-col space-y-3 mb-10 p-5 md:pt-10 md:px-10 md:pb-10">
           <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
             Step 4: Run your application
           </h2>
           <p>Start the development server:</p>
-          <Codeblocks code="npm run dev" showLineNumbers={false} bgColor="bg-body-bg" />
+          <Codeblocks
+            code="npm run dev"
+            showLineNumbers={false}
+            bgColor="bg-body-bg"
+          />
           <p className="text-muted-foreground">
             Your application is now running with functional BlokCN components.
           </p>
