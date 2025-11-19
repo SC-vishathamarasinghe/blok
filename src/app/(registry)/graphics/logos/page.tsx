@@ -307,7 +307,7 @@ export default function LogosPage() {
             <TableBody>
               {logosData.map(({ filename, brand, type }, index) => (
                 <TableRow key={`${filename}-${index}`}>
-                  <TableCell className="px-4 min-w-[200px]">
+                  <TableCell className="px-4 py-3 min-w-[200px]">
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div
@@ -316,19 +316,19 @@ export default function LogosPage() {
                               `https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`
                             )
                           }
-                          className="cursor-pointer h-6 flex items-center"
+                          className="cursor-pointer h-7 flex items-center"
                         >
                           <img
                             src={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`}
                             alt={brand}
-                            className="h-6 object-contain object-left"
+                            className="h-7 object-contain object-left"
                           />
                         </div>
                       </TooltipTrigger>
                       <TooltipContent>Copy URL</TooltipContent>
                     </Tooltip>
                   </TableCell>
-                  <TableCell className="px-4 min-w-[200px]">
+                  <TableCell className="px-4 py-3 min-w-[200px]">
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div
@@ -337,27 +337,27 @@ export default function LogosPage() {
                               `https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`
                             )
                           }
-                          className="cursor-pointer h-6 flex items-center"
+                          className="cursor-pointer h-7 flex items-center"
                         >
                           <img
                             src={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`}
                             alt={`${brand} Dark`}
-                            className="h-6 object-contain object-left"
+                            className="h-7 object-contain object-left"
                           />
                         </div>
                       </TooltipTrigger>
                       <TooltipContent>Copy URL</TooltipContent>
                     </Tooltip>
                   </TableCell>
-                  <TableCell className="px-4 text-sm whitespace-nowrap">
+                  <TableCell className="px-4 py-3 text-sm whitespace-nowrap">
                     {brand}
                   </TableCell>
-                  <TableCell className="px-4">
+                  <TableCell className="px-4 py-3">
                     <Badge colorScheme="neutral" size="sm">
                       {type}
                     </Badge>
                   </TableCell>
-                  <TableCell className="px-4">
+                  <TableCell className="px-4 py-3">
                     <a
                       href={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`}
                       target="_blank"
@@ -367,7 +367,7 @@ export default function LogosPage() {
                       URL (Normal)
                     </a>
                   </TableCell>
-                  <TableCell className="px-4">
+                  <TableCell className="px-4 py-3">
                     <a
                       href={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`}
                       target="_blank"
