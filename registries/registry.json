@@ -1469,6 +1469,21 @@
       ]
     },
     {
+      "name": "stack-navigation",
+      "type": "registry:ui",
+      "title": "Stack Navigation",
+      "description": "A collection of links for navigating websites.",
+      "registryDependencies": [
+        "https://blok.sitecore.com/r/theme.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/stack-navigation.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "switch",
       "type": "registry:ui",
       "title": "Switch",
