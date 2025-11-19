@@ -15,7 +15,7 @@ export default function DemoTab({ code, component, defaultTab = "demo" }: DemoTa
                 <TabsTrigger value="demo">Demo</TabsTrigger>
                 <TabsTrigger value="code">Code</TabsTrigger>
             </TabsList>
-            <TabsContent value="demo">
+            <TabsContent value="demo" className="min-h-[200px] py-8 bg-subtle-bg flex items-center justify-center">
                 {component}
             </TabsContent>
 
