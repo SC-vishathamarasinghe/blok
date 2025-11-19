@@ -59,7 +59,7 @@ export const toggleGroup = {
         </ToggleGroupItem>
       </ToggleGroup>
     ),
-    rounded: (
+    "Rounded Variant": (
       <ToggleGroup
         variant="rounded"
         type="single"
