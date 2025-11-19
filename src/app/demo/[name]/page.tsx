@@ -51,12 +51,14 @@ export default async function DemoPage({
           <InstallationCodeBlock registryUrl={registryUrl} />
         </div>
 
-        <div className="flex flex-col gap-3">
-          <h2 className="font-semibold text-3xl tracking-tight">Usage</h2>
-          {usage.map((code: string, index: number) => (
-            <Codeblocks key={index} variant="filled" code={code} showLineNumbers={false} />
-          ))}
-        </div>
+        {usage && (
+          <div className="flex flex-col gap-3">
+            <h2 className="font-semibold text-3xl tracking-tight">Usage</h2>
+            {usage.map((code: string, index: number) => (
+              <Codeblocks key={index} variant="filled" code={code} showLineNumbers={false} />
+            ))}
+          </div>
+        )}
 
         {components && (
           <div className="flex flex-col gap-9">

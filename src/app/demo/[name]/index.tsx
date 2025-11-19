@@ -60,7 +60,7 @@ import { draggable } from "@/app/demo/[name]/ui/draggable";
 interface Demo {
   name: string; // this must match the `/registries/registry.json` name
   defaultComponent: ReactNode | ReactElement;
-  usage: string[];
+  usage?: string[];
   components?: {
     [name: string]: ReactNode | ReactElement;
   };
