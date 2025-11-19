@@ -4,10 +4,7 @@ import { RightSidebar } from "@/components/layout/right-sidebar";
 import { getRightSidebarMetadata } from "@/lib/right-sidebar-metadata";
 import { Icon } from "@/lib/icon";
 import { copyToClipboard } from "@/components/docsite/code-block";
-import {
-  Alert,
-  AlertDescription,
-} from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Table,
   TableBody,
@@ -596,15 +593,35 @@ const iconsData = [
 const iconLogos = [
   { icon: "iconCdp", product: "CDP", path: logoIcons.iconCdp },
   { icon: "iconConnect", product: "Connect", path: logoIcons.iconConnect },
-  { icon: "iconContentHub", product: "Content Hub", path: logoIcons.iconContentHub },
-  { icon: "iconContentHubOne", product: "Content Hub ONE", path: logoIcons.iconContentHubOne },
+  {
+    icon: "iconContentHub",
+    product: "Content Hub",
+    path: logoIcons.iconContentHub,
+  },
+  {
+    icon: "iconContentHubOne",
+    product: "Content Hub ONE",
+    path: logoIcons.iconContentHubOne,
+  },
   { icon: "iconDiscover", product: "Discover", path: logoIcons.iconDiscover },
-  { icon: "iconOrdercloud", product: "OrderCloud", path: logoIcons.iconOrdercloud },
-  { icon: "iconPersonalize", product: "Personalize", path: logoIcons.iconPersonalize },
+  {
+    icon: "iconOrdercloud",
+    product: "OrderCloud",
+    path: logoIcons.iconOrdercloud,
+  },
+  {
+    icon: "iconPersonalize",
+    product: "Personalize",
+    path: logoIcons.iconPersonalize,
+  },
   { icon: "iconSearch", product: "Search", path: logoIcons.iconSearch },
   { icon: "iconXmCloud", product: "XM Cloud", path: logoIcons.iconXmCloud },
   { icon: "iconSitecore", product: "Sitecore", path: logoIcons.iconSitecore },
-  { icon: "iconSitecoreAI", product: "SitecoreAI", path: logoIcons.iconSitecoreAI },
+  {
+    icon: "iconSitecoreAI",
+    product: "SitecoreAI",
+    path: logoIcons.iconSitecoreAI,
+  },
 ];
 
 iconsData.forEach((data) => {
@@ -624,182 +641,187 @@ iconsData.forEach((data) => {
 });
 
 export default function IconsPage() {
-
   return (
-    <div className="flex w-full xl:pr-[250px]">
-      <div className="flex-1 min-w-0">
-        <div className="container p-5 md:p-10">
-          <div className="mb-8">
-            <h1 className="font-bold text-4xl tracking-tight">Icons</h1>
-          </div>
+    <div className="container p-5 md:p-10  xl:pr-[250px]">
+      <div className="mb-8">
+        <h1 className="font-bold text-4xl tracking-tight">Icons</h1>
+      </div>
 
-          <div className="flex flex-col gap-6">
-              <Alert variant="primary">
-                <AlertDescription className="flex flex-row">
-                  To learn how to implement these icons, see{" "}
-                  <a
-                    href="/components/icon"
-                    className="text-primary hover:text-primary/80 no-underline whitespace-nowrap"
-                  >
-                    Icon component
-                  </a>
-                </AlertDescription>
-              </Alert>
+      <div className="flex flex-col gap-6 mb-12">
+        <Alert variant="primary">
+          <AlertDescription className="flex flex-row">
+            To learn how to implement these icons, see{" "}
+            <a
+              href="/components/icon"
+              className="text-primary hover:text-primary/80 no-underline whitespace-nowrap"
+            >
+              Icon component
+            </a>
+          </AlertDescription>
+        </Alert>
 
-            <h2 className="text-2xl font-bold">General icons</h2>
+        <h2 className="text-2xl font-bold">General icons</h2>
 
-            <p className="text-muted-foreground max-w-[65ch]">
-              All the icons are from the{" "}
-              <a
-                href="https://pictogrammers.com/library/mdi/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-primary/80 no-underline"
-              >
-                Material Design Icons
-              </a>{" "}
-              library.
-            </p>
+        <p className="text-muted-foreground max-w-[65ch]">
+          All the icons are from the{" "}
+          <a
+            href="https://pictogrammers.com/library/mdi/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary/80 no-underline"
+          >
+            Material Design Icons
+          </a>{" "}
+          library.
+        </p>
 
-            <div className="flex flex-col gap-2">
-              <p className="text-sm text-muted-foreground">Example import:</p>
-              <code className="block p-3 bg-muted rounded-md text-sm">
-                {`import { mdiAccountCircleOutline } from '@mdi/js'`}
-              </code>
-            </div>
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-muted-foreground">Example import:</p>
+          <code className="block p-3 bg-muted rounded-md text-sm">
+            {`import { mdiAccountCircleOutline } from '@mdi/js'`}
+          </code>
+        </div>
 
-            <div className="mb-6 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-28 px-4">Icon</TableHead>
-                    <TableHead className="px-4">MDI link</TableHead>
-                    <TableHead className="px-4">MDI code</TableHead>
-                    <TableHead className="px-4">Usage</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {iconsData.map(({ mdi, usage, icon, code }) => (
-                    <TableRow key={mdi}>
-                      <TableCell className="w-28 px-4">
-                        <Suspense fallback={<Spinner size="sm" />}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                onClick={() => copyToClipboard(code || "")}
-                                className="cursor-pointer inline-flex items-center justify-center w-8 h-8 hover:bg-muted rounded transition-colors"
-                              >
-                                <Icon path={icon as string} size={0.85} className="text-foreground" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent>Copy MDI code</TooltipContent>
-                          </Tooltip>
-                        </Suspense>
-                      </TableCell>
-                      <TableCell className="px-4">
-                        <a
-                          href={`https://pictogrammers.com/library/mdi/icon/${mdi}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80 no-underline text-sm transition-colors"
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-28 px-4">Icon</TableHead>
+                <TableHead className="px-4">MDI link</TableHead>
+                <TableHead className="px-4">MDI code</TableHead>
+                <TableHead className="px-4">Usage</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {iconsData.map(({ mdi, usage, icon, code }) => (
+                <TableRow key={mdi}>
+                  <TableCell className="w-28 px-4">
+                    <Suspense fallback={<Spinner size="sm" />}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => copyToClipboard(code || "")}
+                            className="cursor-pointer inline-flex items-center justify-center w-8 h-8 hover:bg-muted rounded transition-colors"
+                          >
+                            <Icon
+                              path={icon as string}
+                              size={0.85}
+                              className="text-foreground"
+                            />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Copy MDI code</TooltipContent>
+                      </Tooltip>
+                    </Suspense>
+                  </TableCell>
+                  <TableCell className="px-4">
+                    <a
+                      href={`https://pictogrammers.com/library/mdi/icon/${mdi}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary/80 no-underline text-sm transition-colors"
+                    >
+                      {mdi}
+                    </a>
+                  </TableCell>
+                  <TableCell className="px-4">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <code
+                          onClick={() => copyToClipboard(code || "")}
+                          className="cursor-pointer bg-muted px-2 py-1 rounded text-sm hover:bg-muted/80 transition-colors inline-block"
                         >
-                          {mdi}
-                        </a>
-                      </TableCell>
-                      <TableCell className="px-4">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <code
-                              onClick={() => copyToClipboard(code || "")}
-                              className="cursor-pointer bg-muted px-2 py-1 rounded text-sm hover:bg-muted/80 transition-colors inline-block"
-                            >
-                              {code}
-                            </code>
-                          </TooltipTrigger>
-                          <TooltipContent>Copy to clipboard</TooltipContent>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell className="px-4 text-sm">{usage}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                          {code}
+                        </code>
+                      </TooltipTrigger>
+                      <TooltipContent>Copy to clipboard</TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell className="px-4 text-sm">{usage}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
-            <h2 className="text-2xl font-bold">Logo icons</h2>
+        <h2 className="text-2xl font-bold">Logo icons</h2>
 
-            <p className="text-muted-foreground max-w-[65ch]">
-              Used when a logo needs to be rendered as a single path inside an{" "}
-              <a
-                href="/components/icon"
-                className="text-primary hover:text-primary/80 no-underline"
-              >
-                Icon
-              </a>
-              . For the regular full-color logo images, see{" "}
-              <a href="/foundations/logos" className="text-primary hover:text-primary/80 no-underline">
-                Logos
-              </a>
-              .
-            </p>
+        <p className="text-muted-foreground max-w-[65ch]">
+          Used when a logo needs to be rendered as a single path inside an{" "}
+          <a
+            href="/components/icon"
+            className="text-primary hover:text-primary/80 no-underline"
+          >
+            Icon
+          </a>
+          . For the regular full-color logo images, see{" "}
+          <a
+            href="/foundations/logos"
+            className="text-primary hover:text-primary/80 no-underline"
+          >
+            Logos
+          </a>
+          .
+        </p>
 
-            <div className="flex flex-col gap-2">
-              <p className="text-sm text-muted-foreground">Example import:</p>
-              <code className="block p-3 bg-muted rounded-md text-sm">
-                {`import { iconXmCloud } from '@sitecore/blok-theme'`}
-              </code>
-            </div>
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-muted-foreground">Example import:</p>
+          <code className="block p-3 bg-muted rounded-md text-sm">
+            {`import { iconXmCloud } from '@sitecore/blok-theme'`}
+          </code>
+        </div>
 
-            <div className="overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-50 px-4">Icon</TableHead>
-                    <TableHead className="w-100 px-4">Product</TableHead>
-                    <TableHead className=" px-4">Icon code</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {iconLogos.map(({ icon, product, path }) => (
-                    <TableRow key={icon}>
-                      <TableCell className="w-36 px-4">
-                        <Suspense fallback={<Spinner size="sm" />}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                onClick={() => copyToClipboard(icon)}
-                                className="cursor-pointer inline-flex items-center justify-center w-8 h-8 hover:bg-muted rounded transition-colors"
-                              >
-                                <Icon path={path} size={0.85} className="text-foreground" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent>Copy icon code</TooltipContent>
-                          </Tooltip>
-                        </Suspense>
-                      </TableCell>
-                      <TableCell className="px-4 text-sm">{product}</TableCell>
-                      <TableCell className="px-4">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <code
-                              onClick={() => copyToClipboard(icon)}
-                              className="cursor-pointer bg-muted px-2 py-1 rounded text-sm hover:bg-muted/80 transition-colors inline-block"
-                            >
-                              {icon}
-                            </code>
-                          </TooltipTrigger>
-                          <TooltipContent>Copy to clipboard</TooltipContent>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
+        <div className="overflow-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-50 px-4">Icon</TableHead>
+                <TableHead className="w-100 px-4">Product</TableHead>
+                <TableHead className=" px-4">Icon code</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {iconLogos.map(({ icon, product, path }) => (
+                <TableRow key={icon}>
+                  <TableCell className="w-36 px-4">
+                    <Suspense fallback={<Spinner size="sm" />}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => copyToClipboard(icon)}
+                            className="cursor-pointer inline-flex items-center justify-center w-8 h-8 hover:bg-muted rounded transition-colors"
+                          >
+                            <Icon
+                              path={path}
+                              size={0.85}
+                              className="text-foreground"
+                            />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Copy icon code</TooltipContent>
+                      </Tooltip>
+                    </Suspense>
+                  </TableCell>
+                  <TableCell className="px-4 text-sm">{product}</TableCell>
+                  <TableCell className="px-4">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <code
+                          onClick={() => copyToClipboard(icon)}
+                          className="cursor-pointer bg-muted px-2 py-1 rounded text-sm hover:bg-muted/80 transition-colors inline-block"
+                        >
+                          {icon}
+                        </code>
+                      </TooltipTrigger>
+                      <TooltipContent>Copy to clipboard</TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
   );
 }
-

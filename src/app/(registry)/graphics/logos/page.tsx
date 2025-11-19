@@ -3,11 +3,7 @@
 import { RightSidebar } from "@/components/layout/right-sidebar";
 import { getRightSidebarMetadata } from "@/lib/right-sidebar-metadata";
 import { copyToClipboard } from "@/components/docsite/code-block";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Table,
   TableBody,
@@ -21,10 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 
@@ -252,142 +245,144 @@ const logosData = [
 ];
 
 export default function LogosPage() {
-
   return (
-    <div className="flex w-full xl:pr-[250px]">
-      <div className="flex-1 min-w-0">
-        <div className="container p-5 md:p-10">
-          <div className="mb-8">
-            <h1 className="font-bold text-4xl tracking-tight">Logos</h1>
-          </div>
+    <div className="container p-5 md:p-10  xl:pr-[250px]">
+      <div className="mb-8">
+        <h1 className="font-bold text-4xl tracking-tight">Logos</h1>
+      </div>
 
-          <div className="flex flex-col gap-6 mb-12">
-            <Alert variant="primary">
-              <AlertTitle className="text-base font-semibold mb-1">Recommended use</AlertTitle>
-              <AlertDescription>
-                We recommend using the URL as your image source to use the logos inside your product UI. This way, if we make any changes to the logo, it will automatically be updated in your product.
-              </AlertDescription>
-            </Alert>
+      <div className="flex flex-col gap-6 mb-12">
+        <Alert variant="primary">
+          <AlertTitle className="text-base font-semibold mb-1">
+            Recommended use
+          </AlertTitle>
+          <AlertDescription>
+            We recommend using the URL as your image source to use the logos
+            inside your product UI. This way, if we make any changes to the
+            logo, it will automatically be updated in your product.
+          </AlertDescription>
+        </Alert>
 
-            <Card style="filled">
-              <CardContent className="flex flex-col gap-2">
-                <a
-                  href="https://sitecore.atlassian.net/wiki/spaces/SDS/pages/3990487063"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:text-primary/80 no-underline text-sm"
-                >
-                  Product Design usage guidelines
-                </a>
-                <a
-                  href="/foundations/favicons"
-                  className="text-primary hover:text-primary/80 no-underline text-sm"
-                >
-                  Favicons
-                </a>
-                <a
-                  href="https://sitecore.atlassian.net/wiki/spaces/UX/blog/2022/10/04/3949690986"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:text-primary/80 no-underline text-sm"
-                >
-                  Blog post about logos
-                </a>
-              </CardContent>
-            </Card>
+        <Card style="filled">
+          <CardContent className="flex flex-col gap-2">
+            <a
+              href="https://sitecore.atlassian.net/wiki/spaces/SDS/pages/3990487063"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 no-underline text-sm"
+            >
+              Product Design usage guidelines
+            </a>
+            <a
+              href="/foundations/favicons"
+              className="text-primary hover:text-primary/80 no-underline text-sm"
+            >
+              Favicons
+            </a>
+            <a
+              href="https://sitecore.atlassian.net/wiki/spaces/UX/blog/2022/10/04/3949690986"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 no-underline text-sm"
+            >
+              Blog post about logos
+            </a>
+          </CardContent>
+        </Card>
 
-            <div className="w-full overflow-x-auto -mx-5 px-5 md:-mx-10 md:px-10">
-              <Table className="min-w-full">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="px-4 min-w-[200px]">SVG (Normal)</TableHead>
-                    <TableHead className="px-4 min-w-[200px]">SVG (Dark)</TableHead>
-                    <TableHead className="px-4">Brand</TableHead>
-                    <TableHead className="px-4">Type</TableHead>
-                    <TableHead className="px-4">URL (Normal)</TableHead>
-                    <TableHead className="px-4">URL (Dark)</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {logosData.map(({ filename, brand, type }, index) => (
-                    <TableRow key={`${filename}-${index}`}>
-                      <TableCell className="px-4 min-w-[200px]">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div
-                              onClick={() =>
-                                copyToClipboard(
-                                  `https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`
-                                )
-                              }
-                              className="cursor-pointer h-6 flex items-center"
-                            >
-                              <img
-                                src={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`}
-                                alt={brand}
-                                className="h-6 object-contain object-left"
-                              />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>Copy URL</TooltipContent>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell className="px-4 min-w-[200px]">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div
-                              onClick={() =>
-                                copyToClipboard(
-                                  `https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`
-                                )
-                              }
-                              className="cursor-pointer h-6 flex items-center"
-                            >
-                              <img
-                                src={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`}
-                                alt={`${brand} Dark`}
-                                className="h-6 object-contain object-left"
-                              />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>Copy URL</TooltipContent>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell className="px-4 text-sm whitespace-nowrap">{brand}</TableCell>
-                      <TableCell className="px-4">
-                        <Badge colorScheme="neutral" size="sm">
-                          {type}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="px-4">
-                        <a
-                          href={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80 no-underline text-sm transition-colors whitespace-nowrap"
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="px-4 min-w-[200px]">
+                  SVG (Normal)
+                </TableHead>
+                <TableHead className="px-4 min-w-[200px]">SVG (Dark)</TableHead>
+                <TableHead className="px-4">Brand</TableHead>
+                <TableHead className="px-4">Type</TableHead>
+                <TableHead className="px-4">URL (Normal)</TableHead>
+                <TableHead className="px-4">URL (Dark)</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {logosData.map(({ filename, brand, type }, index) => (
+                <TableRow key={`${filename}-${index}`}>
+                  <TableCell className="px-4 min-w-[200px]">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          onClick={() =>
+                            copyToClipboard(
+                              `https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`
+                            )
+                          }
+                          className="cursor-pointer h-6 flex items-center"
                         >
-                          URL (Normal)
-                        </a>
-                      </TableCell>
-                      <TableCell className="px-4">
-                        <a
-                          href={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80 no-underline text-sm transition-colors whitespace-nowrap"
+                          <img
+                            src={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`}
+                            alt={brand}
+                            className="h-6 object-contain object-left"
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>Copy URL</TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell className="px-4 min-w-[200px]">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          onClick={() =>
+                            copyToClipboard(
+                              `https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`
+                            )
+                          }
+                          className="cursor-pointer h-6 flex items-center"
                         >
-                          URL (Dark)
-                        </a>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
+                          <img
+                            src={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`}
+                            alt={`${brand} Dark`}
+                            className="h-6 object-contain object-left"
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>Copy URL</TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell className="px-4 text-sm whitespace-nowrap">
+                    {brand}
+                  </TableCell>
+                  <TableCell className="px-4">
+                    <Badge colorScheme="neutral" size="sm">
+                      {type}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="px-4">
+                    <a
+                      href={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary/80 no-underline text-sm transition-colors whitespace-nowrap"
+                    >
+                      URL (Normal)
+                    </a>
+                  </TableCell>
+                  <TableCell className="px-4">
+                    <a
+                      href={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/${filename}-dark`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary/80 no-underline text-sm transition-colors whitespace-nowrap"
+                    >
+                      URL (Dark)
+                    </a>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
   );
 }
-

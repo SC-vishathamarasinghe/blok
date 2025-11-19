@@ -21,9 +21,7 @@ export const themingItems = [
 
 // Graphics items for sidebar
 export const graphicsItems = [
-  { title: "Animations", path: "/graphics/animations" },
-  { title: "Empty States", path: "/graphics/empty-states" },
-  { title: "Error States", path: "/graphics/error-states" },
+  { title: "Favicons", path: "/graphics/favicons" },
   { title: "Icons", path: "/graphics/icons" },
   { title: "Illustrations", path: "/graphics/illustrations" },
   { title: "Logos", path: "/graphics/logos" },
