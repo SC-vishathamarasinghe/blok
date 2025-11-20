@@ -13,7 +13,7 @@ const grapicsCategories = [
     href: "/graphics/favicons",
     preview: (
       <div className="w-full h-full flex items-center justify-center p-4">
-        <FaviconsThumb className="w-full h-auto max-h-full" />
+        <FaviconsThumb />
       </div>
     ),
   },
