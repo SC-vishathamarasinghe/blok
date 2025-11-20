@@ -7,7 +7,7 @@ type Props = {
   content: string;
 };
 
-const ColorsDemo = ({ content }: Props) => {
+export function ColorsClient({ content }: Props) {
   const [defaultColors, setDefaultColors] = useState<Record<string, string>>({});
   const [darkColors, setDarkColors] = useState<Record<string, string>>({});
 
@@ -38,8 +38,23 @@ const ColorsDemo = ({ content }: Props) => {
     return () => observer.disconnect();
   }, [content]);
 
+  // Filter to only show base color tokens
   const allKeys = Object.keys(defaultColors)
-    .filter((key) => key <= "yellow-900");
+    .filter((key) => {
+      const value = defaultColors[key];
+      const trimmedValue = value.trim();
+      const isDirectColor = 
+        trimmedValue.startsWith("#") ||
+        trimmedValue.startsWith("rgba(") ||
+        trimmedValue.startsWith("rgb(") ||
+        trimmedValue === "transparent";
+      
+      return (
+        key.startsWith("color-") &&
+        isDirectColor &&
+        !trimmedValue.startsWith("var(")
+      );
+    });
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }}>
@@ -56,13 +71,11 @@ const ColorsDemo = ({ content }: Props) => {
         </thead>
         <tbody>
           {allKeys.map((key) => {
-            // get the default and dark values for the display color
             const defaultValue = defaultColors[key];
             const darkValue = darkColors[key] || defaultValue;
 
             const bgColor = isDarkTheme ? darkValue : defaultValue;
 
-            // resolve the variable values
             const { light, dark } = resolveVariableValue(defaultValue, defaultVars, darkVars);
 
             return (
@@ -109,6 +122,5 @@ const ColorsDemo = ({ content }: Props) => {
       </table>
     </div>
   );
-};
+}
 
-export default ColorsDemo;

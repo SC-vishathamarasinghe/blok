@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { convertCssVariablesToObject } from "@/lib/token-utils";
 
 type Props = {
-  content: string; // The CSS content containing your @theme breakpoints
+  content: string;
 };
 
 // Helper function to get the current breakpoint name
@@ -37,7 +36,7 @@ const getCurrentBreakpoint = (
   return activeBreakpoint;
 };
 
-const BreakpointsDemo = ({ content }: Props) => {
+export function BreakpointsClient({ content }: Props) {
   const rawBreakpoints = convertCssVariablesToObject(content, "--breakpoint-");
 
   const filteredBreakpoints = Object.fromEntries(
@@ -49,15 +48,12 @@ const BreakpointsDemo = ({ content }: Props) => {
     string | null
   >(null);
 
-  // Define a mapping for device names.
-  // You'll need to update these based on your actual breakpoint names.
   const deviceMap: { [key: string]: string } = {
     sm: "Small Phone",
     md: "Tablet (Portrait)",
     lg: "Tablet (Landscape)",
     xl: "Desktop",
     "2xl": "Large Desktop",
-    // Add any other custom breakpoints you have
   };
 
   useEffect(() => {
@@ -129,23 +125,15 @@ const BreakpointsDemo = ({ content }: Props) => {
           </thead>
           <tbody>
             {Object.entries(filteredBreakpoints).map(([key, value]) => {
-              //   const isActiveRow = currentBreakpointName === key
               const pxValue = parseFloat(value) * 16;
 
               return (
                 <tr key={key} style={{ borderBottom: "1px solid #eee" }}>
-                  <td
-                    style={{ padding: "0.8rem" }}
-                    // className={isActiveRow ? "font-bold" : "font-normal"}
-                  >
+                  <td style={{ padding: "0.8rem" }}>
                     {key}
                   </td>
-                  <td
-                    style={{ padding: "0.8rem" }}
-                    // className={isActiveRow ? "font-bold" : "font-normal"}
-                  >
+                  <td style={{ padding: "0.8rem" }}>
                     {deviceMap[key] || "N/A"}
-                    {/* Display device name, or 'N/A' if not mapped */}
                   </td>
                   <td style={{ padding: "0.8rem" }}>
                     <span
@@ -177,6 +165,5 @@ const BreakpointsDemo = ({ content }: Props) => {
       </div>
     </div>
   );
-};
+}
 
-export default BreakpointsDemo;
