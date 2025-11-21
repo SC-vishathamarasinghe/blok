@@ -45,7 +45,7 @@ const errorStateConfig = {
         (Customizable text) Please try again. If the issue persists, try visiting the{" "}
         <a
           href={knowledgeBaseUrl || "#"}
-          className="text-primary underline hover:no-underline"
+          className="text-primary hover:underline"
           target="_blank"
           rel="noopener noreferrer"
         >
