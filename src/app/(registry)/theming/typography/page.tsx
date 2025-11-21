@@ -12,7 +12,7 @@ export default function TypographyPage() {
   return (
     <div className="container p-5 md:p-10 xl:pr-[250px]">
       <div className="mb-8">
-        <h1 className="font-bold text-4xl tracking-tight mb-2">Typography</h1>
+        <h1 className="font-semibold text-4xl tracking-tight mb-2">Typography</h1>
       </div>
       <TypographyClient typography={typography} />
     </div>

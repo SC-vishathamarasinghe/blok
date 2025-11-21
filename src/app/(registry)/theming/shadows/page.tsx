@@ -28,7 +28,7 @@ export default function ShadowsPage() {
   return (
     <div className="container p-5 md:p-10 xl:pr-[250px]">
       <div className="mb-8">
-        <h1 className="font-bold text-4xl tracking-tight mb-2">Shadows</h1>
+        <h1 className="font-semibold text-4xl tracking-tight mb-2">Shadows</h1>
       </div>
       <Card style="filled">
         <CardContent className="overflow-x-auto p-0">
