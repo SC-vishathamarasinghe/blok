@@ -1,16 +1,20 @@
+import fs from "fs";
+import path from "path";
+import { convertCssVariablesToObject } from "@/lib/token-utils";
+import { TypographyClient } from "./typography-client";
+
+const cssPath = path.join(process.cwd(), "src", "app", "typography.css");
+const typographyContent = fs.readFileSync(cssPath, "utf-8");
 
 export default function TypographyPage() {
+  const typography = convertCssVariablesToObject(typographyContent, "--text-");
 
   return (
-    <div className="flex w-full">
-      <div className="flex-1 min-w-0">
-        <div className="container p-5 md:p-10">
-          <div className="mb-8">
-            <h1 className="font-bold text-4xl tracking-tight">Typography</h1>
-          </div>
-        </div>
-      </div>      
+    <div className="container p-5 md:p-10 xl:pr-[250px]">
+      <div className="mb-8">
+        <h1 className="font-semibold text-4xl tracking-tight mb-2">Typography</h1>
+      </div>
+      <TypographyClient typography={typography} />
     </div>
   );
 }
-
