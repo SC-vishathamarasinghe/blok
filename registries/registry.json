@@ -500,6 +500,8 @@
         "https://blok.sitecore.com/r/dialog.json",
         "https://blok.sitecore.com/r/drawer.json",
         "https://blok.sitecore.com/r/dropdown-menu.json",
+        "https://blok.sitecore.com/r/empty-states.json",
+        "https://blok.sitecore.com/r/error-states.json",
         "https://blok.sitecore.com/r/hover-card.json",
         "https://blok.sitecore.com/r/input.json",
         "https://blok.sitecore.com/r/inputOtp.json",
@@ -1050,6 +1052,46 @@
       ]
     },
     {
+      "name": "error-states",
+      "type": "registry:ui",
+      "title": "Error States",
+      "description": "Displays error state variants for different HTTP error codes and generic errors.",
+      "dependencies": [
+        "class-variance-authority",
+        "next"
+      ],
+      "registryDependencies": [
+        "https://blok.sitecore.com/r/theme.json",
+        "https://blok.sitecore.com/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/error-states.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "empty-states",
+      "type": "registry:ui",
+      "title": "Empty States",
+      "description": "Displays empty state variants for no search results, nothing created, and error scenarios.",
+      "dependencies": [
+        "class-variance-authority",
+        "next"
+      ],
+      "registryDependencies": [
+        "https://blok.sitecore.com/r/theme.json",
+        "https://blok.sitecore.com/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/empty-states.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
@@ -1155,7 +1197,7 @@
     },
      {
       "name": "site-card",
-      "type": "registry:ui",
+      "type": "registry:block",
       "title": "Site Card",
       "description": "Pagination with page navigation, next and previous links.",
       "registryDependencies": [
@@ -1179,7 +1221,7 @@
     },
     {
       "name": "all-site",
-      "type": "registry:ui",
+      "type": "registry:block",
       "title": "All Site Section",
       "description": "Pagination with page navigation, next and previous links.",
       "registryDependencies": [
@@ -1198,7 +1240,7 @@
     },
     {
       "name": "pinned-site",
-      "type": "registry:ui",
+      "type": "registry:block",
       "title": "Pinned Site Section",
       "description": "Pagination with page navigation, next and previous links.",
       "registryDependencies": [
