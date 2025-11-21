@@ -1,16 +1,11 @@
-import * as React from "react";
-
-interface LogosThumbProps {
-  className?: string;
-}
-
-const LogosThumb = ({ className }: LogosThumbProps) => (
+const LogosThumb = () => (
   <svg
     width="59"
     height="59"
     viewBox="0 0 60 60"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="xMidYMid meet"
   >
     <g clipPath="url(#clip0_1220_791)">
       <path
