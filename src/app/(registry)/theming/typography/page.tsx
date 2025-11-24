@@ -84,10 +84,10 @@ export default function TypographyPage() {
             <TableBody>
               {fonts.map((font) => (
                 <TableRow key={font.token}>
-                  <TableCell className="px-4 py-3">
+                  <TableCell className="px-3 py-3">
                     <CopyableToken token={font.token} />
                   </TableCell>
-                  <TableCell className="px-4 py-3">
+                  <TableCell className="px-3 py-3">
                     <code className="font-mono text-xs break-all">
                       {font.value}
                     </code>
