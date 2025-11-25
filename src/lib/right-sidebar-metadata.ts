@@ -7,11 +7,7 @@ export interface RightSidebarMetadata {
 
 // Default links for component pages
 export const defaultComponentLinks: RightSidebarLinks = {
-    shadcn: "https://ui.shadcn.com/docs/components/",
-      rules: "#",
-      figma: "#",
-      confluence: "#",
-      v1Docs: "https://blok.sitecore.com",
+      shadcn: "https://ui.shadcn.com/docs/components/{$componentName}",
 };
 
 // Default sections for component pages
@@ -27,13 +23,10 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
   accordion: {
     links: {
       shadcn: "https://ui.shadcn.com/docs/components/alert",
-      rules: "#",
       figma: "#",
-      confluence: "#",
-      v1Docs: "https://blok.sitecore.com",
     },
     sections: [
-      { id: "starting-kit", title: "Preview" },
+      { id: "preview", title: "Preview" },
       { id: "installation", title: "Installation" },
       { id: "usage", title: "Usage" },
       {
@@ -53,11 +46,25 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
   alert: {
     links: {
       shadcn: "https://ui.shadcn.com/docs/components/alert",
-      rules: "#",
-      figma: "#",
-      confluence: "#",
-      v1Docs: "https://blok.sitecore.com",
+      figma: "https://www.figma.com/design/x0CUbrC5Kjcuk64VPCnbgz/Blok-Components?m=auto&node-id=6748-14484&t=NScvPldB3fxBBWL8-1",
     },
+        sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+      {
+        id: "examples",
+        title: "Examples",
+        children: [
+          { id: "primary", title: "Primary" },
+          { id: "success", title: "Success" },
+          { id: "danger", title: "Danger" },
+          { id: "warning", title: "Warning" },
+          { id: "closable", title: "Closable" },
+          { id: "withButtonLink", title: "With Button Link" },
+        ],
+      },
+    ],
   },
   "alert-dialog": {
     links: {
