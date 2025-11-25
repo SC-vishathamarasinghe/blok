@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export const avatar = {
   name: "avatar",
   components: {
-    default: (
+    Default: (
       <Avatar>
         <AvatarImage src="https://ca.slack-edge.com/T1S2RKGUA-U015TJJS8MS-b581732f917e-512" alt="Frank Grinaert" />
         <AvatarFallback className="bg-primary text-primary-foreground">
@@ -11,12 +11,12 @@ export const avatar = {
         </AvatarFallback>
       </Avatar>
     ),
-    fallback: (
+    Fallback: (
       <Avatar>
         <AvatarFallback>BM</AvatarFallback>
       </Avatar>
     ),
-    large:(
+    Large: (
       <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:size-12 
         *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
         <Avatar>
@@ -35,7 +35,7 @@ export const avatar = {
         </Avatar>
       </div>
     ),
-    interactive: (
+    Interactive: (
       <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 hover:space-x-1 
         *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale 
         *:data-[slot=avatar]:transition-all *:data-[slot=avatar]:duration-300 *:data-[slot=avatar]:ease-in-out">
