@@ -193,7 +193,6 @@ export default function Home() {
           <Codeblocks
             code="npx shadcn@latest init"
             showLineNumbers={false}
-            variant="filled"
           />
           <p>
             During initialization, choose a base color when prompted. The CLI
@@ -229,7 +228,6 @@ export default function Home() {
           <Codeblocks
             code={`npx shadcn@latest add https://${process.env.NEXT_PUBLIC_REGISTRY_URL}/r/button.json`}
             showLineNumbers={false}
-            variant="filled"
           />
           <Alert variant="primary" className="items-start">
             <AlertDescription className="flex flex-col gap-3">
@@ -241,7 +239,6 @@ export default function Home() {
                 <Codeblocks
                   code={`npx shadcn@latest add https://${process.env.NEXT_PUBLIC_REGISTRY_URL}/r/blok-components.json`}
                   showLineNumbers={false}
-                  variant="filled"
                 />
               </div>
               <p className="max-w-full">
@@ -274,7 +271,6 @@ export default function Home() {
             alias:
           </p>
           <Codeblocks
-            variant="filled"
             code={`import { Button } from "@/components/ui/button"
 
 export default function MyComponent() {
@@ -299,7 +295,6 @@ export default function MyComponent() {
           <Codeblocks
             code="npm run dev"
             showLineNumbers={false}
-            variant="filled"
           />
           <p className="text-muted-foreground">
             Your application is now running with functional BlokCN components.
