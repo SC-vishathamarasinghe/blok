@@ -38,9 +38,11 @@ export default async function DemoPage({
   return (
       <div className="flex min-h-[100vh] w-full flex-col gap-12 bg-body-bg">
         <div className="flex flex-col">
-          <div className="relative rounded-lg overflow-hidden min-h-[200px] p-8 bg-subtle-bg flex items-center justify-center">
-            <Renderer>{defaultComponent}</Renderer>
-          </div>
+          <DemoTab
+            key={name} 
+            code={codeMap["Default"] ?? ""} 
+            component={componentDemo(defaultComponent)} 
+          />
         </div>
 
         <div className="flex flex-col gap-3">
