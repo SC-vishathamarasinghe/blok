@@ -1,5 +1,4 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { ClosableAlert } from "@/app/demo/[name]/ui/alert-closable";
 import { ButtonLinkAlert } from "@/app/demo/[name]/ui/alert-button-Link";
 
