@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { demos } from "@/app/demo/[name]/index";
 import { Renderer } from "@/app/demo/[name]/renderer";
-import InstallationCodeBlock from "@/components/registry/installation-code-block";
-import { Codeblocks } from "@/components/registry/code-block";
+import InstallationCodeBlock from "@/components/docsite/installation-code-block";
+import { Codeblocks } from "@/components/docsite/code-block";
 import { getRegistryItem } from "@/lib/registry";
 
 export async function generateStaticParams() {
