@@ -59,6 +59,7 @@ import { timePicker } from "@/app/demo/[name]/ui/time-picker";
 import { draggable } from "@/app/demo/[name]/ui/draggable";
 import { stackNavigation } from "@/app/demo/[name]/ui/stack-navigation";
 
+
 interface Demo {
   name: string; // this must match the `/registries/registry.json` name
   components?: {
