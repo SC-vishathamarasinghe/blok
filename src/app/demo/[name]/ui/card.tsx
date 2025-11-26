@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BriefsTrackerCard } from "./briefs-tracker-card";
+import { cn } from "@/lib/utils";
 
 const elevationVariants = ["none", "xs", "sm", "base", "md", "lg"];
 const styleVariants = ["flat", "outline", "filled"];
@@ -53,11 +54,13 @@ export const card = {
     "Style": (
       <div className="flex flex-wrap items-center gap-3 p-8">
         {styleVariants.map((variant) => (
-          <Card key={variant} style={variant as "flat" | "outline" | "filled"} elevation="base" padding="lg" className="w-[400px]">
-            <CardHeader>
-              <CardTitle>{variant} Style</CardTitle>
-            </CardHeader>
-          </Card>
+          <div key={variant} className={cn("p-4", variant === "filled" && "bg-body-bg rounded-lg" )}>
+            <Card style={variant as "flat" | "outline" | "filled"} elevation="base" padding="lg" className="w-[300px]">
+              <CardHeader>
+                <CardTitle>{variant} Style</CardTitle>
+              </CardHeader>
+            </Card>
+          </div>
         ))}
       </div>
     ),
