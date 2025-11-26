@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Icon } from "@/lib/icon";
 import { mdiClipboardOutline } from "@mdi/js";
 import { useState, useEffect } from "react";
@@ -15,28 +16,43 @@ interface CodeBlockProps {
 export function CodeBlock({ code, lang = "tsx", showLineNumbers = true }: CodeBlockProps) {
     const [copied, setCopied] = useState(false);
     const [html, setHtml] = useState<string>("");
+    const [isDark, setIsDark] = useState(false);
 
+    // detect theme
+    useEffect(() => {
+        const checkTheme = () => {
+        setIsDark(document.documentElement.classList.contains("dark"));
+        };
+
+        checkTheme();
+
+        const observer = new MutationObserver(checkTheme);
+        observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    // highlight code
     useEffect(() => {
         async function load() {
-            const highlighter = await shiki.createHighlighter({ 
-                themes: ["github-light"],
-                langs: ["typescript", "javascript", "tsx", "jsx", "json", "css", "html"],
-            })
-            const rawHtml = highlighter.codeToHtml(code, {
-                lang,
-                theme: "github-light",
-            });
-
-            if (showLineNumbers) {
-                const numbered = addLineNumbers(rawHtml);
-                setHtml(numbered);
-            } else {
-                setHtml(rawHtml);
-            }
+          const highlighter = await shiki.createHighlighter({
+            themes: ["github-light", "github-dark"],
+            langs: ["typescript", "javascript", "tsx", "jsx", "json", "css", "html"],
+          });
+    
+          const rawHtml = highlighter.codeToHtml(code, {
+            lang,
+            theme: isDark ? "github-dark" : "github-light",
+          });
+    
+          setHtml(showLineNumbers ? addLineNumbers(rawHtml) : rawHtml);
         }
-        
+    
         load();
-    }, [code, lang, showLineNumbers]);
+      }, [code, lang, showLineNumbers, isDark]);
 
     async function copyToClipboard() {
         await navigator.clipboard.writeText(code);
@@ -45,7 +61,7 @@ export function CodeBlock({ code, lang = "tsx", showLineNumbers = true }: CodeBl
     }
 
     return (
-        <div className="relative rounded-md bg-muted overflow-hidden">
+        <ScrollArea className="relative rounded-md bg-muted overflow-y-auto max-h-[400px]">
             <Button
                 variant="ghost"
                 colorScheme="neutral"
@@ -59,7 +75,7 @@ export function CodeBlock({ code, lang = "tsx", showLineNumbers = true }: CodeBl
                 className="text-sm overflow-x-auto p-4"
                 dangerouslySetInnerHTML={{ __html: html }}
             />
-        </div>
+        </ScrollArea>
     )
 }
 
