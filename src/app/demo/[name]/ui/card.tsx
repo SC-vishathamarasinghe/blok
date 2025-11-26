@@ -15,7 +15,7 @@ const paddingVariants = ["sm", "md", "lg"];
 export const card = {
   name: "card",
   defaultComponent: (
-    <Card style="flat" elevation="none" padding="lg" className="w-[400px]">
+    <Card style="flat" elevation="none" padding="lg" className="w-[400px] p-8">
       <CardHeader>
         <CardTitle>Default Card</CardTitle>
         <CardDescription>Style: flat, Elevation: none</CardDescription>
@@ -33,9 +33,9 @@ export const card = {
   components: {
     // Elevation Variants
     "Elevation": (
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 p-8">
         {elevationVariants.map((variant) => (
-          <Card style="outline" elevation={variant as "none" | "xs" | "sm" | "base" | "md" | "lg"} padding="lg" className="w-[400px]">
+          <Card key={variant} style="outline" elevation={variant as "none" | "xs" | "sm" | "base" | "md" | "lg"} padding="lg" className="w-[400px]">
             <CardHeader>
               <CardTitle>{variant} Elevation</CardTitle>
               <CardDescription>Style: outline, Elevation: {variant}</CardDescription>
@@ -51,9 +51,9 @@ export const card = {
 
     // Style Variants
     "Style": (
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3 p-8">
         {styleVariants.map((variant) => (
-          <Card style={variant as "flat" | "outline" | "filled"} elevation="base" padding="lg" className="w-[400px]">
+          <Card key={variant} style={variant as "flat" | "outline" | "filled"} elevation="base" padding="lg" className="w-[400px]">
             <CardHeader>
               <CardTitle>{variant} Style</CardTitle>
             </CardHeader>
@@ -64,9 +64,9 @@ export const card = {
 
     // Padding Variants
     "Padding": (
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3 p-8">
         {paddingVariants.map((variant) => (
-          <Card style="outline" elevation="md" padding={variant as "sm" | "md" | "lg"} className="w-[400px]">
+          <Card key={variant} style="outline" elevation="md" padding={variant as "sm" | "md" | "lg"} className="w-[400px]">
             <CardHeader>
               <CardTitle>Padding: {variant}</CardTitle>
             </CardHeader>
