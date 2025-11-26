@@ -46,12 +46,11 @@ export default async function RegistryItemPage({
           </div>
         </div>
       </div>
-
-          <ComponentCard
-            component={component}
-            baseUrl={process.env.NEXT_PUBLIC_REGISTRY_URL ?? ""}
-            prompt={getPrompt()}
-          />
-        </div>
+      <ComponentCard
+        component={component}
+        baseUrl={process.env.NEXT_PUBLIC_REGISTRY_URL ?? ""}
+        prompt={getPrompt()}
+      />
+    </div>
   );
 }
