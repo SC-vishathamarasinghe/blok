@@ -45,13 +45,13 @@ export default async function DemoPage({
           />
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div id="installation" className="flex flex-col gap-3">
           <h2 className="font-semibold text-3xl tracking-tight">Installation</h2>
           <InstallationCodeBlock registryUrl={registryUrl} />
         </div>
 
         {usage && (
-          <div className="flex flex-col gap-3">
+          <div id="usage" className="flex flex-col gap-3">
             <h2 className="font-semibold text-3xl tracking-tight">Usage</h2>
             {usage.map((code: string, index: number) => (
               <Codeblocks key={index} variant="filled" code={code} showLineNumbers={false} />
@@ -60,7 +60,7 @@ export default async function DemoPage({
         )}
         
         {components && (
-          <div className="flex flex-col gap-9">
+          <div id="examples" className="flex flex-col gap-9">
             <div className="flex flex-col gap-6">
               <h2 className="font-semibold text-3xl tracking-tight">Examples</h2>
               <p className="text-sm text-muted-foreground">The following are examples of our {name} classes.</p>
@@ -68,8 +68,10 @@ export default async function DemoPage({
 
             {components &&
               Object.entries(components).map(([key, node], index: number) => {
+                // Convert key to kebab-case for ID (e.g., "Color scheme" -> "color-scheme")
+                const sectionId = key.toLowerCase().replace(/\s+/g, '-');
                 return (
-                  <div key={index} className="flex flex-col gap-6">
+                  <div key={index} id={sectionId} className="flex flex-col gap-6">
                     <h3 className="font-semibold text-xl tracking-tight">{key}</h3>
                     <DemoTab
                       key={key} 
