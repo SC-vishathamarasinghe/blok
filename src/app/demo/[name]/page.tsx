@@ -87,7 +87,7 @@ export default async function DemoPage({
 
 const componentDemo = (component: ReactNode) => {
   return (
-      <div className="relative rounded-lg overflow-hidden">
+      <div className="relative rounded-lg">
           <Renderer>{component}</Renderer>
       </div>
   );
