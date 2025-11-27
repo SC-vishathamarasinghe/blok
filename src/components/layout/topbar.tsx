@@ -411,7 +411,7 @@ export default function TopBar() {
                         className={`flex items-start gap-3 p-3 rounded-md transition-colors ${
                           index === selectedIndex 
                             ? 'bg-primary-background border border-primary' 
-                            : 'hover:bg-primary-background'
+                            : 'hover:bg-muted'
                         }`}
                       >
                         <div className="flex-1 min-w-0 space-y-2">
@@ -478,7 +478,7 @@ export default function TopBar() {
             )}
           </div>
 
-          <Button variant="ghost" className="hidden items-center gap-1 sm:flex hover:bg-primary-background hover:text-primary-fg active:bg-primary-background active:text-primary-fg">
+          <Button variant="ghost" className="hidden items-center gap-1 sm:flex hover:bg-muted active:bg-muted">
             <a
               href={externalLinks?.Block_site_old || ""}
               target="_blank"
@@ -490,7 +490,7 @@ export default function TopBar() {
             </a>
           </Button>
 
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary-background hover:text-primary-fg active:bg-primary-background active:text-primary-fg">
+          <Button variant="ghost" size="icon" asChild className="hover:bg-muted active:bg-muted">
             <a
               href={externalLinks?.Block_github || ""}
               target="_blank"
@@ -500,7 +500,7 @@ export default function TopBar() {
             </a>
           </Button>
 
-          <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="hover:bg-primary-background hover:text-primary-fg active:bg-primary-background active:text-primary-fg">
+          <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="hover:bg-muted active:bg-muted">
             <Icon path={mdiCircleHalfFull} size={1} />
           </Button>
         </div>

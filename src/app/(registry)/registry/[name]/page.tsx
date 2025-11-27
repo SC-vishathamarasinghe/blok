@@ -35,7 +35,7 @@ export default async function RegistryItemPage({
   const registryUrl = `https://${process.env.NEXT_PUBLIC_REGISTRY_URL ?? ""}/r/${name}.json`;
 
   return (
-    <div className="w-full bg-body-bg px-5 pb-10 md:px-10">
+    <div className="w-full max-w-[1250px] mx-auto bg-body-bg pb-10 px-5 md:px-10">
       <div className="flex items-center justify-between">
         <div>
           {/* <Button variant="ghost" size="sm" asChild className="mb-4">

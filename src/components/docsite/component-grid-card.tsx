@@ -43,7 +43,7 @@ export function ComponentGridCard({
   const content = (
     <Card
       className={cn(
-        "group relative overflow-hidden p-0 h-full w-56 flex flex-col cursor-pointer transition-all shadow-xs hover:shadow-md gap-0",
+        "group relative overflow-hidden p-0 h-full w-56 flex flex-col cursor-pointer transition-all hover:shadow-md gap-0 border-black/10",
         className
       )}
       style="filled"

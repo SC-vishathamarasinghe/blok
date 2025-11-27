@@ -116,7 +116,7 @@ const resourcesItems = [
 export default function ResourcesPage() {
   return (
     <div className="w-full p-5 md:p-10 ">
-      <div className="px-32">
+      <div className="max-w-[1250px] mx-auto">
         <div className="mb-8 ">
           <h1 className="font-semibold text-4xl tracking-tight">Resources</h1>
           <p className="mt-2 text-muted-foreground">

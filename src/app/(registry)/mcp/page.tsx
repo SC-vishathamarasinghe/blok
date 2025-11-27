@@ -21,16 +21,16 @@ const CursorConfigurationCode = `{
 
 export default function MCPPage() {
     return (
-        <main className="w-full bg-subtle-bg">
-            <div className="px-32">
+        <main className="w-full">
+            <div className="px-32 max-w-[1250px] mx-auto">
                 <div className="flex flex-col space-y-5 p-5 md:p-10">
                     <h1 className="font-semibold text-4xl tracking-tight md:text-4xl">
                         Blok MCP Server
                     </h1>
-                    <p className="text-muted-foreground w-full ">
+                    <p className="d w-full ">
                         <Link href="https://modelcontextprotocol.io" className="underline hover:no-underline" rel="noopener noreferrer">The MCP Server</Link> is an open protocol that enables AI assistants to securely connect to external data sources and tools. With the shadcn MCP server, your AI assistant can:
                     </p>
-                    <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                    <ul className="list-disc list-inside space-y-2 ">
                         <li>List all available components from the Blok registry</li>
                         <li>Find specific components by name or functionality</li>
                         <li>Add components using simple conversational prompts</li>
@@ -48,7 +48,7 @@ export default function MCPPage() {
                     </Alert>
                 </div>
             </div>
-            <div className="px-32">
+            <div className="px-32 max-w-[1250px] mx-auto">
                 <div className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10">
                     <h2 className="font-semibold text-3xl tracking-tight md:text-4xl">
                         Before You Start
@@ -82,7 +82,7 @@ export default function MCPPage() {
                             <Codeblocks showLineNumbers={false} code={`npx shadcn@latest mcp init --client claude`} variant="outline" />    
 
                             <p className="mt-2">You can then test that your installation has been successful by trying prompts, for example:</p>
-                            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                            <ul className="list-disc list-inside space-y-2">
                                 <li>Show me all available components in the shadcn registry.</li>
                                 <li>Add the button, dialog and card components to my project.</li>
                                 <li>Create a contact form using components from the shadcn registry.</li>
@@ -99,7 +99,7 @@ export default function MCPPage() {
                             <Codeblocks showLineNumbers={false} code={`npx shadcn@latest mcp init --client cursor`} variant="outline" />
 
                             <p className="mt-2">You can then test that your installation has been successful by trying prompts, for example:</p>
-                            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                            <ul className="list-disc list-inside space-y-2">
                                 <li>Show me all available components in the shadcn registry.</li>
                                 <li>Add the button, dialog and card components to my project.</li>
                                 <li>Create a contact form using components from the shadcn registry.</li>
@@ -110,7 +110,7 @@ export default function MCPPage() {
                             <Codeblocks showLineNumbers={false} code={`npx shadcn@latest mcp init --client vscode`} variant="outline" />
 
                             <p className="mt-2">You can then test that your installation has been successful by trying prompts, for example:</p>
-                            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                            <ul className="list-disc list-inside space-y-2 ">
                                 <li>Show me all available components in the shadcn registry.</li>
                                 <li>Add the button, dialog and card components to my project.</li>
                                 <li>Create a contact form using components from the shadcn registry.</li>
@@ -126,7 +126,7 @@ command = "npx"
 args = ["shadcn@latest", "mcp"]`} variant="outline" />
 
                             <p className="mt-2">You can then test that your installation has been successful by trying prompts, for example:</p>
-                            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                            <ul className="list-disc list-inside space-y-2">
                                 <li>Show me all available components in the shadcn registry.</li>
                                 <li>Add the button, dialog and card components to my project.</li>
                                 <li>Create a contact form using components from the shadcn registry.</li>
@@ -157,7 +157,7 @@ args = ["shadcn@latest", "mcp"]`} variant="outline" />
                     <h2 className="font-semibold text-3xl tracking-tight md:text-4xl">Example Prompts</h2>
                     <p>Once the MCP server is configured, you can interact with the Blok registry with natural language, for example:</p>
 
-                    <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                    <ul className="list-disc list-inside space-y-2">
                         <li>Show me all available components in the blok registry.</li>
                         <li>What components are available from blok?</li>
                         <li>Find me a hero section from the blok registry.</li>
@@ -172,7 +172,7 @@ args = ["shadcn@latest", "mcp"]`} variant="outline" />
 
                     <h3 className="mt-4 font-semibold text-2xl tracking-tight md:text-3xl">MCP Not Responding</h3>
                     <p>If the MCP server isn't responding to prompts:</p>
-                    <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+                    <ol className="list-decimal list-inside space-y-2 ">
                         <li>Verify the MCP server is properly configured and enabled in Cursor Settings.</li>
                         <li>Restart Cursor after configuration changes.</li>
                         <li>In Cursor, view logs by clicking View, then click Output, and select <code className="inline text-sm tabular-nums bg-muted px-1 rounded">MCP: project-*</code> in the dropdown.</li>
@@ -180,7 +180,7 @@ args = ["shadcn@latest", "mcp"]`} variant="outline" />
 
                     <h3 className="mt-4 font-semibold text-2xl tracking-tight md:text-3xl">Registry Access Issues</h3>
                     <p>If components aren't loading from the Blok registry:</p>
-                    <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+                    <ol className="list-decimal list-inside space-y-2 ">
                         <li>Verify the <code className="inline text-sm tabular-nums bg-muted px-1 rounded">@blok</code> registry URL is correct</li>
                         <li>Ensure environment variables are set if using private registry</li>
                         <li>Confirm the Blok registry is online and accessible</li>
@@ -189,7 +189,7 @@ args = ["shadcn@latest", "mcp"]`} variant="outline" />
 
                     <h3 className="mt-4 font-semibold text-2xl tracking-tight md:text-3xl">No Tools or Prompts</h3>
                     <p>If you see the <code className="inline text-sm tabular-nums bg-muted px-1 rounded">No tools or prompts</code> message:</p>
-                    <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+                    <ol className="list-decimal list-inside space-y-2">
                         <li>Run <code className="inline text-sm tabular-nums bg-muted px-1 rounded">npx clear-npx-cache</code></li>
                         <li>Try to re-enable the MCP server in Cursor Settings</li>
                         <li>View → Output → select <code className="inline text-sm tabular-nums bg-muted px-1 rounded">MCP: project-*</code> in the dropdown</li>

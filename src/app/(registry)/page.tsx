@@ -16,8 +16,8 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="w-full bg-subtle-bg">
-      <div className="bg-body-bg px-32">
-        <div className="flex flex-col space-y-5 p-5 md:p-10">
+      <div className="bg-body-bg px-32 flex justify-center">
+        <div className="flex flex-col space-y-5 py-10 md:py-20 w-full max-w-[1250px]">
           <h1 className="font-semibold text-5xl">Build better products faster</h1>
           <p className="text-muted-foreground w-full text-lg">
             Blok is Sitecore's product design system: the UI framework and style
@@ -42,12 +42,12 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-32">
-        <div className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10">
+      <div className="px-32 w-full flex items-center flex-col">
+        <div className="flex flex-col space-y-3 py-10 md:pt-10  w-full max-w-[1250px]">
           <h2 className="font-semibold text-3xl tracking-tight md:text-4xl">
             Prerequisites
           </h2>
-          <p className="text-muted-foreground">
+          <p className="">
             Make sure you have these tools installed before proceeding:
           </p>
           <div className="grid gap-4 md:grid-cols-3">
@@ -182,7 +182,7 @@ export default function Home() {
           </Alert>
         </div>
 
-        <div id="step-1" className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10 scroll-mt-20">
+        <div id="step-1" className="flex flex-col space-y-3 py-10 md:pt-10 scroll-mt-20 w-full max-w-[1250px]">
           <h2 className="font-semibold text-3xl tracking-tight md:text-4xl">
             Step 1: Initialize shadcn/ui
           </h2>
@@ -198,7 +198,7 @@ export default function Home() {
             During initialization, choose a base color when prompted. The CLI
             will then:
           </p>
-          <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+          <ul className="list-disc list-inside space-y-2">
             <li>
               Automatically detect your Vite setup and Tailwind configuration.
             </li>
@@ -220,7 +220,7 @@ export default function Home() {
           </ul>
         </div>
 
-        <div className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10">
+        <div className="flex flex-col space-y-3 py-10 md:pt-10 w-full max-w-[1250px]">
           <h2 className="font-semibold text-3xl tracking-tight md:text-4xl">
             Step 2: Install Blok components
           </h2>
@@ -245,7 +245,7 @@ export default function Home() {
                 This command will install a comprehensive set of components
                 including:
               </p>
-              <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+              <ul className="list-disc list-inside space-y-2 ">
                 <li>Basic UI components (Button, Card, Input, etc.)</li>
                 <li>Advanced components (Calendar, DataTable, Charts, etc.)</li>
                 <li>Layout components (Navigation, Breadcrumbs, etc.)</li>
@@ -255,7 +255,7 @@ export default function Home() {
           </Alert>
         </div>
 
-        <div className="flex flex-col space-y-3 p-5 md:pt-10 md:px-10">
+        <div className="flex flex-col space-y-3 py-10 md:pt-10 w-full max-w-[1250px]">
           <h2 className="font-semibold text-3xl tracking-tight md:text-4xl">
             Step 3: Test your setup
           </h2>
@@ -287,7 +287,7 @@ export default function MyComponent() {
           />
         </div>
 
-        <div className="flex flex-col space-y-3 mb-10 p-5 md:pt-10 md:px-10 md:pb-10">
+        <div className="flex flex-col space-y-3 mb-10 py-10 md:pt-10 md:pb-10 w-full max-w-[1250px]">
           <h2 className="font-semibold text-3xl tracking-tight md:text-4xl">
             Step 4: Run your application
           </h2>
@@ -296,7 +296,7 @@ export default function MyComponent() {
             code="npm run dev"
             showLineNumbers={false}
           />
-          <p className="text-muted-foreground">
+          <p className="">
             Your application is now running with functional BlokCN components.
           </p>
         </div>
