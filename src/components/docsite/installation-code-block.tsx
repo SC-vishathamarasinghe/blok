@@ -52,7 +52,7 @@ export default function InstallationCodeBlock({ registryUrl }: InstallationCodeB
                         onClick={copyToClipboard}
                         variant="ghost"
                         size="icon-sm"
-                        aria-label="Copy installation command to clipboard"
+                        aria-label={copied ? "Code copied to clipboard" : "Copy code to clipboard"}
                     >
                         {copied ? (
                           <Check className="size-4" />
@@ -60,23 +60,23 @@ export default function InstallationCodeBlock({ registryUrl }: InstallationCodeB
                             <Icon
                                 className="text-muted-foreground"
                                 path={mdiClipboardOutline}
-                                size={1}
+                                size={0.8}
                             />
                         )}
                     </Button>
                 </div>
 
                 <TabsContent value="pnpm" className="mt-2 mb-0 pb-2">
-                    <code className="font-mono text-sm text-body-text pl-1">{pnpmCommand}</code>
+                    <code className="font-mono text-md text-body-text pl-1">{pnpmCommand}</code>
                 </TabsContent>
                 <TabsContent value="npm" className="mt-2 mb-0 pb-2">
-                    <code className="font-mono text-sm text-body-text pl-1">{npxCommand}</code>
+                    <code className="font-mono text-md text-body-text pl-1">{npxCommand}</code>
                 </TabsContent>
                 <TabsContent value="yarn" className="mt-2 mb-0 pb-2">
-                    <code className="font-mono text-sm text-body-text pl-1">{yarnCommand}</code>
+                    <code className="font-mono text-md text-body-text pl-1">{yarnCommand}</code>
                 </TabsContent>
                 <TabsContent value="bun" className="mt-2 mb-0 pb-2">
-                    <code className="font-mono text-sm text-body-text pl-1">{bunCommand}</code>
+                    <code className="font-mono text-md text-body-text pl-1">{bunCommand}</code>
                 </TabsContent>
             </Tabs>
         </div>
