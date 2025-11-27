@@ -56,6 +56,9 @@ import TopbarThumb from "@/components/component-thumbs/topbar";
 import TooltipThumb from "@/components/component-thumbs/tooltip";
 import DialogThumb from "@/components/component-thumbs/dialog";
 import LabelThumb from "@/components/component-thumbs/label";
+import AllSiteThumb from "@/components/component-thumbs/all-site";
+import PinnedSiteThumb from "@/components/component-thumbs/pinned-site";
+import SiteCardThumb from "@/components/component-thumbs/site-card";
 
 // Map component names to their thumbnail components
 const componentThumbnails: Record<
@@ -115,6 +118,9 @@ const componentThumbnails: Record<
   tooltip: TooltipThumb,
   dialog: DialogThumb,
   label: LabelThumb,
+  "all-site": AllSiteThumb,
+  "pinned-site": PinnedSiteThumb,
+  "site-card": SiteCardThumb,
 };
 
 interface ComponentThumbProps {

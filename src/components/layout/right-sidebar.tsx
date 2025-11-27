@@ -96,7 +96,7 @@ export function RightSidebar({
                 href={links.shadcn}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-md font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Icon path={mdiOpenInNew} size={0.8} />
                 <span>Shadcn docs</span>
@@ -107,7 +107,7 @@ export function RightSidebar({
                 href={links.rules}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-md font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Icon path={mdiOpenInNew} size={0.8} />
                 <span>Rules</span>
@@ -118,7 +118,7 @@ export function RightSidebar({
                 href={links.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-md font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Icon path={mdiOpenInNew} size={0.8} />
                 <span>GitHub</span>
@@ -129,7 +129,7 @@ export function RightSidebar({
                 href={links.documentation}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-md font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Icon path={mdiOpenInNew} size={0.8} />
                 <span>Documentation</span>
@@ -140,7 +140,7 @@ export function RightSidebar({
                 href={links.figma}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-md font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Icon path={mdiOpenInNew} size={0.8} />
                 <span>Open in Figma</span>
@@ -151,7 +151,7 @@ export function RightSidebar({
                 href={links.confluence}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-md font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Icon path={mdiOpenInNew} size={0.8} />
                 <span>Confluence docs</span>
@@ -162,7 +162,7 @@ export function RightSidebar({
                 href={links.v1Docs}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-md font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Icon path={mdiOpenInNew} size={0.8} />
                 <span>Blok v1 docs</span>
@@ -173,7 +173,7 @@ export function RightSidebar({
                 href={links.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-md font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Icon path={mdiOpenInNew} size={0.8} />
                 <span>Website</span>
@@ -195,9 +195,9 @@ export function RightSidebar({
                     type="button"
                     onClick={() => scrollToSection(section.id)}
                     className={cn(
-                      "block w-full text-left text-xs transition-colors hover:text-foreground",
+                      "block w-full text-left text-md font-semibold transition-colors hover:text-foreground",
                       activeId === section.id
-                        ? "text-foreground font-medium"
+                        ? "text-foreground"
                         : "text-muted-foreground"
                     )}
                   >
@@ -211,9 +211,9 @@ export function RightSidebar({
                             type="button"
                             onClick={() => scrollToSection(child.id)}
                             className={cn(
-                              "block w-full text-left text-xs transition-colors hover:text-foreground",
+                              "block w-full text-left text-md font-semibold transition-colors hover:text-foreground",
                               activeId === child.id
-                                ? "text-foreground font-medium"
+                                ? "text-foreground"
                                 : "text-muted-foreground"
                             )}
                           >
