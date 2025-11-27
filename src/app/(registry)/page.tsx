@@ -286,7 +286,7 @@ export default function MyComponent() {
 }`}
             lang="tsx"
             showLineNumbers={true}
-            className="bg-white border"
+            className="bg-body-bg border"
           />
         </div>
 
