@@ -6,6 +6,10 @@ import { ComponentCard } from "@/components/docsite/component-card";
 import { Button } from "@/components/ui/button";
 import { getRegistryItem, getRegistryItems } from "@/lib/registry";
 import { getPrompt } from "@/lib/utils";
+import { demos } from "@/app/demo/[name]/index";
+import { Renderer } from "@/app/demo/[name]/renderer";
+import InstallationCodeBlock from "@/components/docsite/installation-code-block";
+import { Codeblocks } from "@/components/docsite/code-block";
 
 export async function generateStaticParams() {
   const components = getRegistryItems();
@@ -26,6 +30,9 @@ export default async function RegistryItemPage({
   if (!component) {
     notFound();
   }
+
+  const demoData = demos[name];
+  const registryUrl = `https://${process.env.NEXT_PUBLIC_REGISTRY_URL ?? ""}/r/${name}.json`;
 
   return (
     <div className="w-full bg-body-bg px-5 pb-10 md:px-10">
