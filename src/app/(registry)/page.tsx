@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Codeblocks } from "@/components/docsite/code-block";
+import { CodeBlock } from "@/components/code-block";
 import {
   Card,
   CardContent,
@@ -12,6 +13,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
+import Icon from "@mdi/react";
+import { mdiOpenInNew } from "@mdi/js";
 
 export default function Home() {
   return (
@@ -20,8 +23,7 @@ export default function Home() {
         <div className="flex flex-col space-y-5 py-10 md:py-20 w-full max-w-[1250px]">
           <h1 className="font-semibold text-5xl">Build better products faster</h1>
           <p className="text-muted-foreground w-full text-lg">
-            Blok is Sitecore's product design system: the UI framework and style
-            guide we use to build great apps. <br /> It's publicly available, so
+            Blok is Sitecore's design system. It is used for created industry leading martech applications.<br /> Now, it's publicly available, so
             that anyone can easily build software in the Sitecore product design
             language.
           </p>
@@ -36,142 +38,137 @@ export default function Home() {
               Get started
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/bloks">Browse bloks</Link>
+              <Link href="/primitives">Browse primitives</Link>
             </Button>
           </div>
         </div>
       </div>
 
       <div className="px-32 w-full flex items-center flex-col">
-        <div className="flex flex-col space-y-3 py-10 md:pt-10  w-full max-w-[1250px]">
+        <div className="flex flex-col space-y-3 py-10 md:pt-20  w-full max-w-[1250px]">
           <h2 className="font-semibold text-3xl tracking-tight md:text-4xl">
             Prerequisites
           </h2>
           <p className="">
-            Make sure you have these tools installed before proceeding:
+            Make sure you have the following tools installed before proceeding:
           </p>
           <div className="grid gap-4 md:grid-cols-3">
-            <Card className="group hover:shadow-md transition-shadow">
+            <Card>
               <CardHeader className="pb-0">
                 <div className="flex items-center gap-3">
                   <Badge
                     colorScheme="primary"
                     size="sm"
-                    className="w-6 h-6 rounded-full p-0 flex items-center justify-center"
+                    className="w-8 h-8 rounded-[6px] p-0 flex items-center justify-center text-base"
                   >
                     1
                   </Badge>
-                  <CardTitle className="text-base">Node.js 16+</CardTitle>
+                  <CardTitle className="text-lg font-semibold">Node.js 16+</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="pt-2">
-                <CardDescription className="mb-2">
+                <CardDescription className="mb-4">
                   <code className="bg-muted px-1 rounded text-xs">
                     node --version
                   </code>
                 </CardDescription>
                 <Button
                   variant="outline"
+                  colorScheme="neutral"
                   size="sm"
                   asChild
-                  className="text-xs h-7"
                 >
                   <a
                     href="https://nodejs.org/"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Download →
+                    Download
+                    <Icon path={mdiOpenInNew} className="size-4" />
                   </a>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card
-              style="outline"
-              padding="md"
-              className="group hover:shadow-md transition-shadow"
-            >
+            <Card>
               <CardHeader className="pb-0">
                 <div className="flex items-center gap-3">
                   <Badge
                     colorScheme="primary"
                     size="sm"
-                    className="w-6 h-6 rounded-full p-0 flex items-center justify-center"
+                    className="w-8 h-8 rounded-[6px] p-0 flex items-center justify-center text-base"
                   >
                     2
                   </Badge>
-                  <CardTitle className="text-base">npm 10+</CardTitle>
+                  <CardTitle className="text-lg font-semibold">npm 10+</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="pt-2">
-                <CardDescription className="mb-2">
-                  <code className="bg-muted px-1 rounded text-xs">
+              <CardDescription className="mb-4">
+              <code className="bg-muted px-1 rounded text-xs">
                     npm --version
                   </code>
                 </CardDescription>
                 <Button
                   variant="outline"
+                  colorScheme="neutral"
                   size="sm"
                   asChild
-                  className="text-xs h-7"
                 >
                   <a
                     href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Learn more →
+                    Learn more
+                    <Icon path={mdiOpenInNew} className="size-4" />
                   </a>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card
-              style="outline"
-              padding="md"
-              className="group hover:shadow-md transition-shadow"
-            >
+            <Card>
               <CardHeader className="pb-0">
                 <div className="flex items-center gap-3">
                   <Badge
                     colorScheme="primary"
                     size="sm"
-                    className="w-6 h-6 rounded-full p-0 flex items-center justify-center"
+                    className="w-8 h-8 rounded-[6px] p-0 flex items-center justify-center text-base"
                   >
                     3
                   </Badge>
-                  <CardTitle className="text-base">TailwindCSS</CardTitle>
+                  <CardTitle className="text-lg font-semibold">TailwindCSS</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="pt-2">
-                <CardDescription className="mb-2">
-                  Installed & configured
+              <CardDescription className="mb-4">
+              Installed & configured
                 </CardDescription>
                 <Button
                   variant="outline"
+                  colorScheme="neutral"
                   size="sm"
                   asChild
-                  className="text-xs h-7"
                 >
                   <a
                     href="https://tailwindcss.com/docs/installation"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Setup guide →
+                    Setup guide
+                    <Icon path={mdiOpenInNew} className="size-4" />
                   </a>
                 </Button>
               </CardContent>
             </Card>
           </div>
 
-          <Alert variant="primary" className="items-start">
-            <AlertDescription className="flex items-col gap-1">
-              <strong>Tip:</strong> This installation process is similar to{" "}
+          <Alert variant="primary" className="flex align-center items-center">
+            <AlertDescription className="flex items-col gap-1 text-lg">
+              <span className="font-semibold">Tip:</span> This installation process is similar to{" "}
               <a
                 href="https://ui.shadcn.com/docs/installation"
-                className="underline hover:no-underline break-words"
+                className="hover:underline break-words text-primary-fg font-semibold"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -230,7 +227,7 @@ export default function Home() {
             showLineNumbers={false}
           />
           <Alert variant="primary" className="items-start">
-            <AlertDescription className="flex flex-col gap-3">
+            <AlertDescription className="flex flex-col gap-3 text-lg">
               <div className="flex items-col gap-1">
                 Alternatively, you can install the Blok component registry to
                 get access to all components.
@@ -270,7 +267,7 @@ export default function Home() {
             </code>{" "}
             alias:
           </p>
-          <Codeblocks
+          <CodeBlock
             code={`import { Button } from "@/components/ui/button"
 
 export default function MyComponent() {
@@ -283,7 +280,9 @@ export default function MyComponent() {
     </div>
   )
 }`}
+            lang="tsx"
             showLineNumbers={true}
+            className="bg-white border"
           />
         </div>
 
@@ -297,7 +296,7 @@ export default function MyComponent() {
             showLineNumbers={false}
           />
           <p className="">
-            Your application is now running with functional BlokCN components.
+            Your application is now running with functional Blok components.
           </p>
         </div>
       </div>

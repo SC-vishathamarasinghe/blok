@@ -23,7 +23,7 @@ const codeBlockVariants = cva(
   {
     variants: {
       variant: {
-        outline: "border bg-body-bg text-muted-foreground",
+        outline: "border bg-body-bg text-body-text",
         filled: "bg-subtle-bg text-body-text border-none",
       },
     },

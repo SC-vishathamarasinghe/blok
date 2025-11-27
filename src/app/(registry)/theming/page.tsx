@@ -13,7 +13,7 @@ import TypographyThumb from "@/components/component-thumbs/typography";
 const themingCategories = [
   {
     name: "border-radius",
-    title: "Border Radius",
+    title: "Border radius",
     href: "/theming/border-radius",
     preview: (
       <div className="w-full h-full flex items-center justify-center p-4">
@@ -43,7 +43,7 @@ const themingCategories = [
   },
   {
     name: "semantic-tokens",
-    title: "Semantic Tokens",
+    title: "Semantic tokens",
     href: "/theming/semantic-tokens",
     preview: (
       <div className="w-full h-full flex items-center justify-center p-4">

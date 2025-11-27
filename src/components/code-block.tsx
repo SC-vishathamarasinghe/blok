@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Icon } from "@/lib/icon";
+import { cn } from "@/lib/utils";
 import { mdiClipboardOutline } from "@mdi/js";
 import { useState, useEffect } from "react";
 import * as shiki from "shiki";
@@ -11,9 +12,10 @@ interface CodeBlockProps {
     code: string;
     lang?: string;
     showLineNumbers?: boolean;
+    className?: string;
 }
 
-export function CodeBlock({ code, lang = "tsx", showLineNumbers = true }: CodeBlockProps) {
+export function CodeBlock({ code, lang = "tsx", showLineNumbers = true, className }: CodeBlockProps) {
     const [copied, setCopied] = useState(false);
     const [html, setHtml] = useState<string>("");
     const [isDark, setIsDark] = useState(false);
@@ -61,7 +63,7 @@ export function CodeBlock({ code, lang = "tsx", showLineNumbers = true }: CodeBl
     }
 
     return (
-        <ScrollArea className="relative rounded-md bg-muted overflow-y-auto max-h-[400px] scrollbar-hidden-bg">
+        <ScrollArea className={cn("relative rounded-md bg-muted overflow-y-auto max-h-[400px] scrollbar-hidden-bg", className)}>
             <Button
                 variant="ghost"
                 colorScheme="neutral"
