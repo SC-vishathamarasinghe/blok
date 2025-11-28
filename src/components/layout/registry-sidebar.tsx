@@ -155,7 +155,7 @@ export function RegistrySidebar() {
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === `/registry/${item.name}`}
+                    isActive={pathname === `/bloks/${item.name}`}
                     className="h-10 font-medium text-md text-neutral-fg hover:bg-gray-100 hover:dark:bg-gray-700 data-[active=true]:text-primary-fg data-[active=true]:bg-primary-background"
                   >
                     <Link
