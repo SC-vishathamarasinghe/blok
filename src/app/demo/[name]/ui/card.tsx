@@ -34,7 +34,7 @@ export const card = {
   components: {
     // Elevation Variants
     "Elevation": (
-      <div className="grid grid-cols-3 gap-4 p-8">
+      <div className="flex flex-wrap items-center gap-3 p-8">
         {elevationVariants.map((variant) => (
           <Card key={variant} style="outline" elevation={variant as "none" | "xs" | "sm" | "base" | "md" | "lg"} padding="lg" className="w-[400px]">
             <CardHeader>
