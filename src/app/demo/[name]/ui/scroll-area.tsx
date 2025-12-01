@@ -24,8 +24,27 @@ const tags = Array.from({ length: 50 }).map(
 
 export const scrollArea = {
   name: "scrollarea",
+  defaultComponent: (
+    <div className="flex flex-col gap-6">
+      <ScrollArea className="h-72 w-48 rounded-md border">
+        <div className="p-4">
+          <h4 className="mb-4 text-sm leading-none font-medium">Tags</h4>
+          {tags.map((tag) => (
+            <React.Fragment key={tag}>
+              <div className="text-sm">{tag}</div>
+              <Separator className="my-2" />
+            </React.Fragment>
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
+  ),
+  usage: [
+    `import { ScrollArea } from "@/components/ui/scroll-area";`,
+    `<ScrollArea className="h-[200px] w-[350px]">\n Jokester began sneaking into the castle in the middle of the night and\n leaving jokes all over the place: under the king's pillow, in his soup,\n even in the royal toilet. The king was furious, but he couldn't seem to\n stop Jokester. And then, one day, the people of the kingdom discovered\n that the jokes left by Jokester were so funny that they couldn't help\n but laugh. And once they started laughing, they couldn't stop.\n</ScrollArea>`,
+  ],
   components: {
-    ScrollAreaVertical: (
+    Vertical: (
       <div className="flex flex-col gap-6">
         <ScrollArea className="h-72 w-48 rounded-md border">
           <div className="p-4">
@@ -40,7 +59,7 @@ export const scrollArea = {
         </ScrollArea>
       </div>
     ),
-    ScrollAreaHorizontal: (
+    Horizontal: (
       <ScrollArea className="w-full max-w-96 rounded-md border p-4">
         <div className="flex gap-4">
           {works.map((artwork) => (
@@ -49,7 +68,7 @@ export const scrollArea = {
                 <img
                   src={artwork.art}
                   alt={`Photo by ${artwork.artist}`}
-                  className="aspect-[3/4] w-[300px] h-[400px] object-cover"
+                  className="aspect-3/4 w-[300px] h-[400px] object-cover"
                 />
               </div>
             </figure>
