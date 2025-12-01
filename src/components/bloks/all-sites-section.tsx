@@ -60,7 +60,7 @@ export function AllSitesSection<T extends SiteData>({
         </div>
 
         {/* Grid layout for all sites */}
-        <div className="grid grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 xl:grid-cols-3 gap-4">
           {allSites.map((site) => {
             const isPinned = pinnedSiteIdsSet.has(site.id);
 
