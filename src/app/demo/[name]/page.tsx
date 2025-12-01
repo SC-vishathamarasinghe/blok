@@ -21,10 +21,10 @@ export default async function DemoPage({
 }) {
   const { name } = await params;
 
-  const { defaultComponent, usage, components } = demos[name];
-  if (!demos[name]) {
+  if (!name || !demos[name]) {
     notFound();
   }
+  const { defaultComponent, usage, components } = demos[name];
 
   const registryUrl = `https://${baseUrl}/r/${name}.json`;
 
