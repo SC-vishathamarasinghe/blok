@@ -137,7 +137,7 @@ export default function TopBar() {
             results.push({
               name: item.name,
               type: 'ui',
-              href: `/registry/${item.name}`,
+              href: `/primitives/${item.name}`,
               description: item.description,
               categories: categories,
               title: title
@@ -163,7 +163,7 @@ export default function TopBar() {
             results.push({
               name: item.name,
               type: 'block',
-              href: `/registry/${item.name}`,
+              href: `/bloks/${item.name}`,
               description: item.description,
               categories: categories,
               title: title
