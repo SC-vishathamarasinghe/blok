@@ -21,10 +21,10 @@ export default async function DemoPage({
 }) {
   const { name } = await params;
 
-  const { defaultComponent, usage, components } = demos[name];
-  if (!demos[name]) {
+  if (!name || !demos[name]) {
     notFound();
   }
+  const { defaultComponent, usage, components } = demos[name];
 
   const registryUrl = `https://${baseUrl}/r/${name}.json`;
 
@@ -36,7 +36,7 @@ export default async function DemoPage({
   }
 
   return (
-      <div className="flex min-h-[100vh] w-full flex-col gap-12 bg-body-bg">
+      <div className="flex min-h-screen w-full flex-col gap-12 bg-body-bg">
         <div className="flex flex-col">
           <DemoTab
             key={name} 
