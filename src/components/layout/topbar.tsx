@@ -481,8 +481,8 @@ export default function TopBar() {
                                   size="sm"
                                   className="text-xs capitalize flex-shrink-0"
                                 >
-                                  {result.type === 'ui' ? 'UI' : 
-                                   result.type === 'block' ? 'Block' :
+                                  {result.type === 'ui' ? 'Primitive' : 
+                                   result.type === 'block' ? 'Blok' :
                                    result.type === 'theming' ? 'Theming' :
                                    result.type === 'graphics' ? 'Graphics' :
                                    result.type === 'page' ? 'Page' : result.type}
