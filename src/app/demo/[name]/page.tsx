@@ -39,6 +39,7 @@ export default async function DemoPage({
       <div className="flex min-h-screen w-full flex-col gap-12 bg-body-bg">
         <div className="flex flex-col">
           <DemoTab
+            id="preview"
             key={name} 
             code={codeMap["Default"] ?? ""} 
             component={componentDemo(defaultComponent)} 

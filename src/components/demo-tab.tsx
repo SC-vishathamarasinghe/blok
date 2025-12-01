@@ -3,14 +3,15 @@ import { CodeBlock } from "@/components/code-block";
 import { ReactNode } from "react";
 
 interface DemoTabProps {
+    id?: string;
     code: string;
     component: ReactNode;
     defaultTab?: "preview" | "code";
 }
 
-export default function DemoTab({ code, component, defaultTab = "preview" }: DemoTabProps) {
+export default function DemoTab({ id, code, component, defaultTab = "preview" }: DemoTabProps) {
     return (
-        <Tabs defaultValue={defaultTab} className="gap-0">
+        <Tabs id={id} defaultValue={defaultTab} className="gap-0">
             <TabsList className="w-full rounded-none justify-start">
                 <TabsTrigger value="preview">Preview</TabsTrigger>
                 <TabsTrigger value="code">Code</TabsTrigger>
