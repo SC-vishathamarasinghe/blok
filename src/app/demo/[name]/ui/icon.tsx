@@ -1,8 +1,15 @@
+import { Alert } from "@/components/ui/alert";
 import { Icon } from "@/components/ui/icon";
 import { mdiInformationOutline } from "@mdi/js";
+import Link from "next/link";
 
 export const icon = {
   name: "icon",
+  preInformation: (
+    <Alert>
+      <span className="inline">Looking for the right icon to use? See <Link href="graphics/icons" target="_blank" className="text-primary hover:text-primary/80 no-underline"> icons</Link>.</span>
+    </Alert>
+  ),
   defaultComponent: (
     <Icon path={mdiInformationOutline} variant="default" />
   ),

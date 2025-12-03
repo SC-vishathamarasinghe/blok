@@ -63,6 +63,7 @@ import { stackNavigation } from "@/app/demo/[name]/ui/stack-navigation";
 
 interface Demo {
   name: string; // this must match the `/registries/registry.json` name
+  preInformation?: ReactNode | ReactElement;
   defaultComponent: ReactNode | ReactElement;
   usage?: string[];
   components?: {
