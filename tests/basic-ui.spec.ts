@@ -4,6 +4,7 @@ import { testPrimaryAlert, testClosablePrimaryAlert, testPrimaryAlertLink } from
 import { testOpenAlertDialog, testKeepEditing, testDiscard } from './test-Components/test-Alert_Dialog';
 import { testPrimaryORDefaultButton, testGhostButton, testDisabledButtons, testIcononlyVariant, testLinkVariant, testOutlineButton, testSizeVariant } from './test-Components/test-Button';
 import { testAspectRatio } from './test-Components/test-Aspect_Ratio';
+import { testAvatar, testFallbackAvatar, testInteractiveAvatar, testLargeAvatar } from './test-Components/test-Avatar';
 
 
 test.describe('UI BLOK QA Automation', () => {
@@ -41,6 +42,13 @@ test.describe('UI BLOK QA Automation', () => {
 
   test('test_Aspect_Ratio', async ({ page }) => {
     await testAspectRatio(page);
+  });
+
+  test('test_Avatar', async ({ page }) => {
+    await testAvatar(page);
+    await testFallbackAvatar(page);
+    await testLargeAvatar(page);
+    await testInteractiveAvatar(page);
   });
 
   test('close', async ({ page }) => {
