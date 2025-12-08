@@ -544,6 +544,7 @@ export default function TopBar() {
           <Button variant="ghost" size="icon" asChild className="hover:bg-muted active:bg-muted">
             <a
               href={externalLinks?.Block_github || ""}
+              aria-label="Open GitHub"
               target="_blank"
               rel="noopener noreferrer"
             >
