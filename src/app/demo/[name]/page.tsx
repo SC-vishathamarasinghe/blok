@@ -64,7 +64,7 @@ export default async function DemoPage({
           <div id="examples" className="flex flex-col gap-9">
             <div className="flex flex-col gap-6">
               <h2 className="font-semibold text-3xl">Examples</h2>
-              <p className="text-sm text-muted-foreground">The following are examples of our {name} classes.</p>
+              <p className="text-sm text-muted-foreground wrap-break-words">The following are examples of our {name} classes.</p>
             </div>
 
             {components &&
