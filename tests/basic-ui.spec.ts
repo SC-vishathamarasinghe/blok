@@ -10,7 +10,7 @@ import { testBreadcrumb, testBreadcrumbItemLinks } from './test-Components/test-
 import { testSingleCalendar } from './test-Components/test-Calendar';
 import { testCardElevation, testCardPadding, testCardStyle, testDefaultCard } from './test-Components/test-Card';
 import { testDefaultCarousel } from './test-Components/test-Carousel';
-
+import { testAreaChart } from './test-Components/test-Chart';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -83,6 +83,10 @@ test.describe('UI BLOK QA Automation', () => {
 
   test('test_Carousel', async ({ page }) => {
     await testDefaultCarousel(page);
+  });
+
+  test('test_Chart', async ({ page }) => {
+    await testAreaChart(page);
   });
 
   test('close', async ({ page }) => {
