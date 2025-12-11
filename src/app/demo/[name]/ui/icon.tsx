@@ -1,3 +1,4 @@
+import { iconContentHubOne, iconOrdercloud, iconPersonalize, iconXmCloud } from "@/app/(registry)/graphics/icons/logo-icons";
 import { Alert } from "@/components/ui/alert";
 import { Icon } from "@/components/ui/icon";
 import { mdiInformationOutline } from "@mdi/js";
@@ -27,6 +28,7 @@ export const icon = {
     Variants: (
         <div className="flex items-center justify-center gap-4">
             <Icon path={mdiInformationOutline} variant="default" />
+            <Icon path={mdiInformationOutline} variant="subtle" />
             <Icon path={mdiInformationOutline} variant="filled" />
         </div>
     ),
@@ -36,6 +38,8 @@ export const icon = {
         <Icon path={mdiInformationOutline} size="md" />
         <Icon path={mdiInformationOutline} size="default" />
         <Icon path={mdiInformationOutline} size="lg" />
+        <Icon path={mdiInformationOutline} size="xl" />
+        <Icon path={mdiInformationOutline} size="xxl" />
       </div>
     ),
     "Color Schemes": (
@@ -52,5 +56,41 @@ export const icon = {
         <Icon path={mdiInformationOutline} colorScheme="pink" />
       </div>
     ),
+    "Subtle Variants": (
+        <div className="flex items-center justify-center gap-4">
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="primary" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="neutral" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="success" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="danger" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="warning" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="yellow" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="teal" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="cyan" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="blue" />
+            <Icon path={mdiInformationOutline} variant="subtle" colorScheme="pink" />
+        </div>
+    ),
+    "Filled Variants": (
+        <div className="flex items-center justify-center gap-4">
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="primary" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="neutral" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="success" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="danger" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="warning" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="yellow" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="teal" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="cyan" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="blue" />
+            <Icon path={mdiInformationOutline} variant="filled" colorScheme="pink" />
+        </div>
+    ),
+    "Sitecore Logos": (
+      <div className="flex items-center justify-center gap-4">
+        <Icon path={iconXmCloud} variant="default" />
+        <Icon path={iconContentHubOne} variant="subtle" />
+        <Icon path={iconPersonalize} variant="filled" />
+        <Icon path={iconOrdercloud} variant="filled" />
+      </div>
+    )
   },
 };
