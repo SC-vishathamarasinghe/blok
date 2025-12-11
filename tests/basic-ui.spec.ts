@@ -12,6 +12,7 @@ import { testCardElevation, testCardPadding, testCardStyle, testDefaultCard } fr
 import { testDefaultCarousel } from './test-Components/test-Carousel';
 import { testAreaChart } from './test-Components/test-Chart';
 import { testCheckbox, testCheckboxDisabled, testCheckboxWithDescription, testCheckEnabledLabel } from './test-Components/test-Checkbox';
+import { testCollapsible } from './test-Components/test-Collapsible';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -95,6 +96,10 @@ test.describe('UI BLOK QA Automation', () => {
     await testCheckboxWithDescription(page);
     await testCheckboxDisabled(page);
     await testCheckEnabledLabel(page);
+  });
+
+  test('test_Collapsible', async ({ page }) => {
+    await testCollapsible(page);
   });
 
   test('close', async ({ page }) => {
