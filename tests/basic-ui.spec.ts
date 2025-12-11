@@ -11,6 +11,7 @@ import { testSingleCalendar } from './test-Components/test-Calendar';
 import { testCardElevation, testCardPadding, testCardStyle, testDefaultCard } from './test-Components/test-Card';
 import { testDefaultCarousel } from './test-Components/test-Carousel';
 import { testAreaChart } from './test-Components/test-Chart';
+import { testCheckbox, testCheckboxDisabled, testCheckboxWithDescription, testCheckEnabledLabel } from './test-Components/test-Checkbox';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -87,6 +88,13 @@ test.describe('UI BLOK QA Automation', () => {
 
   test('test_Chart', async ({ page }) => {
     await testAreaChart(page);
+  });
+
+  test('test_Checkbox', async ({ page }) => {
+    await testCheckbox(page);
+    await testCheckboxWithDescription(page);
+    await testCheckboxDisabled(page);
+    await testCheckEnabledLabel(page);
   });
 
   test('close', async ({ page }) => {
