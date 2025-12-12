@@ -137,7 +137,7 @@ export default function TopBar() {
             results.push({
               name: item.name,
               type: 'ui',
-              href: `/registry/${item.name}`,
+              href: `/primitives/${item.name}`,
               description: item.description,
               categories: categories,
               title: title
@@ -163,7 +163,7 @@ export default function TopBar() {
             results.push({
               name: item.name,
               type: 'block',
-              href: `/registry/${item.name}`,
+              href: `/bloks/${item.name}`,
               description: item.description,
               categories: categories,
               title: title
@@ -481,8 +481,8 @@ export default function TopBar() {
                                   size="sm"
                                   className="text-xs capitalize flex-shrink-0"
                                 >
-                                  {result.type === 'ui' ? 'UI' : 
-                                   result.type === 'block' ? 'Block' :
+                                  {result.type === 'ui' ? 'Primitive' : 
+                                   result.type === 'block' ? 'Blok' :
                                    result.type === 'theming' ? 'Theming' :
                                    result.type === 'graphics' ? 'Graphics' :
                                    result.type === 'page' ? 'Page' : result.type}
@@ -528,8 +528,8 @@ export default function TopBar() {
               </div>
             )}
           </div>
-
-          <Button variant="ghost" className="hidden items-center gap-1 sm:flex hover:bg-muted active:bg-muted">
+          {/* TODO: Hidden till migration is complete */}
+          {/* <Button variant="ghost" className="hidden items-center gap-1 sm:flex hover:bg-muted active:bg-muted">
             <a
               href={externalLinks?.Block_site_old || ""}
               target="_blank"
@@ -539,7 +539,7 @@ export default function TopBar() {
               <Icon path={mdiOpenInNew} size={0.9} />
               {appConfig?.blockVersion}
             </a>
-          </Button>
+          </Button> */}
 
           <Button variant="ghost" size="icon" asChild className="hover:bg-muted active:bg-muted">
             <a
@@ -559,4 +559,3 @@ export default function TopBar() {
     </header>
   );
 }
-
