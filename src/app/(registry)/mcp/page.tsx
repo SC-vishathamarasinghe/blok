@@ -147,7 +147,7 @@ export default function MCPPage() {
                             <Codeblocks showLineNumbers={false} code={`npx shadcn@latest mcp init --client codex`} variant="outline" />
                             
                             <p className="mt-2">Then, add the following configuration to <code className="inline text-sm tabular-nums bg-muted px-1 rounded">~/.codex/config.toml</code>:</p>
-                            <CodeBlock
+                        <CodeBlock
             code={`[mcp_servers.shadcn]
 command = "npx"
 args = ["shadcn@latest", "mcp"]`}

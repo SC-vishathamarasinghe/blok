@@ -143,6 +143,7 @@ export const navigationMenu = {
                 <Link href="#">Documentation</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
+
             <NavigationMenuItem>
               <NavigationMenuTrigger>List</NavigationMenuTrigger>
               <NavigationMenuContent>
@@ -176,6 +177,7 @@ export const navigationMenu = {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
+
             <NavigationMenuItem>
               <NavigationMenuTrigger>Simple List</NavigationMenuTrigger>
               <NavigationMenuContent>
@@ -194,6 +196,7 @@ export const navigationMenu = {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
+
             <NavigationMenuItem>
               <NavigationMenuTrigger>With Icon</NavigationMenuTrigger>
               <NavigationMenuContent>

@@ -172,6 +172,7 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
           { id: "elevation", title: "Elevation" },
           { id: "style", title: "Style" },
           { id: "padding", title: "Padding" },
+          { id: "styled-card", title: "Styled Card" },
         ],
       },
     ],
@@ -309,7 +310,6 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
   },
   draggable: {
     links: {
-      documentation: "https://docs.dndkit.com/",
     },
     sections: [
       { id: "preview", title: "Preview" },
@@ -322,7 +322,6 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
           { id: "basic-drag-and-drop", title: "Basic Drag and Drop" },
           { id: "sortable-list", title: "Sortable List" },
           { id: "custom-handle", title: "Custom Handle" },
-          { id: "drag,-drop-&-sort", title: "Drag, Drop & Sort" },
         ],
       },
     ],
@@ -888,4 +887,3 @@ export function getShadcnUrl(componentName: string): string {
 }
 
 export type { TocSection, RightSidebarLinks };
-
