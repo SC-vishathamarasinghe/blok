@@ -17,6 +17,7 @@ import { testCombobx } from './test-Components/test-Combobox';
 import { testCommand } from './test-Components/test-Command';
 import { testContextMenu } from './test-Components/test-Context_menu';
 import { testSingleDatePicker } from './test-Components/test-Date_picker';
+import { testDialog } from './test-Components/test-Dialog';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -25,6 +26,7 @@ test.describe('UI BLOK QA Automation', () => {
     await page.goto('/');
   });
 
+  
   test('test_Accordion', async ({ page }) => {
     await testAccordian(page);
   });
@@ -120,6 +122,10 @@ test.describe('UI BLOK QA Automation', () => {
 
   test('test_Date_picker', async ({ page }) => {
     await testSingleDatePicker(page);
+  });
+  
+  test('test_Dialog', async ({ page }) => {
+    await testDialog(page);
   });
 
   test('close', async ({ page }) => {
