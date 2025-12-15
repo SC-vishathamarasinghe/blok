@@ -20,6 +20,7 @@ import { testSingleDatePicker } from './test-Components/test-Date_picker';
 import { testDialog } from './test-Components/test-Dialog';
 import { testDrawer } from './test-Components/test-Drawer';
 import { testDropdown } from './test-Components/test-Dropdown';
+import { testEmptyStates } from './test-Components/test-Empty_States';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -27,7 +28,7 @@ test.describe('UI BLOK QA Automation', () => {
     // adjust baseURL in playwright config, or use full URL:
     await page.goto('/');
   });
-{/*
+
   test('test_Accordion', async ({ page }) => {
     await testAccordian(page);
   });
@@ -132,9 +133,13 @@ test.describe('UI BLOK QA Automation', () => {
   test('test_Drawer', async ({ page }) => {
     await testDrawer(page);
   });
-*/}
+
   test('test_Dropdown', async ({ page }) => {
     await testDropdown(page);
+  });
+
+  test('test_Empty_States', async ({ page }) => {
+    await testEmptyStates(page);
   });
 
   test('close', async ({ page }) => {
