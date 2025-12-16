@@ -1,6 +1,7 @@
 {
-    "Default": "import { BasicDragDrop } from \"./draggable-basic\";\n\nexport default function DefaultDemo() {\n  return (\n    <BasicDragDrop />\n  );\n}",
-    "Basic Drag and Drop": "import { BasicDragDrop } from \"./draggable-basic\";\n\nexport default function BasicDragAndDropDemo() {\n  return (\n    <BasicDragDrop />\n  );\n}",
-    "Sortable List": "import { SortableListDemo } from \"./draggable-sortable-list\";\n\nexport default function SortableListDemo() {\n  return (\n    <SortableListDemo />\n  );\n}",
-    "Custom Handle": "import { CustomHandleDemo } from \"./draggable-custom-handle\";\n\nexport default function CustomHandleDemo() {\n  return (\n    <CustomHandleDemo />\n  );\n}"
+    "Default": "import BasicDragDrop from \"./draggable-basic\";\n\nexport default function DefaultDemo() {\n  return (\n    <BasicDragDrop />\n  );\n}",
+    "Basic Drag and Drop": "import BasicDragDrop from \"./draggable-basic\";\n\nexport default function BasicDragAndDropDemo() {\n  return (\n    <BasicDragDrop />\n  );\n}",
+    "Sortable List": "import SortableListDemo from \"./draggable-sortable-list\";\n\nexport default function SortableListDemo() {\n  return (\n    <SortableListDemo />\n  );\n}",
+    "Custom Handle": "import CustomHandleDemo from \"./draggable-custom-handle\";\n\nexport default function CustomHandleDemo() {\n  return (\n    <CustomHandleDemo />\n  );\n}",
+    "Drag, Drop & Sort": "import DragDropSortableDemo from \"./draggable-sortable-drop\";\n\nexport default function Drag,Drop&SortDemo() {\n  return (\n    <DragDropSortableDemo />\n  );\n}"
 }
