@@ -29,6 +29,7 @@ import { testLabel } from './test-Components/test-Label';
 import { testNavigationMenu } from './test-Components/test-Navigation_Menu';
 import { testPagination } from './test-Components/test-Pagination';
 import { testPopover } from './test-Components/test-Popover';
+import { testProgress } from './test-Components/test-Progress';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -181,6 +182,10 @@ test.describe('UI BLOK QA Automation', () => {
 
   test('test_Popover', async ({ page }) => {
     await testPopover(page);
+  });
+
+  test('test_Progress', async ({ page }) => {
+    await testProgress(page);
   });
 
   test('close', async ({ page }) => {
