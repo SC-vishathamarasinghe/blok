@@ -30,6 +30,7 @@ import { testNavigationMenu } from './test-Components/test-Navigation_Menu';
 import { testPagination } from './test-Components/test-Pagination';
 import { testPopover } from './test-Components/test-Popover';
 import { testProgress } from './test-Components/test-Progress';
+import { testRadioGroup } from './test-Components/test-Radio_Group';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -186,6 +187,10 @@ test.describe('UI BLOK QA Automation', () => {
 
   test('test_Progress', async ({ page }) => {
     await testProgress(page);
+  });
+
+  test('test_Radio_Group', async ({ page }) => {
+    await testRadioGroup(page);
   });
 
   test('close', async ({ page }) => {
