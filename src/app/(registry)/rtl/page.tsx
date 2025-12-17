@@ -302,7 +302,7 @@ export default function RTLPage() {
           </ol>
         </div>
 
-        <div className="flex flex-col space-y-3 p-5 md:pt-2 md:px-10">
+        <div className="flex flex-col space-y-3 p-5 md:pt-2 md:px-10 pb-20">
           <h2 className="font-semibold text-3xl md:text-4xl">
             Examples
           </h2>
@@ -352,7 +352,7 @@ export function Sidebar() {
               />
             </div>
 
-            <div>
+            <div className="mb-10">
               <h3 className="font-semibold text-xl mb-2">
                 Keeping Code Blocks LTR
               </h3>
@@ -374,89 +374,7 @@ export function Sidebar() {
                 className="bg-body-bg border"
               />
             </div>
-
-            <div className="mb-20">
-              <h3 className="font-semibold text-xl mb-2">
-                Direction Toggle Button
-              </h3>
-              <p className="text-muted-foreground mb-2">
-                For testing or manual override, you can create a direction
-                toggle:
-              </p>
-              <CodeBlock
-                code={`"use client";
-
-import { Languages } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-
-export function DirectionToggle() {
-  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
-
-  useEffect(() => {
-    const currentDir = document.documentElement.getAttribute("dir") || "ltr";
-    setDirection(currentDir as "ltr" | "rtl");
-  }, []);
-
-  const toggleDirection = () => {
-    const newDirection = direction === "ltr" ? "rtl" : "ltr";
-    setDirection(newDirection);
-    document.documentElement.setAttribute("dir", newDirection);
-    localStorage.setItem("direction", newDirection);
-  };
-
-  return (
-    <Button variant="ghost" size="icon" onClick={toggleDirection}>
-      <Languages className="h-4 w-4" />
-    </Button>
-  );
-}`}
-                lang="tsx"
-                showLineNumbers={true}
-                className="bg-body-bg border"
-              />
-            </div>
           </div>
-        </div>
-
-        <div className="flex flex-col space-y-3 p-5 md:pt-2 md:px-10 pb-20">
-          <h2 className="font-semibold text-3xl md:text-4xl">
-            Best Practices
-          </h2>
-          <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-            <li>
-              <strong className="text-foreground">
-                Use logical CSS properties
-              </strong>{" "}
-              - Prefer <code className="bg-muted px-1 rounded">start</code> and{" "}
-              <code className="bg-muted px-1 rounded">end</code> over{" "}
-              <code className="bg-muted px-1 rounded">left</code> and{" "}
-              <code className="bg-muted px-1 rounded">right</code> when possible
-            </li>
-            <li>
-              <strong className="text-foreground">Keep code blocks LTR</strong>{" "}
-              - Code should always read left-to-right regardless of UI direction
-            </li>
-            <li>
-              <strong className="text-foreground">
-                Test with RTL languages
-              </strong>{" "}
-              - Change your browser language to Arabic or Hebrew to test the UI
-            </li>
-            <li>
-              <strong className="text-foreground">
-                Use the useDirection hook
-              </strong>{" "}
-              - Access direction context in components that need to adapt their
-              layout
-            </li>
-            <li>
-              <strong className="text-foreground">
-                Persist user preference
-              </strong>{" "}
-              - Save direction choice to localStorage for returning users
-            </li>
-          </ul>
         </div>
       </div>
     </main>
