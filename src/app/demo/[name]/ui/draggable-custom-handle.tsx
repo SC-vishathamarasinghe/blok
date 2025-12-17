@@ -89,39 +89,18 @@ export default function CustomHandleDemo() {
           </p>
         </div>
 
-        <div className="max-w-2xl space-y-2">
-          {items.map((item, index) => {
-            const handleRef = React.useRef<HTMLDivElement>(null);
-            return (
-              <Sortable
-                key={item.id}
-                id={item.id}
-                aria-label={`Drag ${item.name}`}
-                index={index}
-                handle={handleRef as React.RefObject<HTMLElement>}
-              >
-                <Card className={`${cardColors[index]} group hover:shadow-sm transition-all duration-200`}>
-                  <CardContent className="p-2.5">
-                    <div className="flex items-center gap-2">
-                      <div
-                        ref={handleRef}
-                        className={cn(
-                          "flex-shrink-0 w-6 h-6 rounded flex items-center justify-center",
-                          "cursor-grab active:cursor-grabbing",
-                          "bg-card hover:bg-muted",
-                          "text-muted-foreground hover:text-foreground",
-                          "transition-all duration-200"
-                        )}
-                      >
-                        <GripVertical className="h-3.5 w-3.5" />
-                      </div>
-                      <p className="font-medium text-xs">{item.name}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Sortable>
-            );
-          })}
+        <div className="max-w-2xl">
+          <SortableContainer items={items.map((item) => item.id)} strategy="vertical">
+            <div className="space-y-2">
+              {items.map((item, index) => (
+                <SortableCard
+                  key={item.id}
+                  item={item}
+                  cardColor={cardColors[index % cardColors.length]}
+                />
+              ))}
+            </div>
+          </SortableContainer>
         </div>
       </div>
 

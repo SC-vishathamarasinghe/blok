@@ -50,40 +50,6 @@ export default function SortableListDemo() {
   const activeItem = activeId ? items.find((item) => item.id === activeId) : null;
   const activeIndex = activeItem ? items.findIndex((item) => item.id === activeId) : -1;
 
-        return (
-          <div
-            key={item.id}
-            ref={elementRef}
-            aria-label={`Drag ${item.name}`}
-            data-sortable-id={item.id}
-            data-sortable-index={index}
-            data-dragging={state.isDragging}
-            data-drop-target={state.isDropTarget}
-            className={cn(
-              "transition-transform duration-200",
-              state.isDragging && "opacity-50 cursor-grabbing",
-              !state.isDragging && "cursor-grab",
-              state.isDropTarget && "ring-2 ring-primary"
-            )}
-          >
-            <Card className={`${cardColors[index]} hover:shadow-sm transition-all duration-200`}>
-              <CardContent className="p-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-card flex items-center justify-center text-[10px] font-semibold text-foreground">
-                    {index + 1}
-                  </span>
-                  <p className="font-medium text-xs">{item.name}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-export function SortableListDemo() {
   return (
     <DndContext
       onDragStart={handleDragStart}
