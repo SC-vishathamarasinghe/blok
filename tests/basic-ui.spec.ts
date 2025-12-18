@@ -135,11 +135,11 @@ test.describe('UI BLOK QA Automation', () => {
   test('test_Date_picker', async ({ page }) => {
     await testSingleDatePicker(page);
   });
-  
+
   test('test_Dialog', async ({ page }) => {
     await testDialog(page);
   });
-  
+
   test('test_Drawer', async ({ page }) => {
     await testDrawer(page);
   });
@@ -167,7 +167,6 @@ test.describe('UI BLOK QA Automation', () => {
   test('test_Input_OTP', async ({ page }) => {
     await testInputOTP(page);
   });
-
 
   test('test_Label', async ({ page }) => {
     await testLabel(page);

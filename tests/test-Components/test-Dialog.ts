@@ -2,37 +2,39 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testDialog(page: Page){
     // Verify that display dialog trigger button
-    const triggerButton = page.getByRole('button', { name: 'Edit Profile' });
+    const dialog = page.locator('[id="dialog-default"]');
+    const triggerButton = dialog.getByRole('button', { name: 'Edit Profile' });
     await expect(triggerButton).toBeVisible();
 
     // Verify that open dialog when trigger button is clicked
     await triggerButton.click();
+    await page.waitForTimeout(100);
     const dialogContent = page.locator('[data-slot="dialog-content"]');
     await expect(dialogContent).toBeVisible();
 
     // Verify that display dialog title when opened
-    const dialogTitle = page.getByRole('heading', { name: 'Edit profile' });
+    const dialogTitle = dialogContent.getByRole('heading', { name: 'Edit profile' });
     await expect(dialogTitle).toBeVisible();
 
     // Verify that display dialog description when opened
-    const dialogDescription = page.getByText('Make changes to your profile here. Click save when you\'re done.');
+    const dialogDescription = dialogContent.getByText('Make changes to your profile here. Click save when you\'re done.');
     await expect(dialogDescription).toBeVisible();
 
     // Verify that display Name input field in dialog
-    const nameLabel = page.getByText('Name', { exact: true });
+    const nameLabel = dialogContent.getByText('Name', { exact: true });
     await expect(nameLabel).toBeVisible();
     
     // Check for Name input field
-    const nameInput = page.locator('input#name-1[name="name"]');
+    const nameInput = dialogContent.locator('input#name-1[name="name"]');
     await expect(nameInput).toBeVisible();
     await expect(nameInput).toHaveValue('Liz');
 
     // Verify that display Username input field in dialog
-    const usernameLabel = page.getByText('Username', { exact: true });
+    const usernameLabel = dialogContent.getByText('Username', { exact: true });
     await expect(usernameLabel).toBeVisible();
     
     // Check for Username input field
-    const usernameInput = page.locator('input#name-1[name="username"]');
+    const usernameInput = dialogContent.locator('input#name-1[name="username"]');
     await expect(usernameInput).toBeVisible();
     await expect(usernameInput).toHaveValue('@liz');
 
@@ -47,11 +49,11 @@ export async function testDialog(page: Page){
     await expect(usernameInput).toHaveValue('@johndoe');
 
     // Verify that display Cancel button in dialog footer
-    const cancelButton = page.getByRole('button', { name: 'Cancel' });
+    const cancelButton = dialogContent.getByRole('button', { name: 'Cancel' });
     await expect(cancelButton).toBeVisible();
 
     // Verify that display Save changes button in dialog footer
-    const saveButton = page.getByRole('button', { name: 'Save changes' });
+    const saveButton = dialogContent.getByRole('button', { name: 'Save changes' });
     await expect(saveButton).toBeVisible();
 
     // Verify that close dialog when Cancel button is clicked

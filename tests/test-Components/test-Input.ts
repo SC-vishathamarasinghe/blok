@@ -2,12 +2,13 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testInput(page: Page){
     // Verify that display input label
-    const label = page.locator('[data-slot="label"]').first();
+    const inputDefault = page.locator('[id="input-default"]');
+    const label = inputDefault.locator('[data-slot="label"]');
     await expect(label).toBeVisible();
     await expect(label).toContainText('Name');
 
     // Verify that display input contex
-    const input = page.locator('[data-slot="input"] , [id="input"]');
+    const input = inputDefault.locator('[data-slot="input"] , [id="input"]');
     await expect(input).toBeVisible();
     await expect(input).toHaveAttribute('placeholder', 'Enter your name');
 

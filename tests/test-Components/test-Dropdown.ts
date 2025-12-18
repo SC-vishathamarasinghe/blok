@@ -2,7 +2,8 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testDropdown(page: Page){
     // Verify that display dropdown trigger button
-    const triggerButton = page.locator('[data-slot="dropdown-menu-trigger"]');
+    const dropdown = page.locator('[id="dropdown-default"]');
+    const triggerButton = dropdown.locator('[data-slot="dropdown-menu-trigger"]');
     await expect(triggerButton).toBeVisible();
 
     // Verify that open dropdown menu when trigger button is clicked
@@ -37,7 +38,7 @@ export async function testDropdown(page: Page){
     await expect(dropdownContent.getByText('⇧⌘Q')).toBeVisible(); // Log out shortcut  
 
     // verify that open submenu when hovering over submenu trigger
-    const inviteUsersTrigger = page.getByText('Invite users');
+    const inviteUsersTrigger = dropdownContent.getByText('Invite users');
     await expect(inviteUsersTrigger).toBeVisible();
     
     // Hover over the submenu trigger

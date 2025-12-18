@@ -2,16 +2,17 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testAreaChart(page: Page){
     // Verify that "Area Chart" title is visible
-    const cardTitle = page.locator('[data-slot="card-title"]', { hasText: 'Area Chart' });
+    const chartArea = page.locator('[id="chart-area"]');
+    const cardTitle = chartArea.locator('[data-slot="card-title"]', { hasText: 'Area Chart' });
     await expect(cardTitle).toBeVisible();
 
     // Verify that "Area Chart" card description is visible
-    const cardDescription = page.locator('[data-slot="card-description"]').filter({ 
+    const cardDescription = chartArea.locator('[data-slot="card-description"]').filter({ 
         hasText: 'Showing total visitors for the last 6 months'});
     await expect(cardDescription).toBeVisible();
     
     // Verify chart container is visible
-    const chartContainer = page.locator('[data-slot="chart"]');
+    const chartContainer = chartArea.locator('[data-slot="chart"]');
     await expect(chartContainer).toBeVisible();
 
     const svg = chartContainer.locator('svg');
@@ -40,10 +41,10 @@ export async function testAreaChart(page: Page){
     }
 
     // Verify that "Area Chart" card footer is visible and contains trending text and date range text
-    const footerTrendingText = page.locator('[data-slot="card-footer"]').filter({ hasText: 'Trending up'});
+    const footerTrendingText = chartArea.locator('[data-slot="card-footer"]').filter({ hasText: 'Trending up'});
     await expect(footerTrendingText).toBeVisible();
 
-    const footerDescription = page.locator('[data-slot="card-footer"]').filter({ hasText: 'January - June 2024'});
+    const footerDescription = chartArea.locator('[data-slot="card-footer"]').filter({ hasText: 'January - June 2024'});
     await expect(footerDescription).toBeVisible();
 
     // Find the TrendingUp icon

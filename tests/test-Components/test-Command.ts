@@ -2,23 +2,23 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testCommand(page: Page){
     // Verify the text "Press" and the kbd element is present
-    const shortcutHint = page.getByText('Press');
-    await expect(shortcutHint).toBeVisible();
+    const command = page.locator('[id="command"]');
+    await expect(command).toBeVisible();
     const kbdElement = page.locator('kbd');
     await expect(kbdElement).toBeVisible();
 
     // Verify that open command dialog with Ctrl+J keyboard shortcut
     await page.keyboard.press('Control+j');
-    const commandDialog = page.locator('[data-slot="command"]');
+    const commandDialog = page.locator('[data-slot="dialog-content"]');
     await expect(commandDialog).toBeVisible({ timeout: 2000 });
 
     // Verify that display command input when dialog is open
-    const commandInput = page.locator('[data-slot="command-input"]');
+    const commandInput = commandDialog.locator('[data-slot="command-input"]');
     await expect(commandInput).toBeVisible();
     await expect(commandInput).toHaveAttribute('placeholder', 'Type a command or search...');
 
     // Verify that display all command groups
-    const commandGroup = page.locator('[data-slot="command-group"]');
+    const commandGroup = commandDialog.locator('[data-slot="command-group"]');
 
     // Verify that display Suggestions group
     const suggestionsGroup = commandGroup.filter({ has: page.locator('[cmdk-group-heading]:has-text("Suggestions")') });
@@ -52,16 +52,16 @@ export async function testCommand(page: Page){
     await commandInput.clear();
 
     // Verify all options are visible again    
-    await expect(page.getByText('Calendar', { exact: true })).toBeVisible();
-    await expect(page.getByText('Calculator', { exact: true })).toBeVisible();
-    await expect(page.getByText('Profile', { exact: true })).toBeVisible();
+    await expect(suggestionsGroup.getByText('Calendar', { exact: true })).toBeVisible();
+    await expect(suggestionsGroup.getByText('Calculator', { exact: true })).toBeVisible();
+    await expect(settingsItems.getByText('Profile', { exact: true })).toBeVisible();
 
     // Verify that filtering options when searching
     await commandInput.fill('calc');
-    await expect(page.getByText('Calculator', { exact: true })).toBeVisible();
+    await expect(suggestionsGroup.getByText('Calculator', { exact: true })).toBeVisible();
     // Verify other items are filtered out
-    await expect(page.getByText('Calendar', { exact: true })).not.toBeVisible();
-    await expect(page.getByText('Profile', { exact: true })).not.toBeVisible();
+    await expect(suggestionsGroup.getByText('Calendar', { exact: true })).not.toBeVisible();
+    await expect(settingsItems.getByText('Profile', { exact: true })).not.toBeVisible();
 
     // Verify that close dialog when clicking outside
     await page.click('body', { position: { x: 10, y: 10 } });

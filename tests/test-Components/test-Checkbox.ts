@@ -2,28 +2,30 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testCheckbox(page: Page){
     // Verify that checkbox is visible
-    const checkbox = page.locator('[data-slot="checkbox"][id="terms"]');
-    await expect(checkbox).toBeVisible();
+    const checkbox = page.locator('[id="checkbox-default"]');
+    const defaultCheckbox = checkbox.locator('[data-slot="checkbox"][id="terms"]');
+    await expect(defaultCheckbox).toBeVisible();
 
     // Verify that checkbox is not checked initially
-    await expect(checkbox).not.toBeChecked();
+    await expect(defaultCheckbox).not.toBeChecked();
 
     // Verify checkbox is now checked
-    await checkbox.click();
-    await expect(checkbox).toBeChecked();
+    await defaultCheckbox.click();
+    await expect(defaultCheckbox).toBeChecked();
 
     // Verify checkbox is now unchecked
-    await checkbox.click();
-    await expect(checkbox).not.toBeChecked();
+    await defaultCheckbox.click();
+    await expect(defaultCheckbox).not.toBeChecked();
 
     // Verify that checkbox has label text
-    await expect(checkbox).toHaveAttribute('aria-label', 'Accept terms and conditions');
+    await expect(defaultCheckbox).toHaveAttribute('aria-label', 'Accept terms and conditions');
 }
 
 export async function testCheckboxWithDescription(page: Page){
     // Verify that checkbox with description is visible
-    const checkbox = page.locator('[data-slot="checkbox"][id="terms-2"]');
-    await expect(checkbox).toBeVisible();
+    const checkbox = page.locator('[id="checkbox-description"]');
+    const descriptionCheckbox = checkbox.locator('[data-slot="checkbox"][id="terms-2"]');
+    await expect(descriptionCheckbox).toBeVisible();
 
     // Verify that checkbox has description
     const checkboxDescription = page.locator('div.grid.gap-2').filter({ has: page.locator('label[for="terms-2"]') }).locator('p.text-muted-foreground');

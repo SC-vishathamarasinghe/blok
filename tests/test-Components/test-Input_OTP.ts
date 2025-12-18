@@ -3,16 +3,17 @@ import { test, expect, Page } from '@playwright/test';
 export async function testInputOTP(page: Page){
 
     // Verify that have associated label
-    const label = page.locator('label[for="simple"]');
+    const inputOTPSimple = page.locator('[id="input-otp-simple"]');
+    const label = inputOTPSimple.locator('label[for="simple"]');
     await expect(label).toBeVisible();
     await expect(label).toContainText('Simple');
 
     // Verify that display input OTP component
-    const inputOTP = page.locator('[data-slot="input-otp"]').first();
+    const inputOTP = inputOTPSimple.locator('[data-slot="input-otp"]').first();
     await expect(inputOTP).toBeVisible();
 
     // Verify that display two OTP groups
-    const groups = page.locator('[data-slot="input-otp-group"]');
+    const groups = inputOTPSimple.locator('[data-slot="input-otp-group"]');
     await expect(groups).toHaveCount(2);
     
     // Verify each group is visible
@@ -20,12 +21,12 @@ export async function testInputOTP(page: Page){
     await expect(groups.nth(1)).toBeVisible();
 
     // Verify that display separator between groups
-    const separator = page.locator('[data-slot="input-otp-separator"]').first();
+    const separator = inputOTPSimple.locator('[data-slot="input-otp-separator"]').first();
     await expect(separator).toBeVisible();
     await expect(separator).toHaveAttribute('role', 'separator');
 
     // Verify that accept multiple characters
-    const slots = page.locator('[data-slot="input-otp-slot"]');
+    const slots = inputOTPSimple.locator('[data-slot="input-otp-slot"]');
     await inputOTP.click();
     await page.keyboard.type('1b3d5f');
 

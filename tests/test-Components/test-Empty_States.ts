@@ -2,7 +2,8 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testEmptyStates(page: Page){
     // Verify that display empty states component
-    const emptyStates = page.locator('[data-slot="empty-states"]');
+    const emptyStates = page.locator('[id="empty-states-no-search-results"]');
+    //const emptyStates = page.locator('[data-slot="empty-states"]');
     await expect(emptyStates).toBeVisible();
 
     // Verify that display image in empty states

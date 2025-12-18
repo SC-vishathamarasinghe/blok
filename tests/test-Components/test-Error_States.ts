@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testErrorStates(page: Page){
     // Verify that display error states component
-    const errorStates = page.locator('[data-slot="error-states"]');
+    const errorStates = page.locator('[id="error-states-generic"]');
     await expect(errorStates).toBeVisible();
 
     // Verify that display image in error states

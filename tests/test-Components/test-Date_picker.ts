@@ -2,15 +2,15 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testSingleDatePicker(page: Page){
     // Verify that date picker button is visible
-    const datePickerButton = page.locator('[data-slot="popover-trigger"]');
-    //const datePickerButton = page.locator('button:has-text("Pick a date")').last();
+    const datePicker = page.locator('[id="date-picker-single"]');
+    const datePickerButton = datePicker.locator('[data-slot="popover-trigger"]');
     await expect(datePickerButton).toBeVisible();
     await expect(datePickerButton).toContainText('Pick a date');
-    await expect(page.locator('[class="text-muted-foreground"]')).toBeVisible();
+    await expect(datePickerButton.locator('[class="text-muted-foreground"]')).toBeVisible();
 
     // Verify that open calendar popover when button is clicked
     await datePickerButton.click();
-    const popoverContent = page.locator('[data-slot="popover-content"]').last();
+    const popoverContent = page.locator('[data-slot="popover-content"]');
     await expect(popoverContent).toBeVisible();
 
     // Verify calendar is visible inside popover
@@ -19,12 +19,14 @@ export async function testSingleDatePicker(page: Page){
 
 
     // Verify that navigate to previous month when previous button is clicked
-    const prevButton = page.locator('[aria-label="Go to the Previous Month"]').first();
+    const prevButton = popoverContent.locator('[aria-label="Go to the Previous Month"]').first();
+    await expect(prevButton).toBeVisible();
     await prevButton.click();
     await expect(calendar).toBeVisible();
     
     // Verify that navigate to next month when next button is clicked
-    const nextButton = page.locator('[aria-label="Go to the Next Month"]').last();
+    const nextButton = popoverContent.locator('[aria-label="Go to the Next Month"]').last();
+    await expect(nextButton).toBeVisible();
     await nextButton.click();
     await expect(calendar).toBeVisible();
 

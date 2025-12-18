@@ -2,7 +2,8 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testNavigationMenu(page: Page){
     // Verify that display navigation menu
-    const navigationMenu = page.locator('[data-slot="navigation-menu"]');
+    const navigationMenuDefault = page.locator('[id="navigation-menu-default"]');
+    const navigationMenu = navigationMenuDefault.locator('[data-slot="navigation-menu"]');
     await expect(navigationMenu).toBeVisible();
 
     // Verify that display navigation menu list
