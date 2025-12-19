@@ -34,6 +34,7 @@ import { testRadioGroup } from './test-Components/test-Radio_Group';
 import { testResizableHorizontal, testResizableVertical, testResizableWithHandle } from './test-Components/test-Resizable';
 import { testScrollAreaHorizontal, testScrollAreaVertical } from './test-Components/test-Scroll_Area';
 import { testSelectDefault } from './test-Components/test-Select';
+import { testSeparator } from './test-Components/test-Separator';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -210,6 +211,10 @@ test.describe('UI BLOK QA Automation', () => {
     await testSelectDefault(page);
   });
 
+  test('test_Separator', async ({ page }) => {
+    await testSeparator(page);
+  });
+  
   test('close', async ({ page }) => {
     await page.close();
   });
