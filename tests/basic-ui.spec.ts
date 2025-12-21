@@ -42,6 +42,7 @@ import { testSlider } from './test-Components/test-Slider';
 import { testToastAction, testToastClosable, testToastError, testToastNormal, testToastSuccessful, testToastWarning } from './test-Components/test-Sonner';
 import { testSpinnerCircular, testSpinnerDefault, testSpinnerMessage } from './test-Components/test-Spinner';
 import { testSwitchDanger, testSwitchPrimary, testSwitchSuccess } from './test-Components/test-Switch';
+import { testTextareaBasic, testTextareaDisabled, testTextareaInvalid, testTextareaLarge, testTextareaSmall, testTextareaWithDefaultValue, testTextareaWithLabel, testTextareaWithLabelAndDescription } from './test-Components/test-Textarea';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -257,6 +258,17 @@ test.describe('UI BLOK QA Automation', () => {
     await testSwitchPrimary(page);  
     await testSwitchDanger(page);
     await testSwitchSuccess(page);
+  });
+
+  test('test_Textarea', async ({ page }) => {
+    await testTextareaBasic(page);
+    await testTextareaInvalid(page);
+    await testTextareaWithLabel(page);
+    await testTextareaWithLabelAndDescription(page);
+    await testTextareaDisabled(page);
+    await testTextareaSmall(page);
+    await testTextareaLarge(page);
+    await testTextareaWithDefaultValue(page);
   });
   
   test('close', async ({ page }) => {
