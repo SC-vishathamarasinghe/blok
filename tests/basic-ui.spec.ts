@@ -42,8 +42,10 @@ import { testSlider } from './test-Components/test-Slider';
 import { testToastAction, testToastClosable, testToastError, testToastNormal, testToastSuccessful, testToastWarning } from './test-Components/test-Sonner';
 import { testSpinnerCircular, testSpinnerDefault, testSpinnerMessage } from './test-Components/test-Spinner';
 import { testSwitchDanger, testSwitchPrimary, testSwitchSuccess } from './test-Components/test-Switch';
+import { testTable } from './test-Components/test-Table';
 import { testTextareaBasic, testTextareaDisabled, testTextareaInvalid, testTextareaLarge, testTextareaSmall, testTextareaWithDefaultValue, testTextareaWithLabel, testTextareaWithLabelAndDescription } from './test-Components/test-Textarea';
 import { testTimePicker } from './test-Components/test-Time_picker';
+
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -259,6 +261,10 @@ test.describe('UI BLOK QA Automation', () => {
     await testSwitchPrimary(page);  
     await testSwitchDanger(page);
     await testSwitchSuccess(page);
+  });
+
+  test('test_Table', async ({ page }) => {
+    await testTable(page);
   });
 
   test('test_Textarea', async ({ page }) => {
