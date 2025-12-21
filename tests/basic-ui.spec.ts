@@ -43,6 +43,7 @@ import { testToastAction, testToastClosable, testToastError, testToastNormal, te
 import { testSpinnerCircular, testSpinnerDefault, testSpinnerMessage } from './test-Components/test-Spinner';
 import { testSwitchDanger, testSwitchPrimary, testSwitchSuccess } from './test-Components/test-Switch';
 import { testTextareaBasic, testTextareaDisabled, testTextareaInvalid, testTextareaLarge, testTextareaSmall, testTextareaWithDefaultValue, testTextareaWithLabel, testTextareaWithLabelAndDescription } from './test-Components/test-Textarea';
+import { testTimePicker } from './test-Components/test-Time_picker';
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -270,7 +271,11 @@ test.describe('UI BLOK QA Automation', () => {
     await testTextareaLarge(page);
     await testTextareaWithDefaultValue(page);
   });
-  
+
+  test('test_Time_picker', async ({ page }) => {
+    await testTimePicker(page);
+  });
+
   test('close', async ({ page }) => {
     await page.close();
   });
