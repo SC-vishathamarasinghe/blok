@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BriefsTrackerCard } from "./briefs-tracker-card";
+import { BriefsTrackerCard } from "@/app/demo/[name]/ui/briefs-tracker-card";
 import { cn } from "@/lib/utils";
 
 const elevationVariants = ["none", "xs", "sm", "base", "md", "lg"];
