@@ -43,13 +43,13 @@ import { testToastAction, testToastClosable, testToastError, testToastNormal, te
 import { testSpinnerCircular, testSpinnerDefault, testSpinnerMessage } from './test-Components/test-Spinner';
 import { testSwitchDanger, testSwitchPrimary, testSwitchSuccess } from './test-Components/test-Switch';
 import { testTable } from './test-Components/test-Table';
+import { testTabsDefault, testTabsLine, testTabsLineIcons, testTabsSoftRounded, testTabsSoftRoundedIcons } from './test-Components/test-Tabs';
 import { testTextareaBasic, testTextareaDisabled, testTextareaInvalid, testTextareaLarge, testTextareaSmall, testTextareaWithDefaultValue, testTextareaWithLabel, testTextareaWithLabelAndDescription } from './test-Components/test-Textarea';
 import { testTimePicker } from './test-Components/test-Time_picker';
 import { testToggleRounded, testToggleSquare } from './test-Components/test-Toggle';
 import { testToggleGroupRounded, testToggleGroupSquare } from './test-Components/test-Toggle_group';
 import { testTooltip } from './test-Components/test-Tooltip';
 import { testTopbar } from './test-Components/test-Topbar';
-
 
 test.describe('UI BLOK QA Automation', () => {
 
@@ -272,6 +272,14 @@ test.describe('UI BLOK QA Automation', () => {
 
   test('test_Table', async ({ page }) => {
     await testTable(page);
+  });
+
+  test('test_Tabs', async ({ page }) => {
+    await testTabsDefault(page);
+    await testTabsLine(page);
+    await testTabsLineIcons(page);
+    await testTabsSoftRounded(page);
+    await testTabsSoftRoundedIcons(page);
   });
 
   test('test_Textarea', async ({ page }) => {
