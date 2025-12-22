@@ -1,5 +1,4 @@
 import BasicDragDrop from "@/app/demo/[name]/ui/draggable-basic";
-import SortableListDemo from "@/app/demo/[name]/ui/draggable-sortable-list";
 import CustomHandleDemo from "@/app/demo/[name]/ui/draggable-custom-handle";
 import DragDropSortableDemo from "@/app/demo/[name]/ui/draggable-sortable-drop";
 
@@ -34,7 +33,6 @@ import { Droppable } from "@/components/ui/droppable";`,
   ],
   components: {
     "Basic Drag and Drop": <BasicDragDrop />,
-    "Sortable List": <SortableListDemo />,
     "Custom Handle": <CustomHandleDemo />,
     "Drag, Drop & Sort": <DragDropSortableDemo />
   },
