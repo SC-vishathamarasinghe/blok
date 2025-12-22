@@ -13,7 +13,7 @@ import { testDefaultCarousel } from './test-Components/test-Carousel';
 import { testAreaChart } from './test-Components/test-Chart';
 import { testCheckbox, testCheckboxDisabled, testCheckboxWithDescription, testCheckEnabledLabel } from './test-Components/test-Checkbox';
 import { testCollapsible } from './test-Components/test-Collapsible';
-import { testCombobx } from './test-Components/test-Combobox';
+import { testCombobxFramework, testCombobxTimezone, testCombobxUser, testCombobxWithCheckbox } from './test-Components/test-Combobox';
 import { testCommand } from './test-Components/test-Command';
 import { testContextMenu } from './test-Components/test-Context_menu';
 import { testSingleDatePicker } from './test-Components/test-Date_picker';
@@ -140,7 +140,10 @@ test.describe('UI BLOK QA Automation', () => {
   });
 
   test('test_Combobox', async ({ page }) => {
-    await testCombobx(page);
+    await testCombobxFramework(page);
+    await testCombobxUser(page);
+    await testCombobxTimezone(page);
+    await testCombobxWithCheckbox(page);
   });
 
   test('test_Command', async ({ page }) => {
