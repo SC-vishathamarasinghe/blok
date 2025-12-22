@@ -34,91 +34,76 @@ export interface StackNavigationProps {
    * - Next.js: `usePathname()`
    */
   pathname?: string;
+
+  onItemClick?: (
+    item: StackNavigationItem,
+    event: React.MouseEvent<HTMLAnchorElement>
+  ) => void | boolean;
 }
 
 function DefaultNavItem({
   item,
   orientation = "vertical",
   pathname,
-  onNavigate,
+  onItemClick,
 }: {
   item: StackNavigationItem;
   orientation?: "vertical" | "horizontal";
   pathname: string;
-  onNavigate?: (path: string) => void;
+  onItemClick?: (
+    item: StackNavigationItem,
+    event: React.MouseEvent<HTMLAnchorElement>
+  ) => void | boolean;
 }) {
   const isActive = pathname === item.path;
+
   const isHorizontal = orientation === "horizontal";
-  
-  const [TanStackLink, setTanStackLink] = React.useState<any>(null);
-  const [isLoadingRouter, setIsLoadingRouter] = React.useState(false);
 
-  const loadTanStackRouter = React.useCallback(async () => {
-    // Skip in Next.js (runtime check) or if other conditions are met
-    if (
-      onNavigate ||
-      TanStackLink ||
-      isLoadingRouter ||
-      typeof window === "undefined" ||
-      typeof (window as any).__NEXT_DATA__ !== "undefined"
-    ) {
-      return;
-    }
-
-    setIsLoadingRouter(true);
-    try {
-      // Only attempt in non-Next.js environments 
-      // Build the import dynamically to avoid static analysis
-      const getModulePath = () => {
-        const p1 = "@tanstack";
-        const p2 = "/react-router";
-        return p1 + p2;
-      };
-
-      const routerModule = getModulePath();
-
-      // Use Function constructor to create import at runtime
-      // This prevents Turbopack from statically analyzing the import
-      const importFn = Function("specifier", "return import(specifier)");
-      const router = await importFn(routerModule);
-      if (router?.Link) {
-        setTanStackLink(() => router.Link);
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (onItemClick) {
+      const result = onItemClick(item, e);
+      if (result === false) {
+        e.preventDefault();
       }
-    } catch {
-      // TanStack Router not available
-    } finally {
-      setIsLoadingRouter(false);
-    }
-  }, [onNavigate, TanStackLink, isLoadingRouter]);
-
-  const handleClick = async (e: React.MouseEvent) => {
-    if (onNavigate) {
-      e.preventDefault();
-      onNavigate(item.path);
-      return;
-    }
-
-    // Try to load TanStack Router on first click if not already loaded
-    if (!TanStackLink && !isLoadingRouter) {
-      await loadTanStackRouter();
-      // If TanStack Router loaded, let it handle navigation
-      if (TanStackLink) {
-        return;
-      }
-    }
-
-    // Fallback to window.location
-    e.preventDefault();
-    if (
-      typeof window !== "undefined" &&
-      window.location.pathname !== item.path
-    ) {
-      window.location.href = item.path;
     }
   };
 
-  const navItemContent = (
-    <>
+  return (
+    <a
+      href={item.path}
+      onClick={handleClick}
+      className={cn(
+        // ---------VERTICAL--------------
+        !isHorizontal &&
+          cn(
+            "flex flex-col items-center justify-center overflow-hidden",
+            "h-14 min-w-14 min-h-14",
+            "p-1.5 gap-1",
+            "rounded-md transition-colors",
+            "text-3xs text-neutral-fg font-medium",
+            "hover:bg-sidebar-accent cursor-pointer",
+            "relative opacity-100",
+            "no-underline",
+            isActive &&
+              "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg font-medium",
+            item.className
+          ),
+
+        // --------- HORIZONTAL ---------
+        isHorizontal &&
+          cn(
+            "flex flex-col items-center justify-center",
+            "min-w-14 w-fit h-14 p-1.5 gap-1 rounded-md cursor-pointer overflow-hidden",
+            "text-neutral-fg hover:bg-sidebar-accent transition-colors font-medium",
+            "no-underline",
+            isActive &&
+              "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg font-medium",
+            item.className
+          )
+      )}
+      onContextMenu={(e) => e.preventDefault()}
+      aria-label={item.name}
+    >
       {/* Icon */}
       <div
         aria-hidden="true"
@@ -145,73 +130,7 @@ function DefaultNavItem({
       {!isHorizontal && item.badge && (
         <div className="absolute top-1 right-1">{item.badge}</div>
       )}
-    </>
-  );
-
-  const className = cn(
-    // ---------VERTICAL--------------
-    !isHorizontal &&
-      cn(
-        "flex flex-col items-center justify-center overflow-hidden",
-        "h-14 min-w-14 min-h-14",
-        "p-1.5 gap-1",
-        "rounded-md transition-colors",
-        "text-3xs text-neutral-fg font-medium",
-        "hover:bg-sidebar-accent cursor-pointer",
-        "relative opacity-100",
-        isActive &&
-          "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg font-medium",
-        item.className
-      ),
-
-    // --------- HORIZONTAL ---------
-    isHorizontal &&
-      cn(
-        "flex flex-col items-center justify-center",
-        "min-w-14 w-fit h-14 p-1.5 gap-1 rounded-md cursor-pointer overflow-hidden",
-        "text-neutral-fg hover:bg-sidebar-accent transition-colors font-medium",
-        isActive &&
-          "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg font-medium",
-        item.className
-      )
-  );
-
-  // Use TanStack Router Link if available and no custom handler
-  if (TanStackLink && !onNavigate) {
-    return (
-      <TanStackLink
-        to={item.path}
-        className={className}
-        onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
-      >
-        {navItemContent}
-      </TanStackLink>
-    );
-  }
-
-  // Default: use anchor or div with onClick handler
-  const Component = onNavigate || TanStackLink ? "div" : "a";
-  return (
-    <Component
-      href={!onNavigate && !TanStackLink ? item.path : undefined}
-      className={className}
-      onClick={handleClick}
-      onContextMenu={(e) => e.preventDefault()}
-      role={onNavigate || TanStackLink ? "button" : undefined}
-      tabIndex={onNavigate || TanStackLink ? 0 : undefined}
-      onKeyDown={
-        onNavigate || TanStackLink
-          ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                handleClick(e as any);
-              }
-            }
-          : undefined
-      }
-    >
-      {navItemContent}
-    </Component>
+    </a>
   );
 }
 
@@ -240,6 +159,7 @@ export function StackNavigation({
   footer,
   orientation = "vertical",
   pathname: providedPathname,
+  onItemClick,
 }: StackNavigationProps) {
   // Use provided pathname or fall back to window.location.pathname
   const [clientPathname, setClientPathname] = React.useState("");
@@ -247,35 +167,7 @@ export function StackNavigation({
   React.useEffect(() => {
     // Only set pathname on client side to avoid hydration mismatch
     if (typeof window !== "undefined" && !providedPathname) {
-      const updatePathname = () => {
-        setClientPathname(window.location.pathname);
-      };
-
-      // Set initial pathname
-      updatePathname();
-
-      // Listen for navigation events (back/forward buttons)
-      window.addEventListener("popstate", updatePathname);
-
-      // Listen for programmatic navigation (pushState/replaceState)
-      const originalPushState = history.pushState;
-      const originalReplaceState = history.replaceState;
-
-      history.pushState = function (...args) {
-        originalPushState.apply(history, args);
-        updatePathname();
-      };
-
-      history.replaceState = function (...args) {
-        originalReplaceState.apply(history, args);
-        updatePathname();
-      };
-
-      return () => {
-        window.removeEventListener("popstate", updatePathname);
-        history.pushState = originalPushState;
-        history.replaceState = originalReplaceState;
-      };
+      setClientPathname(window.location.pathname);
     }
   }, [providedPathname]);
 
@@ -340,7 +232,7 @@ export function StackNavigation({
                 {renderItem ? (
                   renderItem(navItem)
                 ) : (
-                  <DefaultNavItem item={navItem} orientation={orientation} pathname={pathname} />
+                  <DefaultNavItem item={navItem} orientation={orientation} pathname={pathname} onItemClick={onItemClick} />
                 )}
               </div>
             );
