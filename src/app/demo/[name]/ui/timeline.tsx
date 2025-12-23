@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/lib/icon";
 import { mdiAccount, mdiCheck, mdiFerry, mdiPackageVariantClosed } from "@mdi/js";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const timeline = {
   name: "timeline",
@@ -92,13 +93,19 @@ export const timeline = {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineIndicator variant="solid">
-                <Icon path={mdiAccount} size={0.7} />
+                <Avatar className="size-5">
+                    <AvatarImage
+                      src={"/ChristianHahn.png"}
+                      alt={"ChristianHahn avatar"}
+                    />
+                    <AvatarFallback>{"C"}</AvatarFallback>
+                 </Avatar>
               </TimelineIndicator>
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
               <TimelineTitle>          
-                  Sage created a new project        
+                  Christian created a new project        
               </TimelineTitle>
             </TimelineContent>
           </TimelineItem>
@@ -111,7 +118,7 @@ export const timeline = {
             </TimelineSeparator>
             <TimelineContent>
               <TimelineTitle className="flex items-center gap-2 flex-wrap">
-                Sage changed status from
+                Christian changed status from
                 <Badge colorScheme="neutral">
                   In progress
                 </Badge>
@@ -128,13 +135,19 @@ export const timeline = {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineIndicator variant="outline">
-                <Icon path={mdiAccount} size={0.7} />
+                <Avatar className="size-5">
+                    <AvatarImage
+                      src={"/ChristianHahn.png"}
+                      alt={"ChristianHahn avatar"}
+                    />
+                    <AvatarFallback>{"C"}</AvatarFallback>
+                 </Avatar>
               </TimelineIndicator>
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
               <TimelineTitle>          
-                  Sage created a new project        
+                  Christian created a new project        
               </TimelineTitle>
             </TimelineContent>
           </TimelineItem>
@@ -147,7 +160,7 @@ export const timeline = {
             </TimelineSeparator>
             <TimelineContent>
               <TimelineTitle className="flex items-center gap-2 flex-wrap">
-                Sage changed status from
+                Christian changed status from
                 <Badge colorScheme="neutral">
                   In progress
                 </Badge>
@@ -164,13 +177,19 @@ export const timeline = {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineIndicator variant="plain">
-                <Icon path={mdiAccount} size={0.7} />
+                <Avatar className="size-5">
+                    <AvatarImage
+                      src={"/ChristianHahn.png"}
+                      alt={"ChristianHahn avatar"}
+                    />
+                    <AvatarFallback>{"C"}</AvatarFallback>
+                 </Avatar>
               </TimelineIndicator>
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
               <TimelineTitle>          
-                  Sage created a new project        
+                  Christian created a new project        
               </TimelineTitle>
             </TimelineContent>
           </TimelineItem>
@@ -183,7 +202,7 @@ export const timeline = {
             </TimelineSeparator>
             <TimelineContent>
               <TimelineTitle className="flex items-center gap-2 flex-wrap">
-                Sage changed status from
+                Christian changed status from
                 <Badge colorScheme="neutral">
                   In progress
                 </Badge>
@@ -200,13 +219,19 @@ export const timeline = {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineIndicator variant="subtle">
-                <Icon path={mdiAccount} size={0.7} />
+                <Avatar className="size-5">
+                    <AvatarImage
+                      src={"/ChristianHahn.png"}
+                      alt={"ChristianHahn avatar"}
+                    />
+                    <AvatarFallback>{"C"}</AvatarFallback>
+                 </Avatar>
               </TimelineIndicator>
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
               <TimelineTitle>          
-                  Sage created a new project        
+                  Christian created a new project        
               </TimelineTitle>
             </TimelineContent>
           </TimelineItem>
@@ -219,7 +244,7 @@ export const timeline = {
             </TimelineSeparator>
             <TimelineContent>
               <TimelineTitle className="flex items-center gap-2 flex-wrap">
-                Sage changed status from
+                Christian changed status from
                 <Badge colorScheme="neutral">
                   In progress
                 </Badge>
