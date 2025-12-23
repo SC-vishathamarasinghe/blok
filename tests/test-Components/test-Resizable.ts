@@ -29,6 +29,8 @@ export async function testResizableHorizontal(page: Page){
     await page.mouse.move(startX + 80, startY, { steps: 12 });
     await page.mouse.up();
 
+    await page.waitForTimeout(1000);
+
     await expect.poll(async () => {
       const after = await leftPanel.boundingBox();
       return after?.width ?? 0;

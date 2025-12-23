@@ -52,6 +52,7 @@ import { testToggleRounded, testToggleSquare } from './test-Components/test-Togg
 import { testToggleGroupRounded, testToggleGroupSquare } from './test-Components/test-Toggle_group';
 import { testTooltip } from './test-Components/test-Tooltip';
 import { testTopbar } from './test-Components/test-Topbar';
+import { testDraggable } from './test-Components/test-Draggable';
 
 
 test.describe('UI BLOK QA Automation', () => {
@@ -77,16 +78,6 @@ test.describe('UI BLOK QA Automation', () => {
     await testDiscard(page);
   });
 
-  test('test_Button', async ({ page }) => {
-    await testPrimaryORDefaultButton(page);
-    await testOutlineButton(page);
-    await testGhostButton(page);
-    await testLinkVariant(page);
-    await testDisabledButtons(page);
-    await testIcononlyVariant(page);
-    await testSizeVariant(page);
-  });
-
   test('test_Aspect_Ratio', async ({ page }) => {
     await testAspectRatio(page);
   });
@@ -110,6 +101,16 @@ test.describe('UI BLOK QA Automation', () => {
   test('test_Breadcrumb', async ({ page }) => {
     await testBreadcrumb(page);
     await testBreadcrumbItemLinks(page);
+  });
+
+  test('test_Button', async ({ page }) => {
+    await testPrimaryORDefaultButton(page);
+    await testOutlineButton(page);
+    await testGhostButton(page);
+    await testLinkVariant(page);
+    await testDisabledButtons(page);
+    await testIcononlyVariant(page);
+    await testSizeVariant(page);
   });
 
   test('test_Calendar', async ({ page }) => {
@@ -163,6 +164,10 @@ test.describe('UI BLOK QA Automation', () => {
 
   test('test_Dialog', async ({ page }) => {
     await testDialog(page);
+  });
+
+  test('test_Draggable', async ({ page }) => {
+    await testDraggable(page);
   });
 
   test('test_Drawer', async ({ page }) => {
