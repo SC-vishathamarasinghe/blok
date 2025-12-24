@@ -1003,25 +1003,6 @@
       ]
     },
     {
-      "name": "drawer",
-      "type": "registry:ui",
-      "title": "Drawer",
-      "description": "A side panel containing content or editable fields.",
-      "dependencies": [
-        "vaul"
-      ],
-      "registryDependencies": [
-        "https://blok.sitecore.com/r/button.json",
-        "https://blok.sitecore.com/r/theme.json"
-      ],
-      "files": [
-        {
-          "path": "src/components/ui/drawer.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "dropdown-menu",
       "type": "registry:ui",
       "title": "Dropdown",
@@ -1720,24 +1701,6 @@
       "files": [
         {
           "path": "src/components/ui/popover.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "hover-card",
-      "type": "registry:ui",
-      "title": "Hover card",
-      "description": "For sighted users to preview content available behind a link.",
-      "registryDependencies": [
-        "https://blok.sitecore.com/r/theme.json"
-      ],
-      "dependencies": [
-        "@radix-ui/react-hover-card"
-      ],
-      "files": [
-        {
-          "path": "src/components/ui/hover-card.tsx",
           "type": "registry:ui"
         }
       ]
