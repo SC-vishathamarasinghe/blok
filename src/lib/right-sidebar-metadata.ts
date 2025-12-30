@@ -659,7 +659,7 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
       },
     ],
   },
-  spinner: {
+  "circular-progress": {
     links: {
       shadcn: "https://ui.shadcn.com/docs/components/spinner",
       figma: "https://www.figma.com/design/x0CUbrC5Kjcuk64VPCnbgz/Blok-Components?m=auto&node-id=7069-16458&t=NScvPldB3fxBBWL8-1"
@@ -673,7 +673,7 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
         title: "Examples",
         children: [
           { id: "variants", title: "Variants" },
-          { id: "with-text-spinner", title: "With Text Spinner" },
+          { id: "with-text-circular-progress", title: "With Text Circular Progress" },
         ],
       },
     ],

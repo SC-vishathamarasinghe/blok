@@ -2,7 +2,7 @@ import React from "react"
 
 import { cn } from "@/lib/utils"
 
-interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CircularProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: "xs" | "sm" | "md" | "lg" | "xl"
   variant?: "default" | "circular"
   message?: string
@@ -18,7 +18,7 @@ const sizeClasses = {
   xl: "w-12 h-12",
 }
 
-function Spinner({
+function CircularProgress({
   size = "md",
   variant = "default",
   className,
@@ -26,8 +26,8 @@ function Spinner({
   withOverlay = false,
   fullscreen = false,
   ...props
-}: SpinnerProps) {
-  const spinnerClasses = cn(
+}: CircularProgressProps) {
+  const circularProgressClasses = cn(
     "inline-block rounded-full border-4",
     "border-t-purple-600 border-r-purple-600 border-b-gray-200 border-l-gray-200",
     variant === "circular" && "animate-spin",
@@ -35,9 +35,9 @@ function Spinner({
     className
   )
 
-  const SpinnerElement = (
+  const CircularProgressElement = (
     <div className="text-center">
-      <div className={spinnerClasses} data-testid="spinner" {...props} />
+      <div className={circularProgressClasses} data-testid="circular-progress" {...props} />
       {message && <p className="mt-6 text-sm text-subtle-text">{message}</p>}
     </div>
   )
@@ -45,7 +45,7 @@ function Spinner({
   if (fullscreen) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-body-bg/90">
-        {SpinnerElement}
+        {CircularProgressElement}
       </div>
     )
   }
@@ -53,12 +53,13 @@ function Spinner({
   if (withOverlay) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-body-bg/90">
-        {SpinnerElement}
+        {CircularProgressElement}
       </div>
     )
   }
 
-  return SpinnerElement
+  return CircularProgressElement
 }
 
-export { Spinner, type SpinnerProps }
+export { CircularProgress, type CircularProgressProps }
+

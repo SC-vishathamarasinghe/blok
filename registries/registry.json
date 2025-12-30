@@ -1483,16 +1483,16 @@
       ]
     },
     {
-      "name": "spinner",
+      "name": "circular-progress",
       "type": "registry:ui",
-      "title": "Spinner",
-      "description": "A spinner component for loading states.",
+      "title": "Circular Progress",
+      "description": "A circular progress component for loading states.",
       "registryDependencies": [
         "https://blok.sitecore.com/r/theme.json"
       ],
       "files": [
         {
-          "path": "src/components/ui/spinner.tsx",
+          "path": "src/components/ui/circular-progress.tsx",
           "type": "registry:ui"
         }
       ]

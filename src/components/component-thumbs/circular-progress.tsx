@@ -1,10 +1,10 @@
 import * as React from "react";
 
-interface SpinnerThumbProps {
+interface CircularProgressThumbProps {
   className?: string;
 }
 
-const SpinnerThumb = ({ className }: SpinnerThumbProps) => (
+const CircularProgressThumb = ({ className }: CircularProgressThumbProps) => (
   <svg
     width="100%"
     height="100%"
@@ -23,5 +23,6 @@ const SpinnerThumb = ({ className }: SpinnerThumbProps) => (
   </svg>
 );
 
-export default SpinnerThumb;
+export default CircularProgressThumb;
+
 

@@ -50,7 +50,7 @@ import { collapsible } from "@/app/demo/[name]/ui/collapsible";
 import { progress } from "@/app/demo/[name]/ui/progress";
 import { command } from "@/app/demo/[name]/ui/command";
 import { combobox } from "@/app/demo/[name]/ui/combobox";
-import { spinner } from "@/app/demo/[name]/ui/spinner";
+import { circularProgress } from "@/app/demo/[name]/ui/circular-progress";
 import { pinnedSite } from "@/app/demo/[name]/ui/pinned-site";
 import { allSite } from "@/app/demo/[name]/ui/all-site";
 import { siteCard } from "@/app/demo/[name]/ui/site-card";
@@ -116,7 +116,7 @@ export const demos: { [name: string]: Demo } = {
   skeleton,
   slider,
   sonner,
-  spinner,
+  "circular-progress": circularProgress,
   switch: switchComponent,
   "stack-navigation":stackNavigation,
   table,
