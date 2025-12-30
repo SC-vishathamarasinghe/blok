@@ -51,7 +51,7 @@ export function FilterSingleSelect() {
         <Select value={defaultValue} onValueChange={setDefaultValue}>
           <SelectTrigger
             className={cn(
-              "*:data-[slot=select-value]:hidden",
+              "*:data-[slot=select-value]:hidden border-border",
               defaultValue && "pr-8 [&>svg]:hidden overflow-hidden"
             )}
           >
@@ -100,7 +100,7 @@ export function FilterSingleSelect() {
         <Select value={primaryValue} onValueChange={setPrimaryValue}>
           <SelectTrigger
             className={cn(
-              "*:data-[slot=select-value]:hidden",
+              "*:data-[slot=select-value]:hidden border-border",
               primaryValue &&
                 "pr-8 [&>svg]:hidden bg-primary-bg text-primary-fg border-primary overflow-hidden"
             )}
@@ -110,7 +110,7 @@ export function FilterSingleSelect() {
               <span
                 className={cn(
                   "font-semibold truncate",
-                  primaryValue ? "text-primary-fg" : "text-neutral-fg"
+                primaryValue ? "text-primary-fg" : "text-neutral-fg"
                 )}
               >
                 Select a product
@@ -128,7 +128,7 @@ export function FilterSingleSelect() {
                   <span
                     className={cn(
                       "font-normal truncate min-w-0",
-                      primaryValue ? "text-primary-fg" : "text-neutral-fg"
+                    primaryValue ? "text-primary-fg" : "text-neutral-fg"
                     )}
                   >
                     {primarySelectedLabel}
