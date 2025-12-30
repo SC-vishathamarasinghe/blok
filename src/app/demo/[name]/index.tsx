@@ -51,6 +51,7 @@ import { progress } from "@/app/demo/[name]/ui/progress";
 import { command } from "@/app/demo/[name]/ui/command";
 import { combobox } from "@/app/demo/[name]/ui/combobox";
 import { circularProgress } from "@/app/demo/[name]/ui/circular-progress";
+import { spinner } from "@/app/demo/[name]/ui/spinner";
 import { pinnedSite } from "@/app/demo/[name]/ui/pinned-site";
 import { allSite } from "@/app/demo/[name]/ui/all-site";
 import { siteCard } from "@/app/demo/[name]/ui/site-card";
@@ -117,6 +118,7 @@ export const demos: { [name: string]: Demo } = {
   slider,
   sonner,
   "circular-progress": circularProgress,
+  spinner,
   switch: switchComponent,
   "stack-navigation":stackNavigation,
   table,

@@ -678,6 +678,26 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
       },
     ],
   },
+  spinner: {
+    links: {
+      shadcn: "https://ui.shadcn.com/docs/components/spinner",
+    },
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+      {
+        id: "examples",
+        title: "Examples",
+        children: [
+          { id: "size", title: "Size" },
+          { id: "color", title: "Color" },
+          { id: "button", title: "Button" },
+          { id: "badge", title: "Badge" },
+        ],
+      },
+    ],
+  },
   "stack-navigation": {
     links:{
       figma: "https://www.figma.com/design/x0CUbrC5Kjcuk64VPCnbgz/Blok-Components?m=auto&node-id=10256-14999&t=NScvPldB3fxBBWL8-1"
