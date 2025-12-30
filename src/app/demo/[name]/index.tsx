@@ -24,6 +24,7 @@ import { dropdownMenu } from "@/app/demo/[name]/ui/dropdown-menu";
 import { icon } from "@/app/demo/[name]/ui/icon";
 import { input } from "@/app/demo/[name]/ui/input";
 import { inputOtp } from "@/app/demo/[name]/ui/inputOtp";
+import { kbd } from "@/app/demo/[name]/ui/kbd";
 import { label } from "@/app/demo/[name]/ui/label";
 // import { menuBar } from "@/app/demo/[name]/ui/menu-bar";
 import { navigationMenu } from "@/app/demo/[name]/ui/navigation-menu";
@@ -102,6 +103,7 @@ export const demos: { [name: string]: Demo } = {
   icon,
   input,
   inputOtp,
+  kbd,
   label,
   // "menu-bar": menuBar,
   "navigation-menu": navigationMenu,
