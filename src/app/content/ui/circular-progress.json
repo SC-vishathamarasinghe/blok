@@ -4,3 +4,4 @@
     "With Text Circular Progress": "import { CircularProgress } from \"@/components/ui/circular-progress\";\n\nexport default function WithTextCircularProgressDemo() {\n  return (\n    <div className=\"flex items-start justify-center w-28\"> <CircularProgress variant=\"circular\" size=\"md\" message=\"Loading...\" /></div>\n  );\n}"
 }
 
+
