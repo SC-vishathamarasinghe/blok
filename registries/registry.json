@@ -904,7 +904,8 @@
         "https://blok.sitecore.com/r/theme.json",
         "https://blok.sitecore.com/r/calendar.json",
         "https://blok.sitecore.com/r/button.json",
-        "https://blok.sitecore.com/r/popover.json"
+        "https://blok.sitecore.com/r/popover.json",
+        "https://blok.sitecore.com/r/select.json"
       ],
       "files": [
         {
