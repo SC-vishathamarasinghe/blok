@@ -701,7 +701,8 @@
       ],
       "registryDependencies": [
         "https://blok.sitecore.com/r/theme.json",
-        "https://blok.sitecore.com/r/button.json"
+        "https://blok.sitecore.com/r/button.json",
+        "https://blok.sitecore.com/r/select.json"
       ],
       "files": [
         {
