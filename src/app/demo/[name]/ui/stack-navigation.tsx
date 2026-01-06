@@ -1,16 +1,12 @@
-import StackNavigationExample from "@/app/demo/[name]/ui/stack-navigation-example";
-import StackNavigationHorizontal from "@/app/demo/[name]/ui/stack-navigation-horizontal";
-import StackNavigationTabs from "@/app/demo/[name]/ui/stack-navigation-tabs";
-
 export const stackNavigation = {
   name: "stack-navigation",
-  defaultComponent: <StackNavigationExample />,
+  defaultComponent: "stack-navigation",
   usage: [
-    `import StackNavigationExample from "./stack-navigation-example";`,
-    `<StackNavigationExample/>`,
+    `import { StackNavigation } from "@/components/ui/stack-navigation";`,
+    `<StackNavigation />`,
   ],
   components: {
-    Horizontal: <StackNavigationHorizontal />,
-    "Horizontal Tabs": <StackNavigationTabs />,
+    Horizontal: "stack-navigation-horizontal",
+    "Horizontal Tabs": "stack-navigation-horizontal-tabs",
   },
 };

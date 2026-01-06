@@ -1,10 +1,6 @@
-import { TimePickerExample } from "@/app/demo/[name]/ui/time-picker-example";
-
 export const timePicker = {
   name: "time-picker",
-  defaultComponent: (
-    <TimePickerExample />
-  ),
+  defaultComponent: "time-picker",
   usage: [
     `import { TimePicker } from "@/components/ui/time-picker";`,
     `<TimePicker />`,
