@@ -1,8 +1,12 @@
 export const separator = {
   name: "separator",
-  defaultComponent: "separator",
-  usage: [
-    `import { Separator } from "@/components/ui/separator";`,
-    `<Separator />`,
-  ],
+  preview: {
+    defaultComponent: "separator",
+  },
+  usage: {
+    usage: [
+      `import { Separator } from "@/components/ui/separator";`,
+      `<Separator />`,
+    ]
+  },
 };
