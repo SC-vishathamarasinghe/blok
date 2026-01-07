@@ -94,13 +94,17 @@ export function ExampleCombobox() {
 }`;
 
 export const combobox = {
-  name: "combobox",
-  defaultComponent: "combobox-framework",
-  usage: [ usage ],
+  name: "combobox", 
+  preview: {
+    defaultComponent: "combobox-framework",
+  },
+  usage: {
+    usage: [ usage ],
+  },
   components: {
-    "Framework Combobox": "combobox-framework",
-    "User Combobox": "combobox-user",
-    "Timezone Combobox": "combobox-timezone",
-    "Combobox With Checkbox": "combobox-checkbox",
+    "Framework Combobox": { component: "combobox-framework", },
+    "User Combobox": { component: "combobox-user", },
+    "Timezone Combobox": { component: "combobox-timezone", },
+    "Combobox With Checkbox": { component: "combobox-checkbox", },
   },
 };
