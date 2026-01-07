@@ -1,17 +1,21 @@
 export const sonner = {
   name: "sonner",
-  defaultComponent: "sonner",
-  usage: [
-    `import { Sonner } from "@/components/ui/sonner";`,
-    `<Sonner />`,
-  ],
+  preview: {
+    defaultComponent: "sonner",
+  },
+  usage: {
+    usage: [
+      `import { Sonner } from "@/components/ui/sonner";`,
+      `<Sonner />`,
+    ]
+  },
   components: {
-    Default: "sonner",
-    Success: "sonner-success",
-    Warning: "sonner-warning",
-    Error: "sonner-error",
-    Action: "sonner-action",
+    Default: { component: "sonner", },
+    Success: { component: "sonner-success", },
+    Warning: { component: "sonner-warning", },
+    Error: { component: "sonner-error", },
+    Action: { component: "sonner-action", },
     // Custom: "sonner-custom",
-    Closable: "sonner-closable",
+    Closable: { component: "sonner-closable", },
   },
 };

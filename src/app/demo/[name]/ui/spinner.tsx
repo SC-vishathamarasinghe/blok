@@ -1,12 +1,16 @@
 export const spinner = {
-  name: "checkbox",
-  defaultComponent: 'spinner',
-  usage: [
-    `import { Spinner } from "@/components/ui/spinner";`,
-    `<Spinner />`,
-  ],
+  name: "spinner",
+  preview: {
+    defaultComponent: "spinner",
+  },
+  usage: {
+    usage: [
+      `import { Spinner } from "@/components/ui/spinner";`,
+      `<Spinner />`,
+    ]
+  },  
   components: {
-    Variants: 'spinner-variants',
-    "With Text Spinner": 'spinner-text',
+    Variants: { component: "spinner-variants", },
+    "With Text Spinner": { component: "spinner-text", },
   },
 };
