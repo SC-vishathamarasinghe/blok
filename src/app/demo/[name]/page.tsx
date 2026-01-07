@@ -9,6 +9,8 @@ import { CodeBlock } from "@/components/code-block";
 import { docsiteRegistry } from "@/lib/docsite/docsite-registry";
 import { loadFromRegistry } from "@/lib/docsite/load-from-registry";
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return Object.keys(demos).map((name) => ({ name }));
 }
