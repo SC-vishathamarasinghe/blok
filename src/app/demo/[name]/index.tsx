@@ -69,8 +69,8 @@ interface Demo {
     post?: ReactNode | ReactElement;
   };
   installation?: {
-    pre?: string;
-    post?: string;
+    pre?: ReactNode | ReactElement;
+    post?: ReactNode | ReactElement;
   };
   usage?: {
     pre?: ReactNode | ReactElement;

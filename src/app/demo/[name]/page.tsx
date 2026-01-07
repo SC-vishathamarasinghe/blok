@@ -79,14 +79,12 @@ export default async function DemoPage({
       {preview.post}
 
       {/* Installation */}
-      {installation && (
-        <div id="installation" className="flex flex-col gap-3">
-          <h2 className="font-semibold text-3xl">Installation</h2>
-          {installation.pre}
-          <InstallationCodeBlock registryUrl={registryUrl} />
-          {installation.post}
-        </div>
-      )}
+      <div id="installation" className="flex flex-col gap-3">
+        <h2 className="font-semibold text-3xl">Installation</h2>
+        {installation?.pre}
+        <InstallationCodeBlock registryUrl={registryUrl} />
+        {installation?.post}
+      </div>
 
       {/* Usage */}
       {usage && (
