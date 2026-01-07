@@ -26,7 +26,10 @@ export const kbd = {
   ),
   usage: [
     `import { Kbd, KbdGroup } from "@/components/ui/kbd"`,
-    `<Kbd>Ctrl</Kbd>`,
+    `<KbdGroup>
+  <Kbd>Ctrl</Kbd>
+  <Kbd>K</Kbd>
+</KbdGroup>`,
   ],
   components: {
     "Group": (
