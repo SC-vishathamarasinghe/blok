@@ -4,6 +4,7 @@ import * as React from "react";
 
 // Import all component thumbnails
 import AccordionThumb from "@/components/component-thumbs/accordion";
+import ActionBarThumb from "@/components/component-thumbs/action-bar";
 import AlertThumb from "@/components/component-thumbs/alert";
 import AlertDialogThumb from "@/components/component-thumbs/alert-dialog";
 import AspectRatioThumb from "@/components/component-thumbs/aspect-ratio";
@@ -67,6 +68,7 @@ const componentThumbnails: Record<
   React.ComponentType<{ className?: string }>
 > = {
   accordion: AccordionThumb,
+  "action-bar": ActionBarThumb,
   alert: AlertThumb,
   "alert-dialog": AlertDialogThumb,
   "aspect-ratio": AspectRatioThumb,
