@@ -3,22 +3,16 @@ import {
   EditablePreview,
   EditableInput,
   EditableTextarea,
-  EditableControl,
-  EditableEditTrigger,
-  EditableCancelTrigger,
-  EditableSubmitTrigger,
 } from "@/components/ui/editable";
-import { Icon } from "@/lib/icon";
-import { mdiPencil, mdiCheck, mdiClose } from "@mdi/js";
-import { ControlledDemo, StoreDemo } from "@/app/demo/[name]/ui/editable-demos";
+
 
 export const editable = {
   name: "editable",
   defaultComponent: (
     <div className="">
       <Editable defaultValue="Click to edit this text" placeholder="Enter some text...">
-        <EditablePreview />
-        <EditableInput />
+        <EditablePreview className="w-80"/>
+        <EditableInput className="w-80"/>
       </Editable>
     </div>
   ),
@@ -39,31 +33,6 @@ export const editable = {
 </Editable>`,
   ],
   components: {
-    "Double Click": (
-      <div >
-        <Editable 
-          defaultValue="Double click to edit this text" 
-          placeholder="Enter text..."
-          activationMode="dblclick"
-        >
-          <EditablePreview />
-          <EditableInput className="w-72"/>
-        </Editable>
-      </div>
-    ),
-
-    "Disabled": (
-      <div >
-        <Editable
-          isDisabled
-          defaultValue="This field is disabled"
-          placeholder="Cannot edit..."
-        >
-          <EditablePreview />
-          <EditableInput />
-        </Editable>
-      </div>
-    ),
 
     "Textarea": (
       <div className="w-96">
@@ -76,36 +45,5 @@ export const editable = {
         </Editable>
       </div>
     ),
-
-    "With Controls": (
-      <div>
-        <Editable
-          defaultValue="Edit me with buttons"
-          placeholder="Enter text..."
-          isPreviewFocusable={false}
-          submitOnBlur={false}
-        >
-          <div className="flex items-center gap-2">
-            <EditablePreview className="flex-1" />
-            <EditableInput className="flex-1" />
-            <EditableControl>
-              <EditableEditTrigger>
-                <Icon path={mdiPencil} size="sm" />
-              </EditableEditTrigger>
-              <EditableSubmitTrigger>
-                <Icon path={mdiCheck} size="sm" />
-              </EditableSubmitTrigger>
-              <EditableCancelTrigger>
-                <Icon path={mdiClose} size="sm" />
-              </EditableCancelTrigger>
-            </EditableControl>
-          </div>
-        </Editable>
-      </div>
-    ),
-
-    "Controlled": <ControlledDemo />,
-
-    "Store": <StoreDemo />,
   },
 };

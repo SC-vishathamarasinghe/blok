@@ -444,7 +444,7 @@ function EditableInput({ className, ...props }: EditableInputProps) {
           cancelEdit();
         }
       }}
-      className={cn("w-full border-2 focus-visible:ring-0 focus-visible:border-primary transition-colors", className)}
+      className={cn("w-full border-2 bg-transparent dark:bg-transparent focus-visible:ring-0 focus-visible:border-primary transition-colors", className)}
       {...props}
     />
   );
@@ -494,7 +494,7 @@ function EditableTextarea({ className, ...props }: EditableTextareaProps) {
           cancelEdit();
         }
       }}
-      className={cn("w-36 border-2 focus-visible:ring-0 focus-visible:border-primary transition-colors", className)}
+      className={cn("w-36 border-2 bg-transparent dark:bg-transparent focus-visible:ring-0 focus-visible:border-primary transition-colors", className)}
       {...props}
     />
   );
