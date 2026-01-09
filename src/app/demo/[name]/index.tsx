@@ -20,6 +20,7 @@ import { dialog } from "@/app/demo/[name]/ui/dialog";
 import { emptyStates } from "@/app/demo/[name]/ui/empty-states";
 import { errorStates } from "@/app/demo/[name]/ui/error-states";
 import { dropdownMenu } from "@/app/demo/[name]/ui/dropdown-menu";
+import { field } from "@/app/demo/[name]/ui/field";
 import { icon } from "@/app/demo/[name]/ui/icon";
 import { input } from "@/app/demo/[name]/ui/input";
 import { inputGroup } from "@/app/demo/[name]/ui/input-group";
@@ -97,6 +98,7 @@ export const demos: { [name: string]: Demo } = {
   "dropdown-menu": dropdownMenu,
   "empty-states": emptyStates,
   "error-states": errorStates,
+  field,
   icon,
   input,
   "input-group": inputGroup,
