@@ -2,23 +2,21 @@
 
 import * as React from "react";
 import { useState, useMemo } from "react";
-import { mdiAccountPlusOutline, mdiMagnify, mdiPlus } from "@mdi/js";
+import { mdiAccountPlusOutline, mdiMagnify, mdiPlus, mdiClose } from "@mdi/js";
 import { Icon } from "@/lib/icon";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 // ============================================================================
 // Types
@@ -94,22 +92,22 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-function AvatarStack({
+/** Avatar trigger that opens the popover - shows user avatars + add button */
+function AvatarTrigger({
   users,
   maxDisplay = 3,
-  onOpenDialog,
 }: {
   users: User[];
   maxDisplay?: number;
-  onOpenDialog: () => void;
 }) {
   const displayUsers = users.slice(0, maxDisplay);
   const remainingCount = Math.max(0, users.length - maxDisplay);
+  const hasOverflow = remainingCount > 0;
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center -space-x-2 cursor-pointer">
       {users.length > 0 && (
-        <div className="flex -space-x-2">
+        <>
           {displayUsers.map((user) => (
             <Avatar
               key={user.id}
@@ -121,28 +119,18 @@ function AvatarStack({
               </AvatarFallback>
             </Avatar>
           ))}
-          {remainingCount > 0 && (
-            <div className="flex size-8 items-center justify-center rounded-full border-2 border-background bg-primary text-xs font-medium text-primary-foreground">
-              +{remainingCount}
-            </div>
-          )}
-          <Button 
-          variant="default" 
-          size="icon-sm" 
-          onClick={onOpenDialog}
-          className="group relative flex items-center justify-center rounded-full bg-primary-background text-primary-foreground transition-colors hover:bg-primary hover:text-white">
-            <Icon path={mdiAccountPlusOutline} className="size-3" />
-        </Button>
+        </>
+      )}
+      {/* Show +n count when overflow, otherwise show add user icon */}
+      {hasOverflow ? (
+        <div className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground border-2 border-white transition-colors hover:bg-primary/90">
+          <span className="text-xs font-medium">+{remainingCount}</span>
+        </div>
+      ) : (
+        <div className="flex size-8 items-center justify-center rounded-full bg-primary-background text-primary-foreground transition-colors hover:bg-primary hover:text-white border-2 border-white">
+          <Icon path={mdiAccountPlusOutline} className="size-4" />
         </div>
       )}
-      {/* <Button
-        variant="ghost"
-        size="icon-sm"
-        onClick={onOpenDialog}
-        className="text-primary hover:text-primary/80"
-      >
-        <Icon path={mdiAccountPlusOutline} className="size-5" />
-      </Button> */}
     </div>
   );
 }
@@ -169,7 +157,7 @@ function UserListItem({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-center gap-3">
-        <Avatar className="size-8 bor">
+        <Avatar className="size-8">
           <AvatarImage src={user.avatarUrl} alt={user.name} />
           <AvatarFallback className="text-xs bg-muted">
             {getInitials(user.name)}
@@ -234,17 +222,16 @@ export function Collaboration<T extends User = User>({
   allUsersAddedMessage = "All available users have been added",
   noUsersAvailableMessage = "No users available to add",
 }: CollaborationProps<T>) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUsersOpen, setIsUsersOpen] = useState(false);
+  const [isAddUsersOpen, setIsAddUsersOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter out already added users from available users for the dialog
+  // Filter out already added users from available users
   const addedUserIds = useMemo(() => new Set(users.map((u) => getUserId(u as T))), [users, getUserId]);
 
   const filteredAvailableUsers = useMemo(() => {
-    // First filter out already added users
     let filtered = availableUsers.filter((u) => !addedUserIds.has(getUserId(u)));
     
-    // Apply client-side search filter only if not disabled (for API search)
     if (!disableClientFilter && searchQuery) {
       filtered = filtered.filter((u) => {
         const name = getDisplayName(u).toLowerCase();
@@ -257,11 +244,9 @@ export function Collaboration<T extends User = User>({
     return filtered;
   }, [availableUsers, addedUserIds, searchQuery, disableClientFilter, getDisplayName, getUserId]);
 
-  // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    // Call onSearch callback for API-based search
     onSearch?.(query);
   };
 
@@ -273,143 +258,170 @@ export function Collaboration<T extends User = User>({
     onRemoveUser?.(userId);
   };
 
+  const handleUsersOpenChange = (open: boolean) => {
+    setIsUsersOpen(open);
+    if (!open) {
+      // Close add users popover when users popover closes
+      setIsAddUsersOpen(false);
+      setSearchQuery("");
+    }
+  };
+
+  const handleAddUsersOpenChange = (open: boolean) => {
+    setIsAddUsersOpen(open);
+    if (!open) {
+      setSearchQuery("");
+    }
+  };
+
   const userCount = users.length;
   const isEmpty = userCount === 0;
-  const hasAvailableUsers = filteredAvailableUsers.length > 0;
 
   return (
-    <div className={`w-fit min-w-[368px] ${className ?? ""} `}>
-      {/* Avatar stack - positioned outside the card */}
-      <div className="flex justify-end mb-3 ">
-        <AvatarStack
-          users={users}
-          maxDisplay={maxDisplayAvatars}
-          onOpenDialog={() => setIsDialogOpen(true)}
-        />
-      </div>
-
-      {/* Users Card */}
-      <Card 
-        style="outline" 
-        padding="md" 
-        className="inline-flex flex-col items-start gap-4 min-w-[368px] min-h-[167px] p-6"
-      >
-        <CardHeader className="pb-2 p-0 w-full">
-          <CardTitle className="text-[18px] font-semibold leading-[1.2] flex items-baseline gap-1">
-            <span>{title}</span>
-            <span className="text-muted-foreground text-sm">{userCount}</span>
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="p-0 w-full">
-          {/* User Details Section - shows added users */}
-          {isEmpty ? (
-            <div className="text-sm text-muted-foreground py-2">
-              {emptyStateMessage}
-            </div>
-          ) : (
-            <div className="space-y-1">
-              {users.map((user) => {
-                const userId = getUserId(user as T);
-                const currentUserId = currentUser ? getUserId(currentUser as T) : undefined;
-                const isCurrentUserItem = currentUserId === userId;
-                const canRemove = !isCurrentUserItem || allowRemoveCurrentUser;
-                return (
-                  <UserListItem
-                    key={userId}
-                    user={user}
-                    isCurrentUser={isCurrentUserItem}
-                    isAdded={true}
-                    onRemove={canRemove ? () => handleRemoveUser(userId) : undefined}
-                  />
-                );
-              })}
-            </div>
-          )}
-
-          {/* Add users button */}
-          <Button
-            variant="ghost"
-            size="default"
-            onClick={() => setIsDialogOpen(true)}
-            className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground mt-2 px-4"
-          >
-            <Icon path={mdiAccountPlusOutline} className="size-4" />
-            <span className=" font-semibold leading-[1.2]">Add users</span>
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Dialog - only shows available users to add */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent
-            size="sm"
-            className="max-h-[80vh] overflow-hidden flex flex-col"
-          >
-            {/* Hidden DialogClose to suppress default close button */}
-            <DialogClose className="hidden" />
-            
-            <DialogHeader className="pb-0">
-              <DialogTitle className="text-base text-[18px] font-semibold pb-2">
-                Add users
-              </DialogTitle>
-            </DialogHeader>
-
-            {/* Search Input */}
-            <div className="mb-3">
-              <InputGroup>
-                <InputGroupAddon>
-                  <Icon path={mdiMagnify} size={0.9} />
-                </InputGroupAddon>
-                <InputGroupInput
-                  type="text"
-                  placeholder={searchPlaceholder}
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                />
-              </InputGroup>
+    <div className={`w-fit ${className ?? ""}`}>
+      {/* First Popover: Avatar -> Users Card */}
+      <Popover open={isUsersOpen} onOpenChange={handleUsersOpenChange}>
+        <PopoverTrigger asChild>
+          <button className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full">
+            <AvatarTrigger users={users} maxDisplay={maxDisplayAvatars} />
+          </button>
+        </PopoverTrigger>
+        
+        <PopoverContent 
+          align="end" 
+          sideOffset={8}
+          className="w-[368px] p-0 border-0 bg-transparent shadow-none"
+        >
+          {/* Users Panel */}
+          <Card style="outline" padding="md" elevation="md" className="gap-0">
+            <div className="pb-2">
+              <div className="text-[18px] font-semibold leading-[1.2] flex items-baseline gap-1">
+                <span>{title}</span>
+                <span className="text-muted-foreground text-sm">{userCount}</span>
+              </div>
             </div>
 
-            {/* Available Users List - only users not yet added */}
-            <div className="space-y-1 max-h-64 overflow-y-auto">
-              {/* Loading state for API search */}
-              {isSearching && (
-                <div className="text-sm text-muted-foreground py-4 text-center">
-                  Searching...
+            <div className="pb-2">
+              {isEmpty ? (
+                <div className="text-sm text-muted-foreground py-2">
+                  {emptyStateMessage}
+                </div>
+              ) : (
+                <div className="space-y-1 max-h-48 overflow-y-auto">
+                  {users.map((user) => {
+                    const userId = getUserId(user as T);
+                    const currentUserId = currentUser ? getUserId(currentUser as T) : undefined;
+                    const isCurrentUserItem = currentUserId === userId;
+                    const canRemove = !isCurrentUserItem || allowRemoveCurrentUser;
+                    return (
+                      <UserListItem
+                        key={userId}
+                        user={user}
+                        isCurrentUser={isCurrentUserItem}
+                        isAdded={true}
+                        onRemove={canRemove ? () => handleRemoveUser(userId) : undefined}
+                      />
+                    );
+                  })}
                 </div>
               )}
-              
-              {/* User list */}
-              {!isSearching && filteredAvailableUsers.map((user) => (
-                <UserListItem
-                  key={getUserId(user)}
-                  user={user}
-                  isAdded={false}
-                  onAdd={() => handleAddUser(user)}
-                />
-              ))}
-              
-              {/* Empty states */}
-              {!isSearching && filteredAvailableUsers.length === 0 && searchQuery && (
-                <div className="text-sm text-muted-foreground py-4 text-center">
-                  {emptySearchMessage || `No users found matching "${searchQuery}"`}
-                </div>
-              )}
-              {!isSearching && filteredAvailableUsers.length === 0 &&
-                !searchQuery &&
-                availableUsers.length > 0 && (
-                  <div className="text-sm text-muted-foreground py-4 text-center">
-                    {allUsersAddedMessage}
-                  </div>
-                )}
-              {!isSearching && availableUsers.length === 0 && (
-                <div className="text-sm text-muted-foreground py-4 text-center">
-                  {noUsersAvailableMessage}
-                </div>
-              )}
+
+              {/* Second Popover: Add users button -> Add Users Card */}
+              <Popover open={isAddUsersOpen} onOpenChange={handleAddUsersOpenChange}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="default"
+                    className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground mt-2 px-1"
+                  >
+                    <Icon path={mdiAccountPlusOutline} className="size-4" />
+                    <span className="font-semibold leading-[1.2]">Add users</span>
+                  </Button>
+                </PopoverTrigger>
+
+                <PopoverContent 
+                  side="bottom"
+                  align="center"
+                  sideOffset={-8}
+                  alignOffset={26}
+                  className="w-[420px] p-0 border-0 bg-transparent shadow-none"
+                >
+                  {/* Add Users Panel */}
+                  <Card style="outline" padding="md" elevation="md" className="gap-0">
+                    <div className="pb-2">
+                      <div className="flex items-center justify-between">
+                        <div className="text-[18px] font-semibold leading-[1.2]">
+                          Add users
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => setIsAddUsersOpen(false)}
+                          className="text-muted-foreground hover:text-foreground -mr-1"
+                        >
+                          <Icon path={mdiClose} className="size-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="pb-2">
+                      <div className="mb-3">
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Icon path={mdiMagnify} size={0.9} />
+                          </InputGroupAddon>
+                          <InputGroupInput
+                            type="text"
+                            placeholder={searchPlaceholder}
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            autoFocus
+                          />
+                        </InputGroup>
+                      </div>
+
+                      <div className="space-y-1 max-h-48 overflow-y-auto">
+                        {isSearching && (
+                          <div className="text-sm text-muted-foreground py-4 text-center">
+                            Searching...
+                          </div>
+                        )}
+                        
+                        {!isSearching && filteredAvailableUsers.map((user) => (
+                          <UserListItem
+                            key={getUserId(user)}
+                            user={user}
+                            isAdded={false}
+                            onAdd={() => handleAddUser(user)}
+                          />
+                        ))}
+                        
+                        {!isSearching && filteredAvailableUsers.length === 0 && searchQuery && (
+                          <div className="text-sm text-muted-foreground py-4 text-center">
+                            {emptySearchMessage || `No users found matching "${searchQuery}"`}
+                          </div>
+                        )}
+                        {!isSearching && filteredAvailableUsers.length === 0 &&
+                          !searchQuery &&
+                          availableUsers.length > 0 && (
+                            <div className="text-sm text-muted-foreground py-4 text-center">
+                              {allUsersAddedMessage}
+                            </div>
+                          )}
+                        {!isSearching && availableUsers.length === 0 && (
+                          <div className="text-sm text-muted-foreground py-4 text-center">
+                            {noUsersAvailableMessage}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                </PopoverContent>
+              </Popover>
             </div>
-          </DialogContent>
-        </Dialog>
+          </Card>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

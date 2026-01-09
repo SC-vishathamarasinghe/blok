@@ -3,48 +3,42 @@
 import { useState } from "react";
 import { Collaboration, User } from "@/components/bloks/collaboration";
 
-const initialAvailableUsers: User[] = [
-  {
-    id: "1",
-    name: "Arshad Hannan",
-    avatarUrl: "/ArshadHannan.svg",
-    email: "arshad.hannan@example.com",
-  },
+const currentUser: User = {
+  id: "current",
+  name: "Arshad Hannan",
+  avatarUrl: "/ArshadHannan.svg",
+  email: "arshad.hannan@sitecore.com",
+};
+
+const availableUsers: User[] = [
   {
     id: "2",
-    name: "Christian Hahn",
-    avatarUrl: "/ChristianHahn.png",
-    email: "christian.hahn@example.com",
+    name: "Lasith Gunaratne",
+    avatarUrl: "/LasithGunaratne.png",
+    email: "lasith.gunaratne@sitecore.com",
   },
   {
     id: "3",
-    name: "Frank Grinaert",
-    avatarUrl: "/FrankGrinaert.png",
-    email: "frank.grinaert@example.com",
+    name: "Spyridon Misichronis",
+    avatarUrl: "/SpyridonMisichronis.png",
+    email: "spyros.misichronis@sitecore.com",
   },
   {
     id: "4",
-    name: "Lasith Gunaratne",
-    avatarUrl: "/LasithGunaratne.png",
-    email: "lasith.gunaratne@example.com",
-  },
-  {
-    id: "5",
-    name: "Spyridon Misichronis",
-    avatarUrl: "/SpyridonMisichronis.png",
-    email: "spyridon.misichronis@example.com",
+    name: "Christian Hahn",
+    avatarUrl: "/ChristianHahn.png",
+    email: "christian.hahn@sitecore.com",
   },
 ];
 
 export function CollaborationExample() {
-  const currentUser: User = {
-    id: "1",
-    name: "Arshad Hannan",
-    avatarUrl: "/ArshadHannan.svg",
-    email: "arshad.hannan@example.com",
-  };
-
-  const [addedUsers, setAddedUsers] = useState<User[]>([]);
+  // Start with multiple users to show overflow behavior (maxDisplayAvatars=3)
+  const [addedUsers, setAddedUsers] = useState<User[]>([
+    currentUser,
+    availableUsers[0], // Lasith Gunaratne
+    availableUsers[1], // Spyridon Misichronis
+    availableUsers[2], // Christian Hahn
+  ]);
 
   const handleAddUser = (user: User) => {
     setAddedUsers((prev) => [...prev, user]);
@@ -55,18 +49,16 @@ export function CollaborationExample() {
   };
 
   return (
-    <div className="flex items-center justify-center p-8 min-h-[400px]">
+    <div className="flex items-start justify-center pt-5 pb-8 px-8 min-h-[400px]">
       <Collaboration
         users={addedUsers}
         currentUser={currentUser}
-        availableUsers={initialAvailableUsers}
+        availableUsers={availableUsers}
         onAddUser={handleAddUser}
         onRemoveUser={handleRemoveUser}
-        allowRemoveCurrentUser={true}
+        allowRemoveCurrentUser={false}
         maxDisplayAvatars={3}
-        className="w-full max-w-xs"
       />
     </div>
   );
 }
-

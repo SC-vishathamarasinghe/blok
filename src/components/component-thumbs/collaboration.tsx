@@ -8,39 +8,41 @@ const CollaborationThumb = ({ className }: { className?: string }) => (
     className={className}
     preserveAspectRatio="xMidYMid meet"
   >
-    {/* Card background */}
-    <rect x="100" y="80" width="200" height="140" rx="12" fill="white" stroke="#E5E5E5" strokeWidth="1"/>
-    
-    {/* Header - Users label and count */}
-    <text x="120" y="110" fill="#333" fontSize="12" fontWeight="600">Users</text>
-    <text x="155" y="110" fill="#999" fontSize="12">3</text>
-    
-    {/* Avatar stack - aligned and overlapping left to right */}
-    <g>
-      <circle cx="232" cy="105" r="12" fill="#9373FF"/>
-      <circle cx="250" cy="105" r="12" fill="#6987F9" stroke="white" strokeWidth="2"/>
-      <circle cx="268" cy="105" r="12" fill="#44CBAC" stroke="white" strokeWidth="2"/>
-      {/* Add user icon button */}
-      <circle cx="286" cy="105" r="10" fill="#9373FF"/>
-      <path d="M282 105H290M286 101V109" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+    {/* Avatar stack with overlapping avatars and add button */}
+    <g transform="translate(150, 130)">
+      {/* User avatar 1 */}
+      <circle cx="0" cy="0" r="20" fill="#9373FF"/>
+      <text x="0" y="5" fill="white" fontSize="12" fontWeight="600" textAnchor="middle">AH</text>
+      
+      {/* User avatar 2 */}
+      <circle cx="28" cy="0" r="20" fill="#6987F9" stroke="white" strokeWidth="3"/>
+      <text x="28" y="5" fill="white" fontSize="12" fontWeight="600" textAnchor="middle">CH</text>
+      
+      {/* User avatar 3 */}
+      <circle cx="56" cy="0" r="20" fill="#44CBAC" stroke="white" strokeWidth="3"/>
+      <text x="56" y="5" fill="white" fontSize="12" fontWeight="600" textAnchor="middle">FG</text>
+      
+      {/* Add user button */}
+      <circle cx="84" cy="0" r="18" fill="#F0EBFF" stroke="white" strokeWidth="3"/>
+      <path d="M78 0H90M84 -6V6" stroke="#9373FF" strokeWidth="2.5" strokeLinecap="round"/>
     </g>
-    
-    {/* User list item 1 */}
-    <circle cx="130" cy="140" r="12" fill="#9373FF"/>
-    <rect x="150" y="134" width="80" height="12" rx="4" fill="#E5E5E5"/>
-    
-    {/* User list item 2 */}
-    <circle cx="130" cy="170" r="12" fill="#6987F9"/>
-    <rect x="150" y="164" width="70" height="12" rx="4" fill="#E5E5E5"/>
-    
-    {/* Add users button */}
-    <g>
-      <circle cx="130" cy="202" r="6" fill="none" stroke="#999" strokeWidth="1"/>
-      <path d="M128 202H132M130 200V204" stroke="#999" strokeWidth="1" strokeLinecap="round"/>
-      <text x="142" y="206" fill="#999" fontSize="10">Add users</text>
+
+    {/* Subtle card hint below (showing dropdown preview) */}
+    <g transform="translate(100, 170)">
+      <rect x="0" y="0" width="200" height="100" rx="8" fill="white" stroke="#E5E5E5" strokeWidth="1" opacity="0.6"/>
+      
+      {/* Header hint */}
+      <text x="16" y="28" fill="#333" fontSize="11" fontWeight="600" opacity="0.7">Users</text>
+      <text x="52" y="28" fill="#999" fontSize="10" opacity="0.7">3</text>
+      
+      {/* User list hint */}
+      <circle cx="24" cy="50" r="8" fill="#9373FF" opacity="0.5"/>
+      <rect x="40" y="46" width="60" height="8" rx="3" fill="#E5E5E5" opacity="0.5"/>
+      
+      <circle cx="24" cy="72" r="8" fill="#6987F9" opacity="0.5"/>
+      <rect x="40" y="68" width="50" height="8" rx="3" fill="#E5E5E5" opacity="0.5"/>
     </g>
   </svg>
 );
 
 export default CollaborationThumb;
-
