@@ -1,10 +1,4 @@
 import { SelectReact, type SelectReactOption } from "@/components/ui/select-react";
-import { Icon } from "@/lib/icon";
-import {
-  mdiChartBar,
-  mdiChartLine,
-  mdiChartPie,
-} from "@mdi/js";
 
 const productOptions: SelectReactOption[] = [
   { value: "XMCloud", label: "XM Cloud" },
@@ -20,31 +14,6 @@ const frameworkOptions: SelectReactOption[] = [
   { value: "remix", label: "Remix" },
   { value: "astro", label: "Astro" },
 ];
-
-const chartOptions: SelectReactOption[] = [
-  {
-    value: "line",
-    label: "Line Chart",
-    icon: <Icon path={mdiChartLine} className="size-4 text-neutral-foreground" />,
-  },
-  {
-    value: "bar",
-    label: "Bar Chart",
-    icon: <Icon path={mdiChartBar} className="size-4 text-neutral-foreground" />,
-  },
-  {
-    value: "pie",
-    label: "Pie Chart",
-    icon: <Icon path={mdiChartPie} className="size-4 text-neutral-foreground" />,
-  },
-];
-
-const largeListOptions: SelectReactOption[] = Array.from({ length: 100 }).map(
-  (_, i) => ({
-    value: `item-${i}`,
-    label: `Item ${i}`,
-  })
-);
 
 export const selectReact = {
   name: "select-react",
@@ -88,45 +57,6 @@ export const selectReact = {
           placeholder="Select frameworks..."
           isMulti
           aria-label="Select multiple frameworks"
-        />
-      </div>
-    ),
-    "Clearable": (
-      <div className="p-2 w-[280px]">
-        <SelectReact
-          options={productOptions}
-          placeholder="Select a product"
-          isClearable
-          aria-label="Select a product with clear option"
-        />
-      </div>
-    ),
-    "With Icons": (
-      <div className="p-2 w-[280px]">
-        <SelectReact
-          options={chartOptions}
-          placeholder="Select chart type"
-          aria-label="Select chart type"
-        />
-      </div>
-    ),
-    "Large List": (
-      <div className="p-2 w-[280px]">
-        <SelectReact
-          options={largeListOptions}
-          placeholder="Large List"
-          isSearchable
-          aria-label="Select from large list"
-        />
-      </div>
-    ),
-    "Small Size": (
-      <div className="p-2 w-[280px]">
-        <SelectReact
-          options={productOptions}
-          placeholder="Small select"
-          size="sm"
-          aria-label="Small select"
         />
       </div>
     ),
