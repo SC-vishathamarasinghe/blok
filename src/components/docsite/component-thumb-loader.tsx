@@ -4,6 +4,7 @@ import * as React from "react";
 
 // Import all component thumbnails
 import AccordionThumb from "@/components/component-thumbs/accordion";
+import ActionBarThumb from "@/components/component-thumbs/action-bar";
 import AlertThumb from "@/components/component-thumbs/alert";
 import AlertDialogThumb from "@/components/component-thumbs/alert-dialog";
 import AspectRatioThumb from "@/components/component-thumbs/aspect-ratio";
@@ -47,6 +48,7 @@ import SkeletonThumb from "@/components/component-thumbs/skeleton";
 import SliderThumb from "@/components/component-thumbs/slider";
 import CircularProgressThumb from "@/components/component-thumbs/circular-progress";
 import SpinnerThumb from "@/components/component-thumbs/spinner";
+import StepperThumb from "@/components/component-thumbs/stepper";
 import SwitchThumb from "@/components/component-thumbs/switch";
 import TableThumb from "@/components/component-thumbs/table";
 import TabsThumb from "@/components/component-thumbs/tabs";
@@ -69,6 +71,7 @@ const componentThumbnails: Record<
   React.ComponentType<{ className?: string }>
 > = {
   accordion: AccordionThumb,
+  "action-bar": ActionBarThumb,
   alert: AlertThumb,
   "alert-dialog": AlertDialogThumb,
   "aspect-ratio": AspectRatioThumb,
@@ -112,6 +115,7 @@ const componentThumbnails: Record<
   slider: SliderThumb,
   "circular-progress": CircularProgressThumb,
   spinner: SpinnerThumb,
+  stepper: StepperThumb,
   switch: SwitchThumb,
   table: TableThumb,
   tabs: TabsThumb,
