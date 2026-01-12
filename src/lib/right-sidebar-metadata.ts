@@ -600,16 +600,6 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
       { id: "preview", title: "Preview" },
       { id: "installation", title: "Installation" },
       { id: "usage", title: "Usage" },
-      {
-        id: "examples",
-        title: "Examples",
-        children: [
-          { id: "searchable", title: "Searchable" },
-          { id: "multi-select", title: "Multi Select" },
-          { id: "disabled", title: "Disabled" },
-          { id: "loading", title: "Loading" },
-        ],
-      },
     ],
   },
   separator: {

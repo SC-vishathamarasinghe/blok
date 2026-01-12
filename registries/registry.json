@@ -1394,7 +1394,7 @@
     {
       "name": "select-react",
       "type": "registry:ui",
-      "title": "Select (React)",
+      "title": "Select (React Select)",
       "description": "A feature-rich select component built with React Select, supporting search, multi-select, and custom styling with Blok theming.",
       "dependencies": [
         "react-select",

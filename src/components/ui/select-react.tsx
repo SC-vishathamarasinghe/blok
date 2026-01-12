@@ -127,13 +127,13 @@ function SelectReact<
     control: ({ isFocused, isDisabled: controlDisabled, menuIsOpen }) =>
       cn(
         // Base styles matching SelectTrigger
-        "border-input text-md flex w-full items-center gap-2 rounded-md border-2 px-3 transition-[color] outline-none",
+        "border-input text-md flex w-full items-center gap-2 rounded-md border-1 px-3 transition-[color] outline-none",
         // Size variants
         size === "default" ? "min-h-10" : "min-h-8",
         // Focus states - only apply ring when focused but menu is closed
-        isFocused && !menuIsOpen && "border-primary ring-ring/50 ring-1",
-        // When menu is open, only use border (no ring to avoid double border)
-        menuIsOpen && "border-primary",
+        isFocused && !menuIsOpen && "border-input ring-ring/50 ring-1",
+        // When menu is open, use border-2 (no ring to avoid double border)
+        menuIsOpen && "border-primary border-2",
         // Disabled state
         controlDisabled && "cursor-not-allowed opacity-50",
         // Dark mode

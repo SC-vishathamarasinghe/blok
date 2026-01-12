@@ -1,4 +1,6 @@
 import { SelectReact, type SelectReactOption } from "@/components/ui/select-react";
+import { Alert } from "@/components/ui/alert";
+import Link from "next/link";
 
 const productOptions: SelectReactOption[] = [
   { value: "XMCloud", label: "XM Cloud" },
@@ -7,16 +9,13 @@ const productOptions: SelectReactOption[] = [
   { value: "Blok", label: "Blok", disabled: true },
 ];
 
-const frameworkOptions: SelectReactOption[] = [
-  { value: "next.js", label: "Next.js" },
-  { value: "sveltekit", label: "SvelteKit" },
-  { value: "nuxt.js", label: "Nuxt.js" },
-  { value: "remix", label: "Remix" },
-  { value: "astro", label: "Astro" },
-];
-
 export const selectReact = {
   name: "select-react",
+    preInformation: (
+    <Alert>
+      <span className="inline text-md [&_p]:leading-relaxed">More information: <Link href="https://react-select.com/home" className="text-primary hover:text-primary/80 no-underline"> React-Select</Link></span>
+    </Alert>
+  ),
   defaultComponent: (
     <div className="p-2 w-[280px]">
       <SelectReact
@@ -39,47 +38,4 @@ export const selectReact = {
   placeholder="Select an option"
 />`,
   ],
-  components: {
-    "Searchable": (
-      <div className="p-2 w-[280px]">
-        <SelectReact
-          options={frameworkOptions}
-          placeholder="Search frameworks..."
-          isSearchable
-          aria-label="Search frameworks"
-        />
-      </div>
-    ),
-    "Multi Select": (
-      <div className="p-2 w-[280px]">
-        <SelectReact
-          options={frameworkOptions}
-          placeholder="Select frameworks..."
-          isMulti
-          aria-label="Select multiple frameworks"
-        />
-      </div>
-    ),
-    "Disabled": (
-      <div className="p-2 w-[280px]">
-        <SelectReact
-          options={productOptions}
-          placeholder="Disabled"
-          isDisabled
-          aria-label="Disabled select"
-        />
-      </div>
-    ),
-    "Loading": (
-      <div className="p-2 w-[280px]">
-        <SelectReact
-          options={productOptions}
-          placeholder="Loading..."
-          isLoading
-          aria-label="Loading select"
-        />
-      </div>
-    ),
-  },
 };
-
