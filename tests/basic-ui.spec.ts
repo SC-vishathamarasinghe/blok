@@ -52,6 +52,7 @@ import { testToggleGroupRounded, testToggleGroupSquare } from './test-Components
 import { testTooltip } from './test-Components/test-Tooltip';
 import { testTopbar } from './test-Components/test-Topbar';
 import { testTimelineConnectors, testTimelineDefault, testTimelineSizes, testTimelineVariant } from './test-Components/test-Timeline';
+import { testSpinnerBadge, testSpinnerButton, testSpinnerDefault, testSpinnerSize } from './test-Components/test-Spinner';
 
 
 test.describe('UI BLOK QA Automation', () => {
@@ -334,6 +335,13 @@ test.describe('UI BLOK QA Automation', () => {
     await testCircularProgressDefault(page);
     await testCircularProgressVariant(page);
     await testCircularProgressWithText(page);
+  });
+
+  test('test_Spinner', async ({ page }) => {
+    await testSpinnerDefault(page);
+    await testSpinnerSize(page);
+    await testSpinnerButton(page);
+    await testSpinnerBadge(page);
   });
 
   test('close', async ({ page }) => {

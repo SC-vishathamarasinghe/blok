@@ -1,12 +1,12 @@
 import { test, expect, Page } from '@playwright/test';
 
 export async function testCircularProgressDefault(page: Page){
-    // Verify that the spinner is visible
-    const spinnerDefault = page.locator('[id="circular-default"]');
-    await expect(spinnerDefault).toBeVisible();
+    // Verify that the Circular Progress is visible
+    const circularDefault = page.locator('[id="circular-default"]');
+    await expect(circularDefault).toBeVisible();
 
-    // Verify that spinner has the expected classes
-    const classList = await spinnerDefault.locator('[data-testid="circular-progress"]').getAttribute('class');
+    // Verify that Circular Progress has the expected classes
+    const classList = await circularDefault.locator('[data-testid="circular-progress"]').getAttribute('class');
     expect(classList).toContain('inline-block');
     expect(classList).toContain('rounded-full');
     expect(classList).toContain('border-4');
@@ -19,17 +19,17 @@ export async function testCircularProgressDefault(page: Page){
 }
 
 export async function testCircularProgressVariant(page: Page){
-    // Verify that the spinner is visible
-    const spinnerCircular = page.locator('[id="circular-variant"]');
-    await expect(spinnerCircular).toBeVisible();
+    // Verify that the Circular Progress is visible
+    const circularVariant = page.locator('[id="circular-variant"]');
+    await expect(circularVariant).toBeVisible();
 
-    // Verify that spinner has the expected classes
-    const animateClass = await spinnerCircular.locator('[data-testid="circular-progress"]').getAttribute('class');
+    // Verify that Circular Progress has the expected classes
+    const animateClass = await circularVariant.locator('[data-testid="circular-progress"]').getAttribute('class');
     expect(animateClass).toContain('animate-spin');
 
-    // Verify that the circular spinner is rotating (animation)
-    const animateSpinner = spinnerCircular.locator('[data-testid="circular-progress"]');
-    const animation = await animateSpinner.evaluate((el) => {
+    // Verify that the Circular Progress is rotating (animation)
+    const animateCircular = circularVariant.locator('[data-testid="circular-progress"]');
+    const animation = await animateCircular.evaluate((el) => {
         const styles = window.getComputedStyle(el);
         return {
           animationName: styles.animationName,
@@ -45,11 +45,11 @@ export async function testCircularProgressVariant(page: Page){
 }
 
 export async function testCircularProgressWithText(page: Page){
-    // Verify that the spinner is visible
-    const spinnerWithMessage = page.locator('[id="circular-withText"]');
-    await expect(spinnerWithMessage).toBeVisible();
+    // Verify that the Circular Progress is visible
+    const circularWithMessage = page.locator('[id="circular-withText"]');
+    await expect(circularWithMessage).toBeVisible();
 
-    // Verify that display spinner with message
-    const spinnerMessage = spinnerWithMessage.locator('text=Loading...')
-    await expect(spinnerMessage).toContainText('Loading...');
+    // Verify that display Circular Progress with message
+    const circularMessage = circularWithMessage.locator('text=Loading...')
+    await expect(circularMessage).toContainText('Loading...');
 }
