@@ -42,7 +42,7 @@ import { SidebarDemo } from "@/components-demo/sidebar-demo";
 import { SkeletonDemo } from "@/components-demo/skeleten-demo";
 import { SliderDemo } from "@/components-demo/slider-demo";
 import { SonnerDemo } from "@/components-demo/sonner-demo";
-import { SpinnerDemo } from "@/components-demo/spinner-demo";
+import { CircularProgressDemo } from "@/components-demo/circular_progress-demo";
 import { StackNavigationDemo } from "@/components-demo/stack_navigation-demo";
 import { SwitchDemo } from "@/components-demo/switch-demo";
 import { TableDemo } from "@/components-demo/table-demo";
@@ -54,6 +54,7 @@ import { ToggleGroupDemo } from "@/components-demo/toggle_group-demo";
 import { TooltipDemo } from "@/components-demo/tooltip-demo";
 import { TopbarDemo } from "@/components-demo/topbar-demo";
 import { TimelineDemo } from "@/components-demo/timeline-demo";
+import { SpinnerDemo } from "@/components-demo/spinner-demo";
 
 
 
@@ -113,6 +114,10 @@ export default function SinkPage() {
     <br />
       <div>
         <CheckboxDemo />
+      </div>
+    <br />
+      <div>
+        <CircularProgressDemo />
       </div>
     <br />
       <div>
