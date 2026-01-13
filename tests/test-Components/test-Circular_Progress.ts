@@ -1,12 +1,12 @@
 import { test, expect, Page } from '@playwright/test';
 
-export async function testSpinnerDefault(page: Page){
+export async function testCircularProgressDefault(page: Page){
     // Verify that the spinner is visible
-    const spinnerDefault = page.locator('[id="spinner-default"]');
+    const spinnerDefault = page.locator('[id="circular-default"]');
     await expect(spinnerDefault).toBeVisible();
 
     // Verify that spinner has the expected classes
-    const classList = await spinnerDefault.locator('[data-testid="spinner"]').getAttribute('class');
+    const classList = await spinnerDefault.locator('[data-testid="circular-progress"]').getAttribute('class');
     expect(classList).toContain('inline-block');
     expect(classList).toContain('rounded-full');
     expect(classList).toContain('border-4');
@@ -18,17 +18,17 @@ export async function testSpinnerDefault(page: Page){
     expect(classList).toContain('h-6');
 }
 
-export async function testSpinnerCircular(page: Page){
+export async function testCircularProgressVariant(page: Page){
     // Verify that the spinner is visible
-    const spinnerCircular = page.locator('[id="spinner-circular"]');
+    const spinnerCircular = page.locator('[id="circular-variant"]');
     await expect(spinnerCircular).toBeVisible();
 
     // Verify that spinner has the expected classes
-    const animateClass = await spinnerCircular.locator('[data-testid="spinner"]').getAttribute('class');
+    const animateClass = await spinnerCircular.locator('[data-testid="circular-progress"]').getAttribute('class');
     expect(animateClass).toContain('animate-spin');
 
     // Verify that the circular spinner is rotating (animation)
-    const animateSpinner = spinnerCircular.locator('[data-testid="spinner"]');
+    const animateSpinner = spinnerCircular.locator('[data-testid="circular-progress"]');
     const animation = await animateSpinner.evaluate((el) => {
         const styles = window.getComputedStyle(el);
         return {
@@ -44,9 +44,9 @@ export async function testSpinnerCircular(page: Page){
       expect(animation.animationIterationCount).toBe('infinite');
 }
 
-export async function testSpinnerMessage(page: Page){
+export async function testCircularProgressWithText(page: Page){
     // Verify that the spinner is visible
-    const spinnerWithMessage = page.locator('[id="spinner-with-message"]');
+    const spinnerWithMessage = page.locator('[id="circular-withText"]');
     await expect(spinnerWithMessage).toBeVisible();
 
     // Verify that display spinner with message

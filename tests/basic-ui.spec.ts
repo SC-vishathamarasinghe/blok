@@ -40,7 +40,7 @@ import { testSidebar } from './test-Components/test-Sidebar';
 import { testSkeletonDefault } from './test-Components/test-Skeleton';
 import { testSlider } from './test-Components/test-Slider';
 import { testToastAction, testToastClosable, testToastError, testToastNormal, testToastSuccessful, testToastWarning } from './test-Components/test-Sonner';
-import { testSpinnerCircular, testSpinnerDefault, testSpinnerMessage } from './test-Components/test-Spinner';
+import { testCircularProgressDefault, testCircularProgressVariant, testCircularProgressWithText } from './test-Components/test-Circular_Progress';
 import { testStackNavigationHorizontal, testStackNavigationHorizontalTabs, testStackNavigationVertical } from './test-Components/test-Stack_Navigation';
 import { testSwitchDanger, testSwitchPrimary, testSwitchSuccess } from './test-Components/test-Switch';
 import { testDataTable, testTable } from './test-Components/test-Table';
@@ -265,12 +265,6 @@ test.describe('UI BLOK QA Automation', () => {
     await testToastClosable(page);
   });
 
-  test('test_Spinner', async ({ page }) => {
-    await testSpinnerDefault(page);
-    await testSpinnerCircular(page);
-    await testSpinnerMessage(page);
-  });
-
   test('test_Stack_Navigation', async ({ page }) => {
     await testStackNavigationVertical(page);
     await testStackNavigationHorizontal(page);
@@ -334,6 +328,12 @@ test.describe('UI BLOK QA Automation', () => {
     await testTimelineVariant(page);
     await testTimelineSizes(page);
     await testTimelineConnectors(page);
+  });
+
+  test('test_Circular_Progress', async ({ page }) => {
+    await testCircularProgressDefault(page);
+    await testCircularProgressVariant(page);
+    await testCircularProgressWithText(page);
   });
 
   test('close', async ({ page }) => {
