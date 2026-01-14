@@ -30,7 +30,7 @@ export const field = {
       <FieldGroup>
         <Field orientation="responsive">
           <FieldLabel htmlFor="field-name">Full name</FieldLabel>
-          <Input id="field-name" placeholder="Evil Rabbit" />
+          <Input id="field-name" placeholder="Vijithan Ramalingam" />
           <FieldDescription>This appears on invoices and emails.</FieldDescription>
         </Field>
         <Field>
@@ -47,7 +47,7 @@ export const field = {
   ),
   usage: [
     `import {\n  Field,\n  FieldDescription,\n  FieldError,\n  FieldGroup,\n  FieldLabel,\n  FieldLegend,\n  FieldSeparator,\n  FieldSet,\n} from "@/components/ui/field"`,
-    `<FieldSet>\n  <FieldLegend>Profile</FieldLegend>\n  <FieldDescription>This appears on invoices and emails.</FieldDescription>\n  <FieldGroup>\n    <Field>\n      <FieldLabel htmlFor="name">Full name</FieldLabel>\n      <Input id="name" placeholder="Evil Rabbit" />\n      <FieldDescription>This appears on invoices and emails.</FieldDescription>\n    </Field>\n  </FieldGroup>\n</FieldSet>`
+    `<FieldSet>\n  <FieldLegend>Profile</FieldLegend>\n  <FieldDescription>This appears on invoices and emails.</FieldDescription>\n  <FieldGroup>\n    <Field>\n      <FieldLabel htmlFor="name">Full name</FieldLabel>\n      <Input id="name" placeholder="Vijithan Ramalingam" />\n      <FieldDescription>This appears on invoices and emails.</FieldDescription>\n    </Field>\n  </FieldGroup>\n</FieldSet>`
   ],
   components: {
     "Input": (
