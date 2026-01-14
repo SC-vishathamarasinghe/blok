@@ -2,6 +2,7 @@ import type { ReactElement, ReactNode } from "react";
 
 // ui
 import { accordion } from "@/app/demo/[name]/ui/accordion";
+import { actionBar } from "@/app/demo/[name]/ui/action-bar";
 import { alertDialog } from "@/app/demo/[name]/ui/alert-dialog";
 import { alert } from "@/app/demo/[name]/ui/alert";
 import { aspectRatio } from "@/app/demo/[name]/ui/aspect-ratio";
@@ -25,6 +26,7 @@ import { icon } from "@/app/demo/[name]/ui/icon";
 import { input } from "@/app/demo/[name]/ui/input";
 import { inputGroup } from "@/app/demo/[name]/ui/input-group";
 import { inputOtp } from "@/app/demo/[name]/ui/inputOtp";
+import { kbd } from "@/app/demo/[name]/ui/kbd";
 import { label } from "@/app/demo/[name]/ui/label";
 // import { menuBar } from "@/app/demo/[name]/ui/menu-bar";
 import { navigationMenu } from "@/app/demo/[name]/ui/navigation-menu";
@@ -53,12 +55,14 @@ import { collapsible } from "@/app/demo/[name]/ui/collapsible";
 import { progress } from "@/app/demo/[name]/ui/progress";
 import { command } from "@/app/demo/[name]/ui/command";
 import { combobox } from "@/app/demo/[name]/ui/combobox";
+import { circularProgress } from "@/app/demo/[name]/ui/circular-progress";
 import { spinner } from "@/app/demo/[name]/ui/spinner";
 import { pinnedSite } from "@/app/demo/[name]/ui/pinned-site";
 import { allSite } from "@/app/demo/[name]/ui/all-site";
 import { siteCard } from "@/app/demo/[name]/ui/site-card";
 import { timePicker } from "@/app/demo/[name]/ui/time-picker";
 import { draggable } from "@/app/demo/[name]/ui/draggable";
+import { editable } from "@/app/demo/[name]/ui/editable";
 import { stackNavigation } from "@/app/demo/[name]/ui/stack-navigation";
 import { timeline } from "@/app/demo/[name]/ui/timeline";
 
@@ -75,6 +79,7 @@ interface Demo {
 export const demos: { [name: string]: Demo } = {
   // ui
   accordion,
+  "action-bar": actionBar,
   alert,
   "alert-dialog": alertDialog,
   "all-site": allSite,
@@ -96,6 +101,7 @@ export const demos: { [name: string]: Demo } = {
   dialog,
   draggable,
   "dropdown-menu": dropdownMenu,
+  editable,
   "empty-states": emptyStates,
   "error-states": errorStates,
   field,
@@ -103,6 +109,7 @@ export const demos: { [name: string]: Demo } = {
   input,
   "input-group": inputGroup,
   inputOtp,
+  kbd,
   label,
   // "menu-bar": menuBar,
   "navigation-menu": navigationMenu,
@@ -121,6 +128,7 @@ export const demos: { [name: string]: Demo } = {
   skeleton,
   slider,
   sonner,
+  "circular-progress": circularProgress,
   spinner,
   switch: switchComponent,
   "stack-navigation": stackNavigation,

@@ -11,7 +11,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 export function CustomDropdown({
   options = [],
@@ -60,29 +60,27 @@ export function CustomDropdown({
 
 export function MultiCalendar({numberOfMonths = 1}: {numberOfMonths?: number}) {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-    from: new Date(2025, 5, 9),
-    to: new Date(2025, 5, 26),
+    from: parseISO("2025-06-09"), 
+    to: parseISO("2025-06-26"), 
   });
 
   return (
-    <div className="w-fit">
-      <Calendar
-        mode="range"
-        defaultMonth={dateRange?.from}
-        selected={dateRange}
-        onSelect={setDateRange}
-        numberOfMonths={numberOfMonths}
-        className="rounded-lg border shadow-sm"
-        captionLayout="dropdown"
-        components={{ Dropdown: CustomDropdown }}
-        labels={{
-              labelDayButton: (day) => {
-                const visible = format(day, "d");
-                const longLabel = format(day, "PPPP");
-                return `${visible} – ${longLabel}`;
-              },
-            }}
-      />
-    </div>
+    <Calendar
+      mode="range"
+      defaultMonth={dateRange?.from}
+      selected={dateRange}
+      onSelect={setDateRange}
+      numberOfMonths={numberOfMonths}
+      className="rounded-lg border shadow-sm"
+      captionLayout="dropdown"
+      components={{ Dropdown: CustomDropdown }}
+      labels={{
+        labelDayButton: (day) => {
+          const visible = format(day, "d");
+          const longLabel = format(day, "PPPP");
+          return `${visible} – ${longLabel}`;
+        },
+      }}
+    />
   );
 }
