@@ -56,6 +56,7 @@ import { TopbarDemo } from "@/components-demo/topbar-demo";
 import { TimelineDemo } from "@/components-demo/timeline-demo";
 import { SpinnerDemo } from "@/components-demo/spinner-demo";
 import { StepperDemo } from "@/components-demo/stepper-demo";
+import { InputGroupDemo } from "@/components-demo/input-group-demo";
 
 
 
@@ -171,6 +172,10 @@ export default function SinkPage() {
     <br />
       <div>
         <InputOTPDemo />
+      </div>
+    <br />
+      <div>
+        <InputGroupDemo />
       </div>
     <br />
       <div>
