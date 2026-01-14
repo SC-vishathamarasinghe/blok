@@ -1322,8 +1322,12 @@
       "files": [
         {
           "path": "src/components/bloks/pinned-sites-section.tsx",
-          "type": "registry:block",
-          "target": "src/components/bloks/pinned-sites-section.tsx"
+          "target": "src/components/bloks/pinned-sites-section.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/empty-pin.svg",
+          "type": "registry:lib"
         }
       ]
     },

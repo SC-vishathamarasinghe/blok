@@ -18,9 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-// ============================================================================
+
 // Types
-// ============================================================================
 
 /** Base user interface - extend this for custom user types */
 export interface User {
@@ -53,10 +52,10 @@ export interface CollaborationProps<T extends User = User> {
   /** Custom class name */
   className?: string;
   
-  // ============================================================================
+
+
   // API & Customization Props
-  // ============================================================================
-  
+ 
   /** Callback when search query changes - use for API-based search */
   onSearch?: (query: string) => void;
   /** Shows loading spinner in search results */
@@ -79,9 +78,7 @@ export interface CollaborationProps<T extends User = User> {
   noUsersAvailableMessage?: string;
 }
 
-// ============================================================================
-// Helper Components
-// ============================================================================
+
 
 function getInitials(name: string): string {
   return name
@@ -195,9 +192,7 @@ function UserListItem({
   );
 }
 
-// ============================================================================
 // Main Component
-// ============================================================================
 
 export function Collaboration<T extends User = User>({
   users,
