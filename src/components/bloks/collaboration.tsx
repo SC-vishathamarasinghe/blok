@@ -123,7 +123,7 @@ function AvatarTrigger({
       )}
       {/* Show +n count when overflow, otherwise show add user icon */}
       {hasOverflow ? (
-        <div className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground border-2 border-white transition-colors hover:bg-primary/90">
+        <div className="flex size-8 items-center justify-center rounded-full bg-primary-background text-primary-foreground border-2 border-white transition-colors hover:bg-primary hover:text-white">
           <span className="text-xs font-medium">+{remainingCount}</span>
         </div>
       ) : (

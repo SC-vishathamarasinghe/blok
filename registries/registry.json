@@ -1278,7 +1278,7 @@
         {
           "path": "src/components/bloks/pinned-sites-section.tsx",
           "type": "registry:block",
-          "target": "src/components/blocks/pinned-sites-section.tsx"
+          "target": "src/components/bloks/pinned-sites-section.tsx"
         }
       ]
     },
@@ -1790,7 +1790,7 @@
         "https://blok.sitecore.com/r/avatar.json",
         "https://blok.sitecore.com/r/button.json",
         "https://blok.sitecore.com/r/card.json",
-        "http://localhost:3000/r/input-group.json",
+        "https://blok.sitecore.com/r/input-group.json",
         "https://blok.sitecore.com/r/popover.json",
         "https://blok.sitecore.com/r/icon.json"
       ],
@@ -1801,7 +1801,7 @@
         {
           "path": "src/components/bloks/collaboration.tsx",
           "type": "registry:block",
-          "target": "src/components/blocks/collaboration.tsx"
+          "target": "src/components/bloks/collaboration.tsx"
         }
       ]
     }

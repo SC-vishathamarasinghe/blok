@@ -1,4 +1,4 @@
-"use client";
+"use client";  // Please remove this you are not using nextjs
 
 import { useState } from "react";
 import { Collaboration, User } from "@/components/bloks/collaboration";
@@ -35,9 +35,9 @@ export function CollaborationExample() {
   // Start with multiple users to show overflow behavior (maxDisplayAvatars=3)
   const [addedUsers, setAddedUsers] = useState<User[]>([
     currentUser,
-    availableUsers[0], // Lasith Gunaratne
-    availableUsers[1], // Spyridon Misichronis
-    availableUsers[2], // Christian Hahn
+    availableUsers[0], 
+    availableUsers[1], 
+    availableUsers[2], 
   ]);
 
   const handleAddUser = (user: User) => {
