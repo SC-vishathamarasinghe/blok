@@ -1,9 +1,9 @@
 "use client";
 
-import { mdiDotsGrid, mdiHelpCircleOutline } from "@mdi/js";
+import type { ReactNode } from "react";
+import { mdiDotsGrid } from "@mdi/js";
 import { Icon } from "@/lib/icon";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -34,17 +34,15 @@ export interface LogoConfig {
   alt?: string;
 }
 
-export interface AvatarConfig {
-  src?: string;
-  fallback: string;
-  alt?: string;
+export interface MenuButtonConfig {
+  icon?: string;
   onClick?: () => void;
+  ariaLabel?: string;
 }
 
-export interface HelpConfig {
-  icon?: string;
-  link?: string;
-  onClick?: () => void;
+export interface RightSideItem {
+  id: string;
+  content: ReactNode;
 }
 
 /** Main Topbar component props */
@@ -52,9 +50,8 @@ export interface TopbarProps {
   logo?: LogoConfig;
   brandName?: string;
   navigation?: NavItem[];
-  avatar?: AvatarConfig;
-  help?: HelpConfig;
-  onMenuClick?: () => void;
+  rightSideItems?: RightSideItem[];
+  menuButton?: MenuButtonConfig | false;
   className?: string;
 }
 
@@ -63,9 +60,8 @@ export default function Topbar({
   logo,
   brandName,
   navigation = [],
-  avatar,
-  help,
-  onMenuClick,
+  rightSideItems = [],
+  menuButton,
   className,
 }: TopbarProps) {
   return (
@@ -73,15 +69,17 @@ export default function Topbar({
       <div className="flex h-16 items-center px-4">
         {/* Left section: Menu button + Logo + Brand */}
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            colorScheme="neutral"
-            aria-label="Menu"
-            onClick={onMenuClick}
-          >
-            <Icon path={mdiDotsGrid} size={1} />
-          </Button>
+          {menuButton !== false && (
+            <Button
+              variant="ghost"
+              size="icon"
+              colorScheme="neutral"
+              aria-label={menuButton?.ariaLabel ?? "Menu"}
+              onClick={menuButton?.onClick}
+            >
+              <Icon path={menuButton?.icon ?? mdiDotsGrid} size={1} />
+            </Button>
+          )}
           <div className="flex items-center gap-1">
             {logo && (
               <span className="shrink-0">
@@ -140,40 +138,9 @@ export default function Topbar({
 
         {/* Right section */}
         <div className="ml-auto flex items-center space-x-4">
-          {help && (
-            help.link ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                colorScheme="neutral"
-                aria-label="Help"
-                asChild
-              >
-                <a href={help.link}>
-                  <Icon path={help.icon ?? mdiHelpCircleOutline} size={1} />
-                </a>
-              </Button>
-            ) : (
-              <Button
-                variant="ghost"
-                size="icon"
-                colorScheme="neutral"
-                aria-label="Help"
-                onClick={help.onClick}
-              >
-                <Icon path={help.icon ?? mdiHelpCircleOutline} size={1} />
-              </Button>
-            )
-          )}
-          {avatar && (
-            <Avatar
-              className="h-8 w-8 cursor-pointer"
-              onClick={avatar.onClick}
-            >
-              <AvatarImage src={avatar.src} alt={avatar.alt} />
-              <AvatarFallback>{avatar.fallback}</AvatarFallback>
-            </Avatar>
-          )}
+          {rightSideItems.map((item) => (
+            <div key={item.id}>{item.content}</div>
+          ))}
         </div>
       </div>
     </header>

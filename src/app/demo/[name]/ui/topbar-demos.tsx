@@ -3,10 +3,13 @@
 import Topbar, {
   type NavItem,
   type LogoConfig,
-  type AvatarConfig,
-  type HelpConfig,
+  type RightSideItem,
+  type MenuButtonConfig,
 } from "@/components/ui/top-bar";
-import { mdiHelpCircleOutline } from "@mdi/js";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/lib/icon";
+import { mdiDotsGrid, mdiHelpCircleOutline } from "@mdi/js";
 
 const defaultLogo: LogoConfig = {
   light: "https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/logo-sitecore",
@@ -30,16 +33,32 @@ const defaultNavigation: NavItem[] = [
   { id: "settings", label: "Settings", href: "#" },
 ];
 
-const defaultAvatar: AvatarConfig = {
-  src: "",
-  fallback: "SC",
-  alt: "User avatar",
-  onClick: () => {},
-};
+const defaultRightSideItems: RightSideItem[] = [
+  {
+    id: "help",
+    content: (
+      <Button variant="ghost" size="icon" colorScheme="neutral" aria-label="Help" asChild>
+        <a href="https://doc.sitecore.com/">
+          <Icon path={mdiHelpCircleOutline} size={1} />
+        </a>
+      </Button>
+    ),
+  },
+  {
+    id: "avatar",
+    content: (
+      <Avatar className="h-8 w-8 cursor-pointer" onClick={() => {}}>
+        <AvatarImage src="" alt="User avatar" />
+        <AvatarFallback>SC</AvatarFallback>
+      </Avatar>
+    ),
+  },
+];
 
-const defaultHelp: HelpConfig = {
-  link: "https://doc.sitecore.com/",
-  icon: mdiHelpCircleOutline,
+const defaultMenuButton: MenuButtonConfig = {
+  icon: mdiDotsGrid,
+  onClick: () => {},
+  ariaLabel: "Menu",
 };
 
 export function TopbarDefault() {
@@ -48,9 +67,8 @@ export function TopbarDefault() {
       logo={defaultLogo}
       brandName="Blok"
       navigation={defaultNavigation}
-      avatar={defaultAvatar}
-      help={defaultHelp}
-      onMenuClick={() => {}}
+      rightSideItems={defaultRightSideItems}
+      menuButton={defaultMenuButton}
     />
   );
 }
