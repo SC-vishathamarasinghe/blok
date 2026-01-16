@@ -1,7 +1,7 @@
 "use client";  // Please remove this you are not using nextjs
 
 import { useState } from "react";
-import { Collaboration, User } from "@/components/bloks/collaboration";
+import { Collaboration, type User } from "@/components/bloks/collaboration";
 
 const currentUser: User = {
   id: "current",
