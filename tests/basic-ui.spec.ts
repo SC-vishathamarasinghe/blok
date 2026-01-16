@@ -65,7 +65,7 @@ test.describe('UI BLOK QA Automation', () => {
     // adjust baseURL in playwright config, or use full URL:
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 120000 });
   });
-{/*
+
   test('test_Accordion', async ({ page }) => {
     await testAccordian(page);
   });
@@ -361,7 +361,7 @@ test.describe('UI BLOK QA Automation', () => {
   test('test_Action_Bar', async ({ page }) => {
     await testActionBar(page);
   });
-*/}
+
   test('test_Kbd', async ({ page }) => {
     await testKbdDefault(page);
     await testKbdGroup(page);
