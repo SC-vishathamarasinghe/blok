@@ -501,6 +501,7 @@
         "https://blok.sitecore.com/r/editable.json",
         "https://blok.sitecore.com/r/empty-states.json",
         "https://blok.sitecore.com/r/error-states.json",
+        "https://blok.sitecore.com/r/field.json",
         "https://blok.sitecore.com/r/input.json",
         "https://blok.sitecore.com/r/inputOtp.json",
         "https://blok.sitecore.com/r/kbd.json",
@@ -1158,6 +1159,28 @@
       ]
     },
     {
+      "name": "field",
+      "type": "registry:ui",
+      "title": "Field",
+      "description": "Combine labels, controls, and help text to compose accessible form fields and grouped inputs.",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "https://blok.sitecore.com/r/theme.json",
+        "https://blok.sitecore.com/r/input.json",
+        "https://blok.sitecore.com/r/switch.json"
+
+
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "inputOtp",
       "type": "registry:ui",
       "title": "Input OTP",
@@ -1428,6 +1451,30 @@
       "files": [
         {
           "path": "src/components/ui/select.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/icon.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "select-react",
+      "type": "registry:ui",
+      "title": "Select (React Select)",
+      "description": "A feature-rich select component built with React Select, supporting search, multi-select, and custom styling with Blok theming.",
+      "dependencies": [
+        "react-select",
+        "@mdi/js"
+      ],
+      "registryDependencies": [
+        "https://blok.sitecore.com/r/theme.json",
+        "https://blok.sitecore.com/r/badge.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/select-react.tsx",
           "type": "registry:ui"
         },
         {
@@ -1870,6 +1917,31 @@
         {
           "path": "src/components/ui/popover.tsx",
           "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "collaboration",
+      "type": "registry:block",
+      "title": "Collaboration",
+      "description": "A user collaboration blok with nested popovers for adding and removing team members with search functionality.",
+      "registryDependencies": [
+        "https://blok.sitecore.com/r/theme.json",
+        "https://blok.sitecore.com/r/avatar.json",
+        "https://blok.sitecore.com/r/button.json",
+        "https://blok.sitecore.com/r/card.json",
+        "https://blok.sitecore.com/r/input-group.json",
+        "https://blok.sitecore.com/r/popover.json",
+        "https://blok.sitecore.com/r/icon.json"
+      ],
+      "dependencies": [
+        "@mdi/js"
+      ],
+      "files": [
+        {
+          "path": "src/components/bloks/collaboration.tsx",
+          "type": "registry:block",
+          "target": "src/components/bloks/collaboration.tsx"
         }
       ]
     }

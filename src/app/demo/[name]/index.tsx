@@ -21,6 +21,7 @@ import { dialog } from "@/app/demo/[name]/ui/dialog";
 import { emptyStates } from "@/app/demo/[name]/ui/empty-states";
 import { errorStates } from "@/app/demo/[name]/ui/error-states";
 import { dropdownMenu } from "@/app/demo/[name]/ui/dropdown-menu";
+import { field } from "@/app/demo/[name]/ui/field";
 import { icon } from "@/app/demo/[name]/ui/icon";
 import { input } from "@/app/demo/[name]/ui/input";
 import { inputGroup } from "@/app/demo/[name]/ui/input-group";
@@ -32,6 +33,7 @@ import { navigationMenu } from "@/app/demo/[name]/ui/navigation-menu";
 import { radioGroup } from "@/app/demo/[name]/ui/radio-group";
 import { resizable } from "@/app/demo/[name]/ui/resizable";
 import { select } from "@/app/demo/[name]/ui/select";
+import { selectReact } from "@/app/demo/[name]/ui/select-react";
 import { separator } from "@/app/demo/[name]/ui/separator";
 import { sheet } from "@/app/demo/[name]/ui/sheet";
 import { sidebar } from "@/app/demo/[name]/ui/sidebar";
@@ -64,6 +66,7 @@ import { draggable } from "@/app/demo/[name]/ui/draggable";
 import { editable } from "@/app/demo/[name]/ui/editable";
 import { stackNavigation } from "@/app/demo/[name]/ui/stack-navigation";
 import { timeline } from "@/app/demo/[name]/ui/timeline";
+import { collaboration } from "@/app/demo/[name]/ui/collaboration";
 
 interface Demo {
   name: string; // this must match the `/registries/registry.json` name
@@ -103,6 +106,7 @@ export const demos: { [name: string]: Demo } = {
   editable,
   "empty-states": emptyStates,
   "error-states": errorStates,
+  field,
   icon,
   input,
   "input-group": inputGroup,
@@ -119,6 +123,7 @@ export const demos: { [name: string]: Demo } = {
   resizable,
   "scroll-area": scrollArea,
   select,
+  "select-react": selectReact,
   separator,
   sheet,
   sidebar,
@@ -140,4 +145,5 @@ export const demos: { [name: string]: Demo } = {
   "toggle-group": toggleGroup,
   tooltip,
   topbar,
+  collaboration,
 };

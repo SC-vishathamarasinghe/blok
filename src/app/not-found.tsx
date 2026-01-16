@@ -12,16 +12,13 @@ export default function NotFound() {
 
       <main className="flex flex-1 flex-col items-center justify-center mt-12 px-4">
         <div className="flex flex-col items-center text-center max-w-md">
-          <Image
-            src="/404-illustration.svg"
-            alt="404 illustration"
-            width={134}
-            height={134}
-            className="mb-8"
-            priority
-          />
+           <img
+                            src={`https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/blok-404?v=b2358501`}
+                            alt={`404 Illustration`}
+                            className="max-w-[160px] h-auto object-contain"
+                          />
           
-          <h1 className="text-3xl font-semibold text-foreground mb-4">
+          <h1 className="text-3xl font-semibold text-foreground mb-4 mt-4">
             404 - Page not found
           </h1>
           

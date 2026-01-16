@@ -432,6 +432,36 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
       },
     ],
   },
+  field: {
+    links: {
+      shadcn: "https://ui.shadcn.com/docs/components/field",
+    },
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+      {
+        id: "examples",
+        title: "Examples",
+        children: [
+          { id: "input", title: "Input" },
+          { id: "textarea", title: "Textarea" },
+          { id: "select", title: "Select" },
+          { id: "checkbox", title: "Checkbox" },
+          { id: "radio-group", title: "Radio Group" },
+          { id: "switch", title: "Switch" },
+          { id: "with-separator", title: "With Separator" },
+          { id: "with-error", title: "With Error" },
+          { id: "input-with-icon", title: "Input with Icon" },
+          { id: "input-with-addon", title: "Input with Addon" },
+          { id: "disabled", title: "Disabled" },
+          { id: "readonly", title: "ReadOnly" },
+          { id: "small-size", title: "Small Size" },
+          { id: "input-types", title: "Input Types" },
+        ],
+      },
+    ],
+  },
   "hover-card": {
     links: {
       shadcn: "https://ui.shadcn.com/docs/components/hover-card",
@@ -637,6 +667,15 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
           { id: "disabled", title: "Disabled" },
         ],
       },
+    ],
+  },
+  "select-react": {
+    links: {
+    },
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
     ],
   },
   separator: {
@@ -937,6 +976,16 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
   },
 
   // ===== BLOK-SPECIFIC METADATA =====
+  collaboration: {
+    links: {
+      figma: "https://www.figma.com/design/x0CUbrC5Kjcuk64VPCnbgz/Blok-Components?m=auto&node-id=12635-12702&t=lmjHbhiQJqZWNi7i-1"
+    },
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+    ],
+  },
   "all-site": {
      links: {
 
