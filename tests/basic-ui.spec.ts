@@ -57,6 +57,7 @@ import { testStepper } from './test-Components/test-Stepper';
 import { testInputGroupDropdown, testInputGroupSearch, testInputGroupURL } from './test-Components/test-Input_Group';
 import { testActionBar } from './test-Components/test-Action_Bar';
 import { testKbdButton, testKbdDefault, testKbdGroup, testKbdShortcut, testKbdTooltip } from './test-Components/test-Kbd';
+import { testEditableInput, testEditableTextarea } from './test-Components/test-Editable';
 
 
 test.describe('UI BLOK QA Automation', () => {
@@ -368,6 +369,11 @@ test.describe('UI BLOK QA Automation', () => {
     await testKbdButton(page);
     await testKbdTooltip(page);
     await testKbdShortcut(page);
+  });
+
+  test('test_Editable', async ({ page }) => {
+    await testEditableInput(page);
+    await testEditableTextarea(page);
   });
 
   test('close', async ({ page }) => {
