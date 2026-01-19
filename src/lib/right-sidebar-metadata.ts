@@ -756,6 +756,7 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
     ],
   },
   "circular-progress": {
+    links: {},
     sections: [
       { id: "preview", title: "Preview" },
       { id: "installation", title: "Installation" },
