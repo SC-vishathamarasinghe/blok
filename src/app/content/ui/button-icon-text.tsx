@@ -25,6 +25,10 @@ export default function ButtonIconTextDemo() {
                 <Icon path={mdiInformationOutline} className="mr-2" />
                 Ghost Icon
             </Button>
+            <Button variant="link">
+                <Icon path={mdiInformationOutline} className="mr-2" />
+                Link Icon
+            </Button>
         </div>
     );
 }
