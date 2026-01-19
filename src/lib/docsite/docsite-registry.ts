@@ -164,6 +164,8 @@ import TooltipDemo from "@/app/content/ui/tooltip";
 import SiteCardDemo from "@/app/content/bloks/site-card";
 import AllSitesSectionDemo from "@/app/content/bloks/all-site-section";
 import PinnedSitesSectionDemo from "@/app/content/bloks/pinned-site-section";
+import EditableDemo from "@/app/content/ui/editable";
+import EditableTextareaDemo from "@/app/content/ui/editable-textarea";
 
 export interface DocsiteRegistryEntry {
     name: string;
@@ -532,6 +534,16 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         name: "dropdown-menu-icon-color",
         path: "src/app/content/ui/dropdown-menu-icon-color.tsx",
         component: DropdownMenuIconColorDemo,
+    },
+    "editable": {
+        name: "editable",
+        path: "src/app/content/ui/editable.tsx",
+        component: EditableDemo,
+    },
+    "editable-textarea": {
+        name: "editable-textarea",
+        path: "src/app/content/ui/editable-textarea.tsx",
+        component: EditableTextareaDemo,
     },
     "empty-states-no-results": {
         name: "empty-states-no-results",

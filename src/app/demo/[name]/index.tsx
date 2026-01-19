@@ -52,6 +52,7 @@ import { combobox } from "@/app/demo/[name]/ui/combobox";
 import { spinner } from "@/app/demo/[name]/ui/spinner";
 import { timePicker } from "@/app/demo/[name]/ui/time-picker";
 import { draggable } from "@/app/demo/[name]/ui/draggable";
+import { editable } from "@/app/demo/[name]/ui/editable";
 import { stackNavigation } from "@/app/demo/[name]/ui/stack-navigation";
 
 // BLOKS
@@ -107,6 +108,7 @@ export const demos: { [name: string]: Demo } = {
   dialog,
   draggable,
   "dropdown-menu": dropdownMenu,
+  editable,
   "empty-states": emptyStates,
   "error-states": errorStates,
   icon,
