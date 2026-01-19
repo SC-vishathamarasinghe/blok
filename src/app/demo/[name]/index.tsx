@@ -2,6 +2,7 @@ import type { ReactElement, ReactNode } from "react";
 
 // PRIMITIVES
 import { accordion } from "@/app/demo/[name]/ui/accordion";
+import { actionBar } from "@/app/demo/[name]/ui/action-bar";
 import { alertDialog } from "@/app/demo/[name]/ui/alert-dialog";
 import { alert } from "@/app/demo/[name]/ui/alert";
 import { aspectRatio } from "@/app/demo/[name]/ui/aspect-ratio";
@@ -22,7 +23,9 @@ import { errorStates } from "@/app/demo/[name]/ui/error-states";
 import { dropdownMenu } from "@/app/demo/[name]/ui/dropdown-menu";
 import { icon } from "@/app/demo/[name]/ui/icon-component";
 import { input } from "@/app/demo/[name]/ui/input";
+import { inputGroup } from "@/app/demo/[name]/ui/input-group";
 import { inputOtp } from "@/app/demo/[name]/ui/inputOtp";
+import { kbd } from "@/app/demo/[name]/ui/kbd";
 import { label } from "@/app/demo/[name]/ui/label";
 import { navigationMenu } from "@/app/demo/[name]/ui/navigation-menu";
 import { radioGroup } from "@/app/demo/[name]/ui/radio-group";
@@ -35,6 +38,7 @@ import { skeleton } from "@/app/demo/[name]/ui/skeleton";
 import { slider } from "@/app/demo/[name]/ui/slider";
 import { sonner } from "@/app/demo/[name]/ui/sonner";
 import { switchComponent } from "@/app/demo/[name]/ui/switch";
+import { stepper } from "@/app/demo/[name]/ui/stepper";
 import { table } from "@/app/demo/[name]/ui/table";
 import { tabs } from "@/app/demo/[name]/ui/tabs";
 import { textarea } from "@/app/demo/[name]/ui/textarea";
@@ -49,11 +53,13 @@ import { collapsible } from "@/app/demo/[name]/ui/collapsible";
 import { progress } from "@/app/demo/[name]/ui/progress";
 import { command } from "@/app/demo/[name]/ui/command";
 import { combobox } from "@/app/demo/[name]/ui/combobox";
+import { circularProgress } from "@/app/demo/[name]/ui/circular-progress";
 import { spinner } from "@/app/demo/[name]/ui/spinner";
 import { timePicker } from "@/app/demo/[name]/ui/time-picker";
 import { draggable } from "@/app/demo/[name]/ui/draggable";
 import { editable } from "@/app/demo/[name]/ui/editable";
 import { stackNavigation } from "@/app/demo/[name]/ui/stack-navigation";
+import { timeline } from "@/app/demo/[name]/ui/timeline";
 
 // BLOKS
 import { allSite } from "@/app/demo/[name]/bloks/all-site";
@@ -88,6 +94,7 @@ interface Demo {
 export const demos: { [name: string]: Demo } = {
   // PRIMITIVES
   accordion,
+  "action-bar": actionBar,
   alert,
   "alert-dialog": alertDialog,
   "aspect-ratio": aspectRatio,
@@ -113,7 +120,9 @@ export const demos: { [name: string]: Demo } = {
   "error-states": errorStates,
   icon,
   input,
+  "input-group": inputGroup,
   inputOtp,
+  kbd,
   label,
   "navigation-menu": navigationMenu,
   pagination,
@@ -129,12 +138,15 @@ export const demos: { [name: string]: Demo } = {
   skeleton,
   slider,
   sonner,
+  "circular-progress": circularProgress,
   spinner,
   switch: switchComponent,
-  "stack-navigation":stackNavigation,
+  "stack-navigation": stackNavigation,
+  stepper,
   table,
   tabs,
   textarea,
+  timeline,
   "time-picker": timePicker,
   toggle,
   "toggle-group": toggleGroup,

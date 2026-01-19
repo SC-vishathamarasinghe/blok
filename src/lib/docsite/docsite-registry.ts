@@ -128,8 +128,6 @@ import SonnerClosableDemo from "@/app/content/ui/sonner-closable";
 import SonnerWarningDemo from "@/app/content/ui/sonner-warning";
 import SonnerActionDemo from "@/app/content/ui/sonner-action";
 import SonnerDemo from "@/app/content/ui/sonner";
-import SpinnerVariantsDemo from "@/app/content/ui/spinner-variants";
-import WithTextSpinnerDemo from "@/app/content/ui/spinner-text";
 import SpinnerDemo from "@/app/content/ui/spinner";
 import StackNavigationHorizontalDemo from "@/app/content/ui/stack-navigation-horizontal";
 import StackNavigationHorizontalTabsDemo from "@/app/content/ui/stack-navigation-horizontal-tabs";
@@ -166,6 +164,27 @@ import AllSitesSectionDemo from "@/app/content/bloks/all-site-section";
 import PinnedSitesSectionDemo from "@/app/content/bloks/pinned-site-section";
 import EditableDemo from "@/app/content/ui/editable";
 import EditableTextareaDemo from "@/app/content/ui/editable-textarea";
+import { ActionBarDemo } from "@/app/content/ui/action-bar";
+import CircularProgressDemo from "@/app/content/ui/circular-progress";
+import CircularProgressWithTextDemo from "@/app/content/ui/circular-progress-text";
+import CircularProgressVariantsDemo from "@/app/content/ui/circular-progress-variants";
+import InputGroupDemo from "@/app/content/ui/input-group";
+import InputGroupDropdownDemo from "@/app/content/ui/input-group-dropdown";
+import InputGroupURLDemo from "@/app/content/ui/input-group-url";
+import InputGroupSearchDemo from "@/app/content/ui/input-group-search";
+import KbdGroupDemo from "@/app/content/ui/kbd-group";
+import KbdShortcutDemo from "@/app/content/ui/kbd-shortcut";
+import KbdTooltipDemo from "@/app/content/ui/kbd-tooltip";
+import KbdButtonDemo from "@/app/content/ui/kbd-button";
+import KbdDemo from "@/app/content/ui/kbd";
+import SpinnerBadgeDemo from "@/app/content/ui/spinner-badge";
+import SpinnerButtonDemo from "@/app/content/ui/spinner-button";
+import SpinnerSizeDemo from "@/app/content/ui/spinner-size";
+import StepperDemo from "@/app/content/ui/stepper";
+import TimelineVariantsDemo from "@/app/content/ui/timeline-variants";
+import TimelineSizesDemo from "@/app/content/ui/timeline-sizes";
+import TimelineConnectorVariantsDemo from "@/app/content/ui/timeline-connector-variants";
+import TimelineDemo from "@/app/content/ui/timeline";
 
 export interface DocsiteRegistryEntry {
     name: string;
@@ -179,6 +198,11 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         name: "accordion",
         path: "src/app/content/ui/accordion.tsx",
         component: AccordionDemo,
+    },
+    "action-bar": {
+        name: "action-bar",
+        path: "src/app/content/ui/action-bar.tsx",
+        component: ActionBarDemo,
     },
     "alert": {
         name: "alert",
@@ -414,6 +438,21 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         name: "checkbox-label",
         path: "src/app/content/ui/checkbox-label.tsx",
         component: EnabledCheckboxLabelDemo,
+    },
+    "circular-progress": {
+        name: "circular-progress",
+        path: "src/app/content/ui/circular-progress.tsx",
+        component: CircularProgressDemo,
+    },
+    "circular-progress-variants": {
+        name: "circular-progress-variants",
+        path: "src/app/content/ui/circular-progress-variants.tsx",
+        component: CircularProgressVariantsDemo,
+    },
+    "circular-progress-text": {
+        name: "circular-progress-text",
+        path: "src/app/content/ui/circular-progress-text.tsx",
+        component: CircularProgressWithTextDemo,
     },
     "collapsible": {
         name: "collapsible",
@@ -660,6 +699,26 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         path: "src/app/content/ui/input-disabled.tsx",
         component: DisabledInputDemo,
     },
+    "input-group": {
+        name: "input-group",
+        path: "src/app/content/ui/input-group.tsx",
+        component: InputGroupDemo,
+    },
+    "input-group-search": {
+        name: "input-group-search",
+        path: "src/app/content/ui/input-group-search.tsx",
+        component: InputGroupSearchDemo,
+    },
+    "input-group-url": {
+        name: "input-group-url",
+        path: "src/app/content/ui/input-group-url.tsx",
+        component: InputGroupURLDemo,
+    },
+    "input-group-dropdown": {
+        name: "input-group-dropdown",
+        path: "src/app/content/ui/input-group-dropdown.tsx",
+        component: InputGroupDropdownDemo,
+    },
     "inputOtp": {
         name: "inputOtp",
         path: "src/app/content/ui/inputotp.tsx",
@@ -674,6 +733,31 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         name: "inputOtp-spacing",
         path: "src/app/content/ui/inputotp-spacing.tsx",
         component: InputOTPSpacingDemo,
+    },
+    "kbd": {
+        name: "kbd",
+        path: "src/app/content/ui/kbd.tsx",
+        component: KbdDemo,
+    },
+    "kbd-group": {
+        name: "kbd-group",
+        path: "src/app/content/ui/kbd-group.tsx",
+        component: KbdGroupDemo,
+    },
+    "kbd-button": {
+        name: "kbd-button",
+        path: "src/app/content/ui/kbd-button.tsx",
+        component: KbdButtonDemo,
+    },
+    "kbd-tooltip": {
+        name: "kbd-tooltip",
+        path: "src/app/content/ui/kbd-tooltip.tsx",
+        component: KbdTooltipDemo,
+    },
+    "kbd-shortcut": {
+        name: "kbd-shortcut",
+        path: "src/app/content/ui/kbd-shortcut.tsx",
+        component: KbdShortcutDemo,
     },
     "label": {
         name: "label",
@@ -825,15 +909,20 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         path: "src/app/content/ui/spinner.tsx",
         component: SpinnerDemo,
     },
-    "spinner-variants": {
-        name: "spinner-variants",
-        path: "src/app/content/ui/spinner-variants.tsx",
-        component: SpinnerVariantsDemo,
+    "spinner-size": {
+        name: "spinner-size",
+        path: "src/app/content/ui/spinner-size.tsx",
+        component: SpinnerSizeDemo,
     },
-    "spinner-text": {
-        name: "spinner-text",
-        path: "src/app/content/ui/spinner-text.tsx",
-        component: WithTextSpinnerDemo,
+    "spinner-button": {
+        name: "spinner-button",
+        path: "src/app/content/ui/spinner-button.tsx",
+        component: SpinnerButtonDemo,
+    },
+    "spinner-badge": {
+        name: "spinner-badge",
+        path: "src/app/content/ui/spinner-badge.tsx",
+        component: SpinnerBadgeDemo,
     },
     "stack-navigation": {
         name: "stack-navigation",
@@ -849,6 +938,11 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         name: "stack-navigation-horizontal-tabs",
         path: "src/app/content/ui/stack-navigation-horizontal-tabs.tsx",
         component: StackNavigationHorizontalTabsDemo,
+    },
+    "stepper": {
+        name: "stepper",
+        path: "src/app/content/ui/stepper.tsx",
+        component: StepperDemo,
     },
     "switch": {
         name: "switch",
@@ -944,6 +1038,26 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         name: "time-picker",
         path: "src/app/content/ui/time-picker.tsx",
         component: TimePickerDemo,
+    },
+    "timeline": {
+        name: "timeline",
+        path: "src/app/content/ui/timeline.tsx",
+        component: TimelineDemo,
+    },
+    "timeline-variants": {
+        name: "timeline-variants",
+        path: "src/app/content/ui/timeline-variants.tsx",
+        component: TimelineVariantsDemo,
+    },
+    "timeline-sizes": {
+        name: "timeline-sizes",
+        path: "src/app/content/ui/timeline-sizes.tsx",
+        component: TimelineSizesDemo,
+    },
+    "timeline-connector-variants": {
+        name: "timeline-connector-variants",
+        path: "src/app/content/ui/timeline-connector-variants.tsx",
+        component: TimelineConnectorVariantsDemo,
     },
     "toggle-square": {
         name: "toggle-square",

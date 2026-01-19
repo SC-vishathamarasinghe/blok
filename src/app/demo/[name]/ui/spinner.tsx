@@ -10,7 +10,9 @@ export const spinner = {
     ]
   },  
   components: {
-    Variants: { component: "spinner-variants", },
-    "With Text Spinner": { component: "spinner-text", },
+    Size: { component: "spinner-size", },
+    Button: { component: "spinner-button", },
+    Badge: { component: "spinner-badge", },
   },
 };
+
