@@ -1163,7 +1163,7 @@
       "title": "Input OTP",
       "description": "A one-time password input component for verification codes.",
       "dependencies": [
-        "@mdi/js", 
+        "@mdi/js",
         "input-otp"
       ],
       "registryDependencies": [

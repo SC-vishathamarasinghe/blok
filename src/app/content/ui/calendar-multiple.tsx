@@ -11,9 +11,9 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
-function CustomDropdown({
+export function CustomDropdown({
     options = [],
     value,
     onChange,
@@ -23,15 +23,15 @@ function CustomDropdown({
 }: DropdownProps) {
     return (
         <Select
-        disabled={disabled}
-        name={name}
-        value={value != null ? String(value) : ""}
-        onValueChange={(val) => {
-            const e = {
-                target: { value: val },
-            } as unknown as React.ChangeEvent<HTMLSelectElement>;
-            onChange?.(e);
-        }}
+            disabled={disabled}
+            name={name}
+            value={value != null ? String(value) : ""}
+            onValueChange={(val) => {
+                const e = {
+                    target: { value: val },
+                } as unknown as React.ChangeEvent<HTMLSelectElement>;
+                onChange?.(e);
+            }}
         >
             <SelectTrigger
                 id={id}
@@ -58,10 +58,10 @@ function CustomDropdown({
     );
 }
 
-function MultiCalendar({numberOfMonths = 1}: {numberOfMonths?: number}) {
+export function MultiCalendar({ numberOfMonths = 1 }: { numberOfMonths?: number }) {
     const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-        from: new Date(2025, 5, 9),
-        to: new Date(2025, 5, 26),
+        from: parseISO("2025-06-09"),
+        to: parseISO("2025-06-26"),
     });
 
     return (

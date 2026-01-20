@@ -10,9 +10,9 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
-function CustomDropdown({
+export function CustomDropdown({
     options = [],
     value,
     onChange,
@@ -27,7 +27,7 @@ function CustomDropdown({
             value={value != null ? String(value) : ""}
             onValueChange={(val) => {
                 const e = {
-                target: { value: val },
+                    target: { value: val },
                 } as unknown as React.ChangeEvent<HTMLSelectElement>;
                 onChange?.(e);
             }}
@@ -59,7 +59,7 @@ function CustomDropdown({
 
 export default function CalendarDemo() {
     const [date, setDate] = React.useState<Date | undefined>(
-        new Date(2025, 5, 12),
+        parseISO("2025-06-12")
     );
 
     return (
@@ -73,9 +73,9 @@ export default function CalendarDemo() {
             components={{ Dropdown: CustomDropdown }}
             labels={{
                 labelDayButton: (day) => {
-                const visible = format(day, "d");
-                const longLabel = format(day, "PPPP");
-                return `${visible} – ${longLabel}`;
+                    const visible = format(day, "d");
+                    const longLabel = format(day, "PPPP");
+                    return `${visible} – ${longLabel}`;
                 },
             }}
         />
