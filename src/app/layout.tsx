@@ -28,7 +28,7 @@ export default function RootLayout({
         name="robots"
         content="noindex, nofollow, noarchive, nosnippet, noimageindex"
       />
-      <body>
+      <body className="flex grow">
         <DirectionProvider>
           {children}
           <Analytics />
