@@ -66,6 +66,7 @@ import { timeline } from "@/app/demo/[name]/ui/timeline";
 import { allSite } from "@/app/demo/[name]/bloks/all-site";
 import { siteCard } from "@/app/demo/[name]/bloks/site-card";
 import { pinnedSite } from "@/app/demo/[name]/bloks/pinned-site";
+import { collaboration } from "@/app/demo/[name]/bloks/collaboration";
 
 interface Demo {
   name: string; // this must match the `/registries/registry.json` name
@@ -159,4 +160,5 @@ export const demos: { [name: string]: Demo } = {
   "all-site": allSite,
   "site-card": siteCard,
   "pinned-site": pinnedSite,
+  collaboration,
 };

@@ -1896,6 +1896,31 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "collaboration",
+      "type": "registry:block",
+      "title": "Collaboration",
+      "description": "A user collaboration blok with nested popovers for adding and removing team members with search functionality.",
+      "registryDependencies": [
+        "https://blok.sitecore.com/r/theme.json",
+        "https://blok.sitecore.com/r/avatar.json",
+        "https://blok.sitecore.com/r/button.json",
+        "https://blok.sitecore.com/r/card.json",
+        "https://blok.sitecore.com/r/input-group.json",
+        "https://blok.sitecore.com/r/popover.json",
+        "https://blok.sitecore.com/r/icon.json"
+      ],
+      "dependencies": [
+        "@mdi/js"
+      ],
+      "files": [
+        {
+          "path": "src/components/bloks/collaboration.tsx",
+          "type": "registry:block",
+          "target": "src/components/bloks/collaboration.tsx"
+        }
+      ]
     }
   ]
 }

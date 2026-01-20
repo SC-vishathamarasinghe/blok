@@ -942,6 +942,16 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
   },
 
   // ===== BLOK-SPECIFIC METADATA =====
+  collaboration: {
+    links: {
+      figma: "https://www.figma.com/design/x0CUbrC5Kjcuk64VPCnbgz/Blok-Components?m=auto&node-id=12635-12702&t=lmjHbhiQJqZWNi7i-1"
+    },
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+    ],
+  },
   "all-site": {
      links: {
 

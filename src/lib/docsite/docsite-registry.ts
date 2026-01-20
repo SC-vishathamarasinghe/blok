@@ -186,6 +186,7 @@ import TimelineSizesDemo from "@/app/content/ui/timeline-sizes";
 import TimelineConnectorVariantsDemo from "@/app/content/ui/timeline-connector-variants";
 import TimelineDemo from "@/app/content/ui/timeline";
 import SelectReactDemo from "@/app/content/ui/select-react";
+import CollaborationDemo from "@/app/content/bloks/collaboration";
 
 export interface DocsiteRegistryEntry {
     name: string;
@@ -1106,6 +1107,11 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
         name: "all-site",
         path: "src/app/content/bloks/all-site-section.tsx",
         component: AllSitesSectionDemo,
+    },
+    "collaboration": {
+        name: "collaboration",
+        path: "src/app/content/bloks/collaboration.tsx",
+        component: CollaborationDemo,
     },
     "pinned-site": {
         name: "pinned-site",
