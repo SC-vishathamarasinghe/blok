@@ -572,10 +572,17 @@ const FilterMultiSelect = React.forwardRef<
                               className="overflow-visible!"
                             >
                               <span>{label}</span>
-                              <button
-                                type="button"
-                                className="cursor-pointer rounded-full p-0.5 hover:bg-neutral-bg-active flex items-center justify-center ml-2 -mr-1 pointer-events-auto focus:outline-none focus:ring-1 focus:ring-ring"
+                              <span
+                                role="button"
+                                tabIndex={0}
+                                className="cursor-pointer rounded-full p-0.5 hover:bg-neutral-bg-active flex items-center justify-center -mr-1 pointer-events-auto focus:outline-none focus:ring-1 focus:ring-ring"
                                 onClick={(e) => handleRemoveBadge(val, e)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    handleRemoveBadge(val, e as unknown as React.MouseEvent);
+                                  }
+                                }}
                                 aria-label={`Remove ${label}`}
                               >
                                 <Icon
@@ -583,7 +590,7 @@ const FilterMultiSelect = React.forwardRef<
                                   size={0.7}
                                   className="pointer-events-none"
                                 />
-                              </button>
+                              </span>
                             </Badge>
                           );
                         })}
