@@ -27,8 +27,8 @@ on:
         default: ''
 
 env:
-  # 🔴 IMPORTANT: Replace this with your actual Vercel deployment URL
-  DEFAULT_BASE_URL: 'https://qa-automation-nextjs-jmbpxrp6g-vishath-amarasinghes-projects.vercel.app'
+  # Your Vercel deployment URL
+  BASE_URL: 'https://qa-automation-nextjs-jmbpxrp6g-vishath-amarasinghes-projects.vercel.app'
 
 jobs:
   test:
@@ -50,7 +50,7 @@ jobs:
     - name: Run Playwright tests
       run: npx playwright test
       env:
-        BASE_URL: ${{ github.event.inputs.base_url || env.DEFAULT_BASE_URL }}
+        BASE_URL: ${{ inputs.base_url || env.BASE_URL }}
     
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
