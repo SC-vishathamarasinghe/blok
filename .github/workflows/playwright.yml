@@ -35,7 +35,10 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
+    # Always checkout QA-Automation branch where tests are located
     - uses: actions/checkout@v4
+      with:
+        ref: QA-Automation
     
     - uses: actions/setup-node@v4
       with:
