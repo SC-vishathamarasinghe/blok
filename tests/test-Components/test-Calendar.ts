@@ -10,6 +10,21 @@ export async function testSingleCalendar(page: Page){
     const table = calendar.locator('table');
     await expect(table).toBeVisible();
 
+    // Verify default selected date (June 12, 2025) - check before navigation
+    // Try to find by data-selected first, fallback to finding by data-day attribute
+    let selectedDay = calendar.locator('button[data-selected="true"]');
+    const selectedCount = await selectedDay.count();
+    
+    if (selectedCount === 0) {
+      // If no button with data-selected, try to find the specific date button
+      selectedDay = calendar.locator('button[data-day*="2025-06-12"]');
+    }
+    
+    await expect(selectedDay).toBeVisible();
+    const dayValue = await selectedDay.getAttribute('data-day');
+    expect(dayValue).toBeTruthy();
+    expect(dayValue).toContain('2025-06-12');
+
     // Verify that navigate to previous month when previous button is clicked
     const prevButton = page.locator('[aria-label="Go to the Previous Month"]').first();
     await prevButton.click();
@@ -35,15 +50,6 @@ export async function testSingleCalendar(page: Page){
     for (let i = 0; i < Math.min(daycount, 7); i++) {
       await expect(dayButtons.nth(i)).toBeVisible();
     }
-    
-/*
-  // Verify default selected date (June 12, 2025)
-    const selectedDay = calendar.locator('button[data-selected="true"]');
-    await expect(selectedDay).toBeVisible();
-    const dayValue = await selectedDay.getAttribute('data-day');
-    expect(dayValue).toBeTruthy();
-    expect(dayValue).toContain('6/12/2025');
-*/       
 
     // Verify display month options in dropdown
     const monthDropdown = calendar.locator('[data-slot="select-trigger"]').first();

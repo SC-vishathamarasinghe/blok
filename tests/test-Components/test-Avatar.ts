@@ -1,41 +1,40 @@
 import { test, expect, Page } from '@playwright/test';
 
 export async function testAvatar(page: Page){
-  // Find the avatar with an image
-    const avatar = page.locator('[data-slot="avatar"]').first();
-    
-  // Check that avatar is visible
+  // Verify that display default avatar section
+    const avatarDefault = page.locator('[id="avatar-default"]');
+  // Verify that avatar with an image is visible
+    const avatar = avatarDefault.locator('[data-slot="avatar"]');
     await expect(avatar).toBeVisible();
   
-  // Check that the avatar image exists
+  // Verify that the avatar image exists
     const avatarImage = avatar.locator('[data-slot="avatar-image"]');
     await expect(avatarImage).toBeVisible();
   
   // Verify the image has the correct alt text
     await expect(avatarImage).toHaveAttribute('alt', 'Frank Grinaert');
-  
 }
 
 export async function testFallbackAvatar(page: Page){
-  // Find the avatar which only has fallback
-    const avatars = page.locator('[data-slot="avatar"]');
-    const fallbackAvatar = avatars.nth(1);
-    
-  // Check that fallback avatar is visible
-    await expect(fallbackAvatar).toBeVisible();
-    const fallback = fallbackAvatar.locator('[data-slot="avatar-fallback"]');
+  // Verify that display fallback avatar section
+  const avatarFallback = page.locator('[id="avatar-fallback"]');
+
+  // Verify that avatar which has fallback is visible
+    const avatars = avatarFallback.locator('span[data-slot="avatar"]');
+    await expect(avatars).toBeVisible();
+
+  // Verify that fallback text is visible
+    const fallback = avatars.locator('[data-slot="avatar-fallback"]');
     await expect(fallback).toBeVisible();
     await expect(fallback).toContainText('BM');
-  
 }
 
 export async function testLargeAvatar(page: Page){
-  
-  // Find the group of large avatars (third group)
-    const avatarGroup = page.locator('[data-slot="avatar"]').nth(2).locator('..');
+  // Verify that display large avatar section
+  const avatarLarge = page.locator('[id="avatar-large"]');
     
   // Verify multiple avatars are present in the group
-    const avatarsInGroup = avatarGroup.locator('[data-slot="avatar"]');
+    const avatarsInGroup = avatarLarge.locator('span[data-slot="avatar"]');
     const count = await avatarsInGroup.count();
     expect(count).toBeGreaterThanOrEqual(3);
   
@@ -44,39 +43,92 @@ export async function testLargeAvatar(page: Page){
         await expect(avatarsInGroup.nth(i)).toBeVisible();
     }
 
-  // display fallback text in avatar group
-    const avatars = page.locator('[data-slot="avatar"]');
-    
-  // Check the first avatar in the group has fallback "CN"
-    const firstGroupAvatar = avatars.nth(2);
-    const fallback = firstGroupAvatar.locator('[data-slot="avatar-fallback"]');
+  // Verify that first avatar is visible in avatar group
+    const avatarOne = avatarsInGroup.nth(0);
+    await expect(avatarOne).toBeVisible();
+    // Verify that fallback text is visible
+    const fallback = avatarOne.locator('[data-slot="avatar-fallback"]');
+    await expect(fallback).toBeVisible();
     await expect(fallback).toContainText('CN');
 
-  // correct image source for avatars with images
-    const avatar = page.locator('[data-slot="avatar"]').first();
-    const avatarImage = avatar.locator('[data-slot="avatar-image"]');
-  
-  // Verify the image source
-    const imageSrc = await avatarImage.getAttribute('src');
-    expect(imageSrc).toContain('slack-edge.com');
-  
+  // Verify that second avatar is visible in avatar group
+    const avatarTwo = avatarsInGroup.nth(1);
+    await expect(avatarTwo).toBeVisible();
+    // Verify that avatar image is visible
+    const imageMartin = avatarTwo.locator('[data-slot="avatar-image"]');
+    await expect(imageMartin).toBeVisible();
+    await expect(imageMartin).toHaveAttribute('alt', 'Martin Svarrer Christensen');
+    
+  // Verify that third avatar is visible in avatar group
+    const avatarThree = avatarsInGroup.nth(2);
+    await expect(avatarThree).toBeVisible();
+    // Verify that avatar image is visible
+    const imageOmar = avatarThree.locator('[data-slot="avatar-image"]');
+    await expect(imageOmar).toBeVisible();
+    await expect(imageOmar).toHaveAttribute('alt', 'Omar Oueslati');
 }
 
 export async function testInteractiveAvatar(page: Page){
-  // Find the interactive avatar group (last group)
-    const avatars = page.locator('[data-slot="avatar"]');
-    const interactiveGroup = avatars.nth(3).locator('..');
-  
-  // Verify the group exists
-    await expect(interactiveGroup).toBeVisible();
-  
-  // Check that avatars in interactive group are visible
-    const interactiveAvatars = interactiveGroup.locator('[data-slot="avatar"]');
-    const count = await interactiveAvatars.count();
+  // Verify that display interactive avatar section
+  const avatarInteractive = page.locator('[id="avatar-interactive"]');
+    
+  // Verify multiple avatars are present in the group
+    const avatarsInGroup = avatarInteractive.locator('span[data-slot="avatar"]');
+    const count = await avatarsInGroup.count();
     expect(count).toBeGreaterThanOrEqual(3);
   
-  // The hover effect might change spacing, verify avatars are still visible
-  await interactiveAvatars.first().hover();
-  await expect(interactiveAvatars.first()).toBeVisible();
-  
+  // Check that each avatar in the group is visible
+    for (let i = 0; i < count; i++) {
+        await expect(avatarsInGroup.nth(i)).toBeVisible();
+    }
+
+  // Verify that first avatar is visible in avatar group
+    const avatarOne = avatarsInGroup.nth(0);
+    await expect(avatarOne).toBeVisible();
+    // Verify that avatar image is visible
+    const imageSpongebob = avatarOne.locator('[data-slot="avatar-image"]');
+    await expect(imageSpongebob).toBeVisible();
+    await expect(imageSpongebob).toHaveAttribute('alt', 'Spongebob');
+
+  // Verify that second avatar is visible in avatar group
+    const avatarTwo = avatarsInGroup.nth(1);
+    await expect(avatarTwo).toBeVisible();
+    // Verify that avatar image is visible
+    const fallbackPS = avatarTwo.locator('[data-slot="avatar-fallback"]');
+    await expect(fallbackPS).toBeVisible();
+    await expect(fallbackPS).toContainText('PS');
+    
+  // Verify that third avatar is visible in avatar group
+    const avatarThree = avatarsInGroup.nth(2);
+    await expect(avatarThree).toBeVisible();
+    // Verify that avatar image is visible
+    const fallbackST = avatarThree.locator('[data-slot="avatar-fallback"]');
+    await expect(fallbackST).toBeVisible();
+    await expect(fallbackST).toContainText('ST');
+}
+
+export async function testAvatarMenu(page: Page){
+  // Verify that display avatar menu section
+  const avatarMenu = page.locator('[id="avatar-menu"]');
+
+  // Verify that first avatar menu is visible
+  const avatarMenu1 = avatarMenu.locator('[class="flex -space-x-2"]').nth(0);
+
+  // Verify that first avatar menu item is visible
+  const avatarMenuItem1 = avatarMenu1.locator('button');
+  await expect(avatarMenuItem1).toBeVisible();
+  // Verify class attribute of avatar menu item
+  const classAttribute = await avatarMenuItem1.getAttribute('class');
+  expect(classAttribute).toContain('rounded-full');    
+  expect(classAttribute).toContain('bg-primary-background');
+  expect(classAttribute).toContain('text-primary-foreground');
+  expect(classAttribute).toContain('transition-colors');
+  expect(classAttribute).toContain('hover:bg-primary');
+  expect(classAttribute).toContain('hover:text-white');
+
+  // Verify that second avatar menu item is visible
+  const avatarMenuItem2 = avatarMenu1.locator('span[data-slot="avatar"]');
+  const imageSpongebob = avatarMenuItem2.locator('[data-slot="avatar-image"]');
+    await expect(imageSpongebob).toBeVisible();
+    await expect(imageSpongebob).toHaveAttribute('alt', 'Spongebob');
 }

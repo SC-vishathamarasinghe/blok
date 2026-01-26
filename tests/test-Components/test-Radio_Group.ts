@@ -2,7 +2,8 @@ import { test, expect, Page } from '@playwright/test';
 
 export async function testRadioGroup(page: Page){
     // Verify that display radio group component
-    const radioGroup = page.locator('[data-slot="radio-group"]');
+    const radioGroupButton = page.locator('[id="radio-group-button"]');
+    const radioGroup = radioGroupButton.locator('[role="radiogroup"][data-slot="radio-group"]');
     await expect(radioGroup).toBeVisible();
 
     // Verify that display all radio group items

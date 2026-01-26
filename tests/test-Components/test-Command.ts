@@ -4,7 +4,8 @@ export async function testCommand(page: Page){
     // Verify the text "Press" and the kbd element is present
     const command = page.locator('[id="command"]');
     await expect(command).toBeVisible();
-    const kbdElement = page.locator('kbd');
+    // Scope kbd element to the command section to avoid matching all kbd elements on the page
+    const kbdElement = command.locator('kbd').first();
     await expect(kbdElement).toBeVisible();
 
     // Verify that open command dialog with Ctrl+J keyboard shortcut

@@ -81,11 +81,32 @@ export async function testKbdTooltip(page: Page){
     // Verify that display kbd tooltip section  
     const kbdTooltipSection = page.locator('[id="kbd-tooltip"]');
     await expect(kbdTooltipSection).toBeVisible();
+    
+    // Scroll section into view to ensure buttons are accessible
+    await kbdTooltipSection.scrollIntoViewIfNeeded();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
 
     // Verify that display buttons with Kbd elements
-    // Check for Save button
-    const buttonSave = kbdTooltipSection.locator('button[data-slot="button"]').nth(0);
-    await expect(buttonSave).toBeVisible();
+    // Check for Save button - try multiple approaches
+    let buttonSave;
+    
+    // First try finding by text within the section
+    const saveByRole = kbdTooltipSection.getByRole('button', { name: /Save/i });
+    if (await saveByRole.count() > 0) {
+        buttonSave = saveByRole.first();
+    } else {
+        // Try the data-slot selector
+        const saveBySlot = kbdTooltipSection.locator('button[data-slot="button"]').first();
+        if (await saveBySlot.count() > 0) {
+            buttonSave = saveBySlot;
+        } else {
+            // Try finding any button with "Save" text in the section
+            buttonSave = kbdTooltipSection.locator('button').filter({ hasText: 'Save' }).first();
+        }
+    }
+    
+    await expect(buttonSave).toBeVisible({ timeout: 5000 });
     // Check for button is clickable
     await expect(buttonSave).toBeEnabled();
     // Check for Save text
@@ -94,43 +115,37 @@ export async function testKbdTooltip(page: Page){
     await buttonSave.hover();
     // Wait a bit for tooltip to appear
     await page.waitForTimeout(500);
-    // Verify that tooltip text is visible - find by text directly like test-Input_Group
-    const tooltipTextSave = page.getByText('Save Changes');
+    // Verify that tooltip text is visible - use getByRole to find the tooltip specifically
+    const tooltipTextSave = page.getByRole('tooltip', { name: /Save Changes/i });
     await expect(tooltipTextSave).toBeVisible({ timeout: 5000 });
     
-    // Find the kbd group that's in the tooltip - filter by one that contains ⌘ symbol
-    const kbdTooltipGroup = page.locator('kbd[data-slot="kbd-group"]').filter({
-        has: page.locator('kbd[data-slot="kbd"]').filter({ hasText: '⌘' })
-    }).first();
+    // Find the kbd group that's in the tooltip - scope to the tooltip element
+    const kbdTooltipGroup = tooltipTextSave.locator('kbd[data-slot="kbd-group"]');
     await expect(kbdTooltipGroup).toBeVisible();
     // Check for ⌘ key in the KbdGroup
     await expect(kbdTooltipGroup.getByText('⌘')).toBeVisible();
-    
-    // Check for S key - search for it in kbd elements within the tooltip area
-    // The S might be in the same kbd group or in a separate kbd element nearby
-    const sKeyInKbd = page.locator('kbd[data-slot="kbd"]').filter({ hasText: 'S' });
-    const sKeyCount = await sKeyInKbd.count();
-    // Find the S key that's visible and near the tooltip (not from other sections)
-    if (sKeyCount > 0) {
-        // Get all visible S keys and verify at least one is visible
-        let sKeyFound = false;
-        for (let i = 0; i < sKeyCount; i++) {
-            const sKey = sKeyInKbd.nth(i);
-            const isVisible = await sKey.isVisible().catch(() => false);
-            if (isVisible) {
-                sKeyFound = true;
-                break;
-            }
-        }
-        expect(sKeyFound).toBe(true);
-    } else {
-        // If no S key found, try searching within the kbd group using getByText with exact
-        await expect(kbdTooltipGroup.getByText('S', { exact: true })).toBeVisible();
-    }
+    // Check for S key in the KbdGroup
+    await expect(kbdTooltipGroup.getByText('S', { exact: true })).toBeVisible();
 
-    // Check for Print button
-    const buttonPrint = kbdTooltipSection.locator('button[data-slot="button"]').nth(1);
-    await expect(buttonPrint).toBeVisible();
+    // Check for Print button - try multiple approaches
+    let buttonPrint;
+    
+    // First try finding by text within the section
+    const printByRole = kbdTooltipSection.getByRole('button', { name: /Print/i });
+    if (await printByRole.count() > 0) {
+        buttonPrint = printByRole.first();
+    } else {
+        // Try the data-slot selector
+        const printBySlot = kbdTooltipSection.locator('button[data-slot="button"]').nth(1);
+        if (await printBySlot.count() > 0) {
+            buttonPrint = printBySlot;
+        } else {
+            // Try finding any button with "Print" text in the section
+            buttonPrint = kbdTooltipSection.locator('button').filter({ hasText: 'Print' }).first();
+        }
+    }
+    
+    await expect(buttonPrint).toBeVisible({ timeout: 5000 });
     // Check for button is clickable
     await expect(buttonPrint).toBeEnabled();
     // Check for Print text

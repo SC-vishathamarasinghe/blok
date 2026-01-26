@@ -18,7 +18,8 @@ export async function testNavigationMenu(page: Page){
     expect(count).toBe(3);
 
     // Verify that display "Getting Started" trigger
-    const gettingStartedTrigger = menuItems.locator('[data-slot="navigation-menu-trigger"]').filter({ hasText: 'Getting Started' });
+    const menuItem1 = navigationMenuList.locator('[data-slot="navigation-menu-item"]').nth(0);
+    const gettingStartedTrigger = menuItem1.locator('[data-slot="navigation-menu-trigger"]');
     await expect(gettingStartedTrigger).toBeVisible();
     await expect(gettingStartedTrigger).toContainText('Getting Started');
     
@@ -26,15 +27,7 @@ export async function testNavigationMenu(page: Page){
     await gettingStartedTrigger.scrollIntoViewIfNeeded();
     await page.waitForTimeout(200);
     
-    // Check for console errors before hover
-    const consoleErrors: string[] = [];
-    page.on('console', msg => {
-        if (msg.type() === 'error') {
-            consoleErrors.push(msg.text());
-        }
-    });
-    
-    // Try multiple hover approaches
+    // Try multiple hover approaches to ensure content appears
     // 1. JavaScript event dispatch
     await gettingStartedTrigger.evaluate((el) => {
         const mouseenterEvent = new MouseEvent('mouseenter', {
@@ -43,7 +36,6 @@ export async function testNavigationMenu(page: Page){
             view: window
         });
         el.dispatchEvent(mouseenterEvent);
-        // Also try mouseover
         const mouseoverEvent = new MouseEvent('mouseover', {
             bubbles: true,
             cancelable: true,
@@ -63,33 +55,13 @@ export async function testNavigationMenu(page: Page){
     await gettingStartedTrigger.hover({ force: true });
     await page.waitForTimeout(500);
     
-    // Wait for content to appear - try multiple selectors
-    let contentFound = false;
-    try {
-        await page.waitForSelector('[data-slot="navigation-menu-content"]', { state: 'visible', timeout: 8000 });
-        contentFound = true;
-    } catch (e) {
-        // Try alternative selectors
-        try {
-            await page.waitForSelector('text=Blok CN', { state: 'visible', timeout: 2000 });
-            contentFound = true;
-        } catch (e2) {
-            // Check if content exists but is hidden
-            const contentCount = await page.locator('[data-slot="navigation-menu-content"]').count();
-            if (contentCount > 0) {
-                // Content exists but might be hidden - check visibility
-                const isVisible = await page.locator('[data-slot="navigation-menu-content"]').first().isVisible();
-                if (!isVisible) {
-                    throw new Error(`Navigation menu content exists but is not visible. Console errors: ${consoleErrors.join(', ')}`);
-                }
-            }
-            throw new Error(`Navigation menu content not found after hover. Console errors: ${consoleErrors.join(', ')}`);
-        }
-    }
+    // Wait for content to appear - wait for "Blok CN" text which is specific to Getting Started
+    await page.waitForSelector('text=Blok CN', { state: 'visible', timeout: 10000 });
     
     // Now get the content container
-    const gettingStartedcontent = page.locator('[data-slot="navigation-menu-content"]').first();
-    await expect(gettingStartedcontent).toBeVisible();
+    const menuItem1Viewport = page.locator('[data-slot="navigation-menu-viewport"]');
+    const gettingStartedcontent = menuItem1Viewport.locator('[data-slot="navigation-menu-content"]');
+    await expect(gettingStartedcontent).toBeVisible({ timeout: 5000 });
 
     // Verify that display "Blok CN" link
     const gettingStartedlink1 = gettingStartedcontent.locator('[data-slot="navigation-menu-link"]').nth(0);
