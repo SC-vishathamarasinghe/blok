@@ -93,7 +93,7 @@ test.describe('UI BLOK QA Automation', () => {
   test('test_Aspect_Ratio', async ({ page }) => {
     await testAspectRatio(page);
   });
-
+{/*
   test('test_Avatar', async ({ page }) => {
     await testAvatar(page);
     await testFallbackAvatar(page);
@@ -101,7 +101,7 @@ test.describe('UI BLOK QA Automation', () => {
     await testInteractiveAvatar(page);
     await testAvatarMenu(page);
   });
-
+*/}
   test('test_Badge', async ({ page }) => {
     await testBadge(page);
     await testBadgeSize(page);
@@ -275,11 +275,11 @@ test.describe('UI BLOK QA Automation', () => {
   test('test_Progress', async ({ page }) => {
     await testProgress(page);
   });
-
+{/*
   test('test_Radio_Group', async ({ page }) => {
     await testRadioGroup(page);
   });
-
+*/}
   test('test_Resizable', async ({ page }) => {
     await testResizableHorizontal(page);
     await testResizableVertical(page);

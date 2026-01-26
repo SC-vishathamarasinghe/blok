@@ -10,4 +10,9 @@ export async function testCollaboration(page: Page){
     // Verify that display avatar stack with maximum 3 avatars
     const avatarStack = collaboration.locator('[data-slot="avatar"]');
     await expect(avatarStack).toHaveCount(3);
+
+    // Verify that first avatar is visible
+    const firstAvatar = avatarStack.nth(0).locator('[data-slot="avatar-fallback"]');
+    await expect(firstAvatar).toBeVisible();
+    await expect(firstAvatar).toContainText('AH');
 }
