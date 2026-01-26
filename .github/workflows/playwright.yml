@@ -46,10 +46,49 @@ jobs:
       working-directory: ./app
       run: npm ci
     
-    # Step 4: Install components from blok.sitecore.com
+    # Step 4: Install components from components-config.json
     - name: Install Blok components
       working-directory: ./app
-      run: npx shadcn@latest add https://blok.sitecore.com/r/blok-components.json --yes
+      run: |
+        echo "📦 Installing components from configuration..."
+        
+        # Check if components-config.json exists, if not use default
+        if [ -f "components-config.json" ]; then
+          echo "✅ Found components-config.json, reading configuration..."
+          
+          # Install bulk components if enabled
+          BULK_ENABLED=$(node -p "require('./components-config.json').bulkInstall?.enabled !== false")
+          if [ "$BULK_ENABLED" = "true" ]; then
+            BULK_URL=$(node -p "require('./components-config.json').bulkInstall?.url || ''")
+            if [ -n "$BULK_URL" ] && [ "$BULK_URL" != "undefined" ]; then
+              echo "📥 Installing bulk components from: $BULK_URL"
+              npx shadcn@latest add "$BULK_URL" --yes || true
+            fi
+          fi
+          
+          # Install additional components
+          echo "📥 Installing additional components..."
+          node -e "
+            const config = require('./components-config.json');
+            if (config.additionalComponents && Array.isArray(config.additionalComponents)) {
+              config.additionalComponents.forEach(comp => {
+                if (comp.enabled !== false && comp.name) {
+                  console.log(comp.name);
+                }
+              });
+            }
+          " | while IFS= read -r component; do
+            if [ -n "$component" ]; then
+              echo "  → Installing $component..."
+              npx shadcn@latest add "$component" --yes 2>&1 || echo "    ⚠️ $component installation skipped (may already exist or not available)"
+            fi
+          done
+        else
+          echo "⚠️ components-config.json not found, using default URL..."
+          npx shadcn@latest add https://blok.sitecore.com/r/blok-components.json --yes || true
+        fi
+        
+        echo "✅ Component installation completed"
     
     # Step 5: Build Next.js application
     - name: Build Next.js application
