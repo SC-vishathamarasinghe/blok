@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
 };
 
+// This is the root layout for the Blok website.
 export default function RootLayout({
   children,
 }: Readonly<{
