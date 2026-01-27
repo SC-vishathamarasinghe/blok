@@ -519,8 +519,59 @@ jobs:
         
         # Create JSON payload for Teams webhook using node for proper JSON escaping
         # Write to temp file to avoid shell variable escaping issues
+        # Export all variables as environment variables first, then run node
+        export STATUS="${STATUS}"
+        export STATUS_EMOJI="${STATUS_EMOJI}"
+        export STATUS_TEXT="${STATUS_TEXT}"
+        export STATUS_COLOR="${STATUS_COLOR}"
+        export TOTAL="${TOTAL}"
+        export PASSED="${PASSED}"
+        export FAILED="${FAILED}"
+        export SKIPPED="${SKIPPED}"
+        export SUMMARY_MESSAGE="${SUMMARY_MESSAGE}"
+        export AUTHOR_NAME="${AUTHOR_NAME}"
+        export AUTHOR_USERNAME="${AUTHOR_USERNAME}"
+        export GITHUB_SERVER_URL="${{ github.server_url }}"
+        export GITHUB_REPOSITORY="${{ github.repository }}"
+        export GITHUB_REF_NAME="${{ github.ref_name }}"
+        export GITHUB_SHA="${{ github.sha }}"
+        export GITHUB_WORKFLOW="${{ github.workflow }}"
+        export GITHUB_RUN_ID="${{ github.run_id }}"
+        export GITHUB_RUN_NUMBER="${{ github.run_number }}"
+        export WORKFLOW_RUN_URL="${WORKFLOW_RUN_URL}"
+        export EVENT_TYPE="${EVENT_TYPE}"
+        export EVENT_URL="${EVENT_URL}"
+        export EVENT_DETAILS="${EVENT_DETAILS}"
+        export REPORT_URL="${REPORT_URL}"
+        
+        # Now run node with all environment variables available
+        # Debug: Print all environment variables to verify they're set
+        echo "=== DEBUG: Environment Variables ==="
+        echo "STATUS=${STATUS}"
+        echo "TOTAL=${TOTAL}"
+        echo "PASSED=${PASSED}"
+        echo "FAILED=${FAILED}"
+        echo "SKIPPED=${SKIPPED}"
+        echo "AUTHOR_NAME=${AUTHOR_NAME}"
+        echo "AUTHOR_USERNAME=${AUTHOR_USERNAME}"
+        echo "SUMMARY_MESSAGE=${SUMMARY_MESSAGE}"
+        echo ""
+        
         node -e "
           const fs = require('fs');
+          
+          // Debug: Log all environment variables
+          console.error('=== Node.js Environment Variables ===');
+          console.error('STATUS:', process.env.STATUS);
+          console.error('TOTAL:', process.env.TOTAL);
+          console.error('PASSED:', process.env.PASSED);
+          console.error('FAILED:', process.env.FAILED);
+          console.error('SKIPPED:', process.env.SKIPPED);
+          console.error('AUTHOR_NAME:', process.env.AUTHOR_NAME);
+          console.error('AUTHOR_USERNAME:', process.env.AUTHOR_USERNAME);
+          console.error('SUMMARY_MESSAGE:', process.env.SUMMARY_MESSAGE);
+          console.error('');
+          
           const payload = {
             status: process.env.STATUS || 'unknown',
             statusEmoji: process.env.STATUS_EMOJI || '⚠️',
@@ -536,7 +587,7 @@ jobs:
             author: {
               name: process.env.AUTHOR_NAME || '',
               username: process.env.AUTHOR_USERNAME || '',
-              githubUrl: process.env.GITHUB_SERVER_URL + '/' + process.env.AUTHOR_USERNAME
+              githubUrl: (process.env.GITHUB_SERVER_URL || 'https://github.com') + '/' + (process.env.AUTHOR_USERNAME || '')
             },
             repository: {
               name: process.env.GITHUB_REPOSITORY || '',
@@ -561,31 +612,13 @@ jobs:
             },
             timestamp: new Date().toISOString()
           };
+          
           fs.writeFileSync('/tmp/teams_payload.json', JSON.stringify(payload, null, 2));
-        " \
-        STATUS="${STATUS}" \
-        STATUS_EMOJI="${STATUS_EMOJI}" \
-        STATUS_TEXT="${STATUS_TEXT}" \
-        STATUS_COLOR="${STATUS_COLOR}" \
-        TOTAL="${TOTAL}" \
-        PASSED="${PASSED}" \
-        FAILED="${FAILED}" \
-        SKIPPED="${SKIPPED}" \
-        SUMMARY_MESSAGE="${SUMMARY_MESSAGE}" \
-        AUTHOR_NAME="${AUTHOR_NAME}" \
-        AUTHOR_USERNAME="${AUTHOR_USERNAME}" \
-        GITHUB_SERVER_URL="${{ github.server_url }}" \
-        GITHUB_REPOSITORY="${{ github.repository }}" \
-        GITHUB_REF_NAME="${{ github.ref_name }}" \
-        GITHUB_SHA="${{ github.sha }}" \
-        GITHUB_WORKFLOW="${{ github.workflow }}" \
-        GITHUB_RUN_ID="${{ github.run_id }}" \
-        GITHUB_RUN_NUMBER="${{ github.run_number }}" \
-        WORKFLOW_RUN_URL="${WORKFLOW_RUN_URL}" \
-        EVENT_TYPE="${EVENT_TYPE}" \
-        EVENT_URL="${EVENT_URL}" \
-        EVENT_DETAILS="${EVENT_DETAILS}" \
-        REPORT_URL="${REPORT_URL}"
+          console.error('✅ JSON payload created successfully');
+          console.error('Payload status:', payload.status);
+          console.error('Payload metrics:', JSON.stringify(payload.metrics));
+          console.error('Payload author:', payload.author.name, '(@' + payload.author.username + ')');
+        "
         
         # Read the JSON payload from file
         JSON_PAYLOAD=$(cat /tmp/teams_payload.json)
@@ -594,30 +627,63 @@ jobs:
         # Webhook URL is stored in GitHub secrets as TEAMS_WEBHOOK_URL
         WEBHOOK_URL="${{ secrets.TEAMS_WEBHOOK_URL }}"
         
+        echo "=== Webhook Configuration ==="
         if [ -z "$WEBHOOK_URL" ] || [ "$WEBHOOK_URL" == "" ]; then
-          echo "⚠️ Warning: TEAMS_WEBHOOK_URL secret is not set. Skipping Teams notification."
-          echo "To enable Teams notifications, add the webhook URL to GitHub repository secrets as TEAMS_WEBHOOK_URL"
+          echo "❌ ERROR: TEAMS_WEBHOOK_URL secret is not set!"
+          echo ""
+          echo "To enable Teams notifications:"
+          echo "1. Go to: Settings → Secrets and variables → Actions"
+          echo "2. Click 'New repository secret'"
+          echo "3. Name: TEAMS_WEBHOOK_URL"
+          echo "4. Value: Your Power Automate webhook URL"
+          echo "5. Click 'Add secret'"
+          echo ""
+          echo "Skipping Teams notification..."
           exit 0
+        else
+          echo "✅ TEAMS_WEBHOOK_URL secret is configured"
+          echo "Webhook URL length: ${#WEBHOOK_URL} characters"
         fi
-        
-        echo "Sending test results to Teams channel..."
-        echo "Payload preview:"
-        cat /tmp/teams_payload.json | head -20
         echo ""
         
-        HTTP_CODE=$(curl -s -o /tmp/teams_response.txt -w "%{http_code}" \
+        echo "Sending test results to Teams channel..."
+        echo "Webhook URL: ${WEBHOOK_URL:0:50}..." # Show first 50 chars for debugging
+        echo ""
+        echo "Full JSON payload:"
+        cat /tmp/teams_payload.json
+        echo ""
+        echo "Payload size: $(wc -c < /tmp/teams_payload.json) bytes"
+        echo ""
+        
+        # Send with verbose output for debugging
+        HTTP_CODE=$(curl -v -s -o /tmp/teams_response.txt -w "%{http_code}" \
           -X POST \
           -H "Content-Type: application/json" \
+          -H "Accept: application/json" \
           --data-binary @/tmp/teams_payload.json \
-          "${WEBHOOK_URL}")
+          "${WEBHOOK_URL}" 2>&1 | tee /tmp/curl_debug.txt || echo "CURL_ERROR")
         
-        if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
-          echo "✅ Successfully sent test results to Teams channel (HTTP $HTTP_CODE)"
+        echo ""
+        echo "=== CURL DEBUG OUTPUT ==="
+        cat /tmp/curl_debug.txt || true
+        echo ""
+        echo "=== HTTP RESPONSE CODE ==="
+        echo "${HTTP_CODE}"
+        echo ""
+        echo "=== RESPONSE BODY ==="
+        cat /tmp/teams_response.txt || echo "No response body"
+        echo ""
+        
+        if [ "$HTTP_CODE" == "CURL_ERROR" ]; then
+          echo "❌ Error: curl command failed. Check the debug output above."
+        elif [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+          echo "✅ HTTP request successful (HTTP $HTTP_CODE)"
+          echo "Note: If message doesn't appear in Teams, check your Power Automate flow configuration."
+          echo "The webhook received the data, but the flow might need adjustment to process it."
         else
-          echo "⚠️ Warning: Failed to send to Teams channel (HTTP $HTTP_CODE)"
-          echo "Response:"
+          echo "⚠️ Warning: HTTP request returned non-success code (HTTP $HTTP_CODE)"
+          echo "Response body:"
           cat /tmp/teams_response.txt || true
-          # Don't fail the workflow if Teams notification fails
         fi
       continue-on-error: true
     
