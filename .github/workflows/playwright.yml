@@ -139,7 +139,10 @@ jobs:
     # Step 9: Install test dependencies
     - name: Install test dependencies
       working-directory: ./tests
-      run: npm ci
+      run: |
+        npm ci
+        # Install GitHub Actions reporter for Playwright
+        npm install @estruyf/github-actions-reporter --save-dev
     
     # Step 10: Install Playwright Browsers
     - name: Install Playwright Browsers
@@ -153,29 +156,38 @@ jobs:
       continue-on-error: true
       run: |
         set +e
-        # Run tests with both JSON and HTML reporters
-        # JSON reporter outputs to stdout, so we capture it to a file
-        # HTML reporter creates playwright-report/ directory
-        npx playwright test --reporter=json,html > test-results.json 2>&1
+        # Update playwright.config.ts to use GitHub Actions reporter if not already configured
+        # This ensures the reporter is used even if the config in QA-Automation branch doesn't have it
+        if [ -f "playwright.config.ts" ]; then
+          node -e "
+            const fs = require('fs');
+            let config = fs.readFileSync('playwright.config.ts', 'utf-8');
+            
+            // Check if GitHub Actions reporter is already configured
+            if (!config.includes('@estruyf/github-actions-reporter')) {
+              // Replace reporter configuration
+              config = config.replace(
+                /reporter:\s*(?:'html'|\[\s*'html'\s*\])/,
+                \"reporter: process.env.CI ? [['list'], ['@estruyf/github-actions-reporter', { title: 'Playwright Test Results', useDetails: true, showError: true, showTags: true, showAnnotations: true, includeResults: ['pass', 'skipped', 'fail', 'flaky'], showArtifactsLink: true }], ['html']] : 'html'\"
+              );
+              fs.writeFileSync('playwright.config.ts', config);
+              console.log('Updated playwright.config.ts to use GitHub Actions reporter');
+            }
+          "
+        fi
+        
+        # Run tests - GitHub Actions reporter will automatically create summaries
+        # Also capture output for parsing test counts for PR comments
+        npx playwright test 2>&1 | tee test-output.log
         TEST_EXIT_CODE=$?
         echo "exit_code=${TEST_EXIT_CODE}" >> $GITHUB_OUTPUT
-        
-        # Extract JSON from the output (it might be mixed with other output)
-        # Try to find the JSON object in the file
-        if [ -f test-results.json ]; then
-          # Extract just the JSON part (from first { to last })
-          # Playwright JSON output is typically the last JSON object in the output
-          grep -o '{.*}' test-results.json | tail -1 > test-results-clean.json 2>/dev/null || true
-          if [ -f test-results-clean.json ] && [ -s test-results-clean.json ]; then
-            mv test-results-clean.json test-results.json
-          fi
-        fi
         
         # Don't exit with error code here - let continue-on-error handle it
         # This allows parsing step to run even if tests fail
         exit 0
       env:
         BASE_URL: http://localhost:3000
+        CI: true
     
     # Step 11.5: Parse test results
     - name: Parse test results
@@ -193,61 +205,107 @@ jobs:
         const exitCode = process.env.EXIT_CODE || '0';
         
         try {
-          // Try multiple possible locations for JSON results file
-          const possiblePaths = [
-            path.join(__dirname, 'test-results.json'),
-            path.join(__dirname, 'playwright-report', 'data', 'test-results.json'),
-            path.join(process.cwd(), 'test-results.json'),
-            path.join(process.cwd(), 'playwright-report', 'data', 'test-results.json'),
-            path.join(process.cwd(), 'playwright-report', 'data.json')
-          ];
+          // Playwright creates test-results/.last-run.json with status info
+          // Also parse the test output summary for counts
+          const lastRunPath = path.join(process.cwd(), 'test-results', '.last-run.json');
+          const testOutputPath = path.join(process.cwd(), 'test-output.log');
           
           let jsonData = null;
-          for (const jsonPath of possiblePaths) {
-            if (fs.existsSync(jsonPath)) {
-              try {
-                jsonData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
-                console.error(`Found JSON results at: ${jsonPath}`);
-                break;
-              } catch (e) {
-                console.error(`Error reading ${jsonPath}:`, e.message);
-              }
+          let summaryData = null;
+          
+          // Try to read .last-run.json first (has status)
+          if (fs.existsSync(lastRunPath)) {
+            try {
+              jsonData = JSON.parse(fs.readFileSync(lastRunPath, 'utf-8'));
+              console.error(`Found .last-run.json at: ${lastRunPath}`);
+            } catch (e) {
+              console.error(`Error reading .last-run.json:`, e.message);
             }
           }
           
-          if (jsonData) {
-            // Playwright JSON format has suites array
-            if (jsonData.suites && Array.isArray(jsonData.suites)) {
-              const countTests = (suite) => {
-                if (suite.specs) {
-                  suite.specs.forEach(spec => {
-                    if (spec.tests) {
-                      spec.tests.forEach(test => {
-                        total++;
-                        if (test.results && test.results.length > 0) {
-                          const result = test.results[test.results.length - 1];
-                          if (result.status === 'passed') passed++;
-                          else if (result.status === 'failed') failed++;
-                          else if (result.status === 'skipped') skipped++;
-                        }
-                      });
-                    }
-                  });
+          // Parse test output summary (Playwright prints summary at the end)
+          // Example: "1 passed (30s)" or "1 failed, 2 passed" or "1 passed (1)"
+          if (fs.existsSync(testOutputPath)) {
+            try {
+              const output = fs.readFileSync(testOutputPath, 'utf-8');
+              
+              // Try multiple patterns to find the summary
+              // Pattern 1: "X passed (Ys)" or "X failed, Y passed"
+              let match = output.match(/(\d+)\s+passed/i);
+              const passedCount = match ? parseInt(match[1]) : 0;
+              
+              match = output.match(/(\d+)\s+failed/i);
+              const failedCount = match ? parseInt(match[1]) : 0;
+              
+              match = output.match(/(\d+)\s+skipped/i);
+              const skippedCount = match ? parseInt(match[1]) : 0;
+              
+              // Pattern 2: Look for summary line like "1 passed (30s)" at the end
+              const lines = output.split('\n').reverse();
+              for (const line of lines.slice(0, 10)) { // Check last 10 lines
+                // Match patterns like: "1 passed", "1 failed, 2 passed", "1 passed (30s)"
+                const lineMatch = line.match(/(?:(\d+)\s+failed[,\s]*)?(?:(\d+)\s+passed)?(?:[,\s]*(\d+)\s+skipped)?/i);
+                if (lineMatch) {
+                  const f = parseInt(lineMatch[1] || '0');
+                  const p = parseInt(lineMatch[2] || '0');
+                  const s = parseInt(lineMatch[3] || '0');
+                  if (p > 0 || f > 0 || s > 0) {
+                    summaryData = {
+                      passed: p || passedCount,
+                      failed: f || failedCount,
+                      skipped: s || skippedCount
+                    };
+                    summaryData.total = summaryData.passed + summaryData.failed + summaryData.skipped;
+                    console.error(`Found summary in output line: "${line.trim()}"`, summaryData);
+                    break;
+                  }
                 }
-                if (suite.suites) {
-                  suite.suites.forEach(countTests);
-                }
-              };
-              jsonData.suites.forEach(countTests);
+              }
+              
+              // If no match found but we have counts, use them
+              if (!summaryData && (passedCount > 0 || failedCount > 0 || skippedCount > 0)) {
+                summaryData = {
+                  passed: passedCount,
+                  failed: failedCount,
+                  skipped: skippedCount,
+                  total: passedCount + failedCount + skippedCount
+                };
+                console.error(`Found summary from individual counts:`, summaryData);
+              }
+            } catch (e) {
+              console.error(`Error parsing test output:`, e.message);
             }
+          }
+          
+          // Use summary from output if available (most reliable)
+          if (summaryData) {
+            total = summaryData.total || 0;
+            passed = summaryData.passed || 0;
+            failed = summaryData.failed || 0;
+            skipped = summaryData.skipped || 0;
             
-            // Determine status
+            // Determine status from summary
             if (failed > 0) {
               status = 'failed';
             } else if (passed > 0 && failed === 0) {
               status = 'passed';
             } else {
               status = 'unknown';
+            }
+          } else if (jsonData) {
+            // Fallback: use .last-run.json for status
+            // .last-run.json has format: { "status": "failed|passed", "failedTests": [...] }
+            if (jsonData.status) {
+              status = jsonData.status; // "failed" or "passed"
+              // If we have failedTests array, we can count failures
+              if (jsonData.failedTests && Array.isArray(jsonData.failedTests)) {
+                failed = jsonData.failedTests.length;
+              }
+              // If status is "passed", assume at least 1 test passed
+              if (status === 'passed' && total === 0) {
+                passed = 1;
+                total = 1;
+              }
             }
           } else {
             // Fallback: use exit code if JSON file doesn't exist
