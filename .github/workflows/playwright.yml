@@ -454,6 +454,173 @@ jobs:
         
         echo "::notice title=📄 Test Report::Download the 'playwright-report' artifact to view the full HTML test report"
     
+    # Step 11.9: Send test results to Teams channel via Power Automate webhook
+    - name: Send test results to Teams
+      if: always()
+      run: |
+        STATUS="${{ steps.test-results.outputs.status }}"
+        TOTAL="${{ steps.test-results.outputs.total }}"
+        PASSED="${{ steps.test-results.outputs.passed }}"
+        FAILED="${{ steps.test-results.outputs.failed }}"
+        SKIPPED="${{ steps.test-results.outputs.skipped }}"
+        
+        # Set defaults if empty
+        STATUS="${STATUS:-unknown}"
+        TOTAL="${TOTAL:-0}"
+        PASSED="${PASSED:-0}"
+        FAILED="${FAILED:-0}"
+        SKIPPED="${SKIPPED:-0}"
+        
+        # Determine status emoji and text
+        if [ "$STATUS" == "failed" ]; then
+          STATUS_EMOJI="❌"
+          STATUS_TEXT="Failed"
+          STATUS_COLOR="danger"
+        elif [ "$STATUS" == "passed" ]; then
+          STATUS_EMOJI="✅"
+          STATUS_TEXT="Passed"
+          STATUS_COLOR="good"
+        else
+          STATUS_EMOJI="⚠️"
+          STATUS_TEXT="Unknown"
+          STATUS_COLOR="warning"
+        fi
+        
+        # Get author information
+        AUTHOR_NAME="${{ steps.author-info.outputs.name }}"
+        AUTHOR_USERNAME="${{ steps.author-info.outputs.username }}"
+        AUTHOR_NAME="${AUTHOR_NAME:-${{ github.actor }}}"
+        AUTHOR_USERNAME="${AUTHOR_USERNAME:-${{ github.actor }}}"
+        
+        # Build URLs
+        WORKFLOW_RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        REPORT_URL="${WORKFLOW_RUN_URL}#artifacts"
+        
+        # Determine if this is a PR or direct commit
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          EVENT_TYPE="Pull Request"
+          EVENT_URL="${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          EVENT_DETAILS="PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
+        else
+          EVENT_TYPE="Direct Commit"
+          EVENT_URL="${WORKFLOW_RUN_URL}"
+          EVENT_DETAILS="Commit: ${{ github.event.head_commit.message }}"
+        fi
+        
+        # Build summary message
+        SUMMARY_MESSAGE=""
+        if [ "$STATUS" == "failed" ]; then
+          SUMMARY_MESSAGE="⚠️ Some tests have failed. Please review the test results and download the report for details."
+        elif [ "$STATUS" == "passed" ]; then
+          SUMMARY_MESSAGE="✅ All tests passed successfully!"
+        else
+          SUMMARY_MESSAGE="⚠️ Unable to parse test results. Please check the workflow logs for details."
+        fi
+        
+        # Create JSON payload for Teams webhook using node for proper JSON escaping
+        # Write to temp file to avoid shell variable escaping issues
+        node -e "
+          const fs = require('fs');
+          const payload = {
+            status: process.env.STATUS || 'unknown',
+            statusEmoji: process.env.STATUS_EMOJI || '⚠️',
+            statusText: process.env.STATUS_TEXT || 'Unknown',
+            statusColor: process.env.STATUS_COLOR || 'warning',
+            metrics: {
+              total: parseInt(process.env.TOTAL || '0'),
+              passed: parseInt(process.env.PASSED || '0'),
+              failed: parseInt(process.env.FAILED || '0'),
+              skipped: parseInt(process.env.SKIPPED || '0')
+            },
+            summary: process.env.SUMMARY_MESSAGE || '',
+            author: {
+              name: process.env.AUTHOR_NAME || '',
+              username: process.env.AUTHOR_USERNAME || '',
+              githubUrl: process.env.GITHUB_SERVER_URL + '/' + process.env.AUTHOR_USERNAME
+            },
+            repository: {
+              name: process.env.GITHUB_REPOSITORY || '',
+              branch: process.env.GITHUB_REF_NAME || '',
+              commit: process.env.GITHUB_SHA || '',
+              commitShort: (process.env.GITHUB_SHA || '').substring(0, 7)
+            },
+            workflow: {
+              name: process.env.GITHUB_WORKFLOW || '',
+              runId: process.env.GITHUB_RUN_ID || '',
+              runNumber: parseInt(process.env.GITHUB_RUN_NUMBER || '0'),
+              runUrl: process.env.WORKFLOW_RUN_URL || ''
+            },
+            event: {
+              type: process.env.EVENT_TYPE || '',
+              url: process.env.EVENT_URL || '',
+              details: process.env.EVENT_DETAILS || ''
+            },
+            report: {
+              url: process.env.REPORT_URL || '',
+              instructions: 'Download the playwright-report artifact from the workflow run, extract and open index.html in a browser to view the full HTML report with detailed test results, screenshots, and traces.'
+            },
+            timestamp: new Date().toISOString()
+          };
+          fs.writeFileSync('/tmp/teams_payload.json', JSON.stringify(payload, null, 2));
+        " \
+        STATUS="${STATUS}" \
+        STATUS_EMOJI="${STATUS_EMOJI}" \
+        STATUS_TEXT="${STATUS_TEXT}" \
+        STATUS_COLOR="${STATUS_COLOR}" \
+        TOTAL="${TOTAL}" \
+        PASSED="${PASSED}" \
+        FAILED="${FAILED}" \
+        SKIPPED="${SKIPPED}" \
+        SUMMARY_MESSAGE="${SUMMARY_MESSAGE}" \
+        AUTHOR_NAME="${AUTHOR_NAME}" \
+        AUTHOR_USERNAME="${AUTHOR_USERNAME}" \
+        GITHUB_SERVER_URL="${{ github.server_url }}" \
+        GITHUB_REPOSITORY="${{ github.repository }}" \
+        GITHUB_REF_NAME="${{ github.ref_name }}" \
+        GITHUB_SHA="${{ github.sha }}" \
+        GITHUB_WORKFLOW="${{ github.workflow }}" \
+        GITHUB_RUN_ID="${{ github.run_id }}" \
+        GITHUB_RUN_NUMBER="${{ github.run_number }}" \
+        WORKFLOW_RUN_URL="${WORKFLOW_RUN_URL}" \
+        EVENT_TYPE="${EVENT_TYPE}" \
+        EVENT_URL="${EVENT_URL}" \
+        EVENT_DETAILS="${EVENT_DETAILS}" \
+        REPORT_URL="${REPORT_URL}"
+        
+        # Read the JSON payload from file
+        JSON_PAYLOAD=$(cat /tmp/teams_payload.json)
+        
+        # Send to Teams webhook
+        # Webhook URL is stored in GitHub secrets as TEAMS_WEBHOOK_URL
+        WEBHOOK_URL="${{ secrets.TEAMS_WEBHOOK_URL }}"
+        
+        if [ -z "$WEBHOOK_URL" ] || [ "$WEBHOOK_URL" == "" ]; then
+          echo "⚠️ Warning: TEAMS_WEBHOOK_URL secret is not set. Skipping Teams notification."
+          echo "To enable Teams notifications, add the webhook URL to GitHub repository secrets as TEAMS_WEBHOOK_URL"
+          exit 0
+        fi
+        
+        echo "Sending test results to Teams channel..."
+        echo "Payload preview:"
+        cat /tmp/teams_payload.json | head -20
+        echo ""
+        
+        HTTP_CODE=$(curl -s -o /tmp/teams_response.txt -w "%{http_code}" \
+          -X POST \
+          -H "Content-Type: application/json" \
+          --data-binary @/tmp/teams_payload.json \
+          "${WEBHOOK_URL}")
+        
+        if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+          echo "✅ Successfully sent test results to Teams channel (HTTP $HTTP_CODE)"
+        else
+          echo "⚠️ Warning: Failed to send to Teams channel (HTTP $HTTP_CODE)"
+          echo "Response:"
+          cat /tmp/teams_response.txt || true
+          # Don't fail the workflow if Teams notification fails
+        fi
+      continue-on-error: true
+    
     # Step 12: Cleanup - Stop the server
     - name: Stop Next.js server
       if: always()
