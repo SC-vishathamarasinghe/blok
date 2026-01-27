@@ -71,16 +71,16 @@ jobs:
           node -e "
             const config = require('./components-config.json');
             if (config.additionalComponents && Array.isArray(config.additionalComponents)) {
-              config.additionalComponents.forEach(comp => {
-                if (comp.enabled !== false && comp.name) {
-                  console.log(comp.name);
+              config.additionalComponents.forEach(url => {
+                if (typeof url === 'string' && url.trim()) {
+                  console.log(url);
                 }
               });
             }
-          " | while IFS= read -r component; do
-            if [ -n "$component" ]; then
-              echo "  → Installing $component..."
-              npx shadcn@latest add "$component" --yes 2>&1 || echo "    ⚠️ $component installation skipped (may already exist or not available)"
+          " | while IFS= read -r componentUrl; do
+            if [ -n "$componentUrl" ]; then
+              echo "  → Installing from: $componentUrl"
+              npx shadcn@latest add "$componentUrl" --yes 2>&1 || echo "    ⚠️ Component installation skipped (may already exist or not available)"
             fi
           done
         else
