@@ -7,6 +7,7 @@ import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { DirectionProvider } from "@/components/docsite/direction-provider";
 
+// This is the metadata for the Blok website.
 export const metadata: Metadata = {
   title: "Blok",
   description: "Blok is Sitecore's design system. It is used for created industry leading martech applications.",
