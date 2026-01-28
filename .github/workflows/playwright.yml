@@ -39,6 +39,10 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
+      # Step 0: Checkout repository (needed for composite actions)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
       # Step 1: Checkout QA-Automation_NextFW branch (Next.js app)
       - name: Checkout Next.js app (QA-Automation_NextFW)
         uses: actions/checkout@v4
