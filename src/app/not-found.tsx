@@ -3,6 +3,8 @@ import Image from "next/image";
 import TopBar from "@/components/layout/topbar";
 import { Button } from "@/components/ui/button";
 
+
+// This is the not found page for the application
 export default function NotFound() {
   return (
     <div className="flex min-h-screen flex-col w-full bg-muted">
