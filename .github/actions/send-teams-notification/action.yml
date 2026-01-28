@@ -130,6 +130,19 @@ runs:
           PR_URL="${{ inputs.github-server-url }}/${{ inputs.github-repository }}/pull/${PR_NUMBER}"
           WORKFLOW_RUN_URL="${{ inputs.github-server-url }}/${{ inputs.github-repository }}/actions/runs/${{ inputs.github-run-id }}"
           
+          # Export all variables as environment variables for Node.js
+          export STATUS_EMOJI="${STATUS_EMOJI}"
+          export STATUS_TEXT="${STATUS_TEXT}"
+          export CARD_COLOR="${CARD_COLOR}"
+          export SUMMARY="${SUMMARY}"
+          export AUTHOR_NAME="${AUTHOR_NAME}"
+          export PR_NUMBER="${PR_NUMBER}"
+          export PR_TITLE="${PR_TITLE}"
+          export PR_BRANCH="${PR_BRANCH}"
+          export BASE_BRANCH="${BASE_BRANCH}"
+          export PR_URL="${PR_URL}"
+          export WORKFLOW_RUN_URL="${WORKFLOW_RUN_URL}"
+          
           node -e "
             const fs = require('fs');
             const payload = {
@@ -156,10 +169,10 @@ runs:
                     {
                       type: 'FactSet',
                       facts: [
-                        { title: 'PR #', value: process.env.PR_NUMBER },
-                        { title: 'PR Branch', value: process.env.PR_BRANCH },
-                        { title: 'Target Branch', value: process.env.BASE_BRANCH },
-                        { title: 'Author', value: process.env.AUTHOR_NAME }
+                        { title: 'PR #', value: process.env.PR_NUMBER || '' },
+                        { title: 'PR Branch', value: process.env.PR_BRANCH || '' },
+                        { title: 'Target Branch', value: process.env.BASE_BRANCH || '' },
+                        { title: 'Author', value: process.env.AUTHOR_NAME || '' }
                       ]
                     },
                     {
@@ -173,7 +186,7 @@ runs:
                         },
                         {
                           type: 'TextBlock',
-                          text: process.env.PR_TITLE,
+                          text: process.env.PR_TITLE || 'No title',
                           wrap: true
                         }
                       ]
@@ -195,18 +208,7 @@ runs:
               }]
             };
             fs.writeFileSync('/tmp/pr_build_payload.json', JSON.stringify(payload, null, 2));
-          " \
-          STATUS_EMOJI="${STATUS_EMOJI}" \
-          STATUS_TEXT="${STATUS_TEXT}" \
-          CARD_COLOR="${CARD_COLOR}" \
-          SUMMARY="${SUMMARY}" \
-          AUTHOR_NAME="${AUTHOR_NAME}" \
-          PR_NUMBER="${PR_NUMBER}" \
-          PR_TITLE="${PR_TITLE}" \
-          PR_BRANCH="${PR_BRANCH}" \
-          BASE_BRANCH="${BASE_BRANCH}" \
-          PR_URL="${PR_URL}" \
-          WORKFLOW_RUN_URL="${WORKFLOW_RUN_URL}"
+          "
           
           PAYLOAD_FILE="/tmp/pr_build_payload.json"
         else
