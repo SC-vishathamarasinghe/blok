@@ -497,14 +497,24 @@ jobs:
         REPORT_URL="${WORKFLOW_RUN_URL}#artifacts"
         
         # Determine if this is a PR or direct commit
+        # Extract PR number for Adaptive Card formatting
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           EVENT_TYPE="Pull Request"
-          EVENT_URL="${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
-          EVENT_DETAILS="PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          EVENT_URL="${{ github.server_url }}/${{ github.repository }}/pull/${PR_NUMBER}"
+          EVENT_DETAILS="PR #${PR_NUMBER}: ${PR_TITLE}"
         else
           EVENT_TYPE="Direct Commit"
+          PR_NUMBER=""
+          PR_TITLE=""
           EVENT_URL="${WORKFLOW_RUN_URL}"
-          EVENT_DETAILS="Commit: ${{ github.event.head_commit.message }}"
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          # Truncate commit message if too long
+          if [ ${#COMMIT_MSG} -gt 100 ]; then
+            COMMIT_MSG="${COMMIT_MSG:0:97}..."
+          fi
+          EVENT_DETAILS="Commit: ${COMMIT_MSG}"
         fi
         
         # Build summary message
@@ -542,6 +552,8 @@ jobs:
         export EVENT_TYPE="${EVENT_TYPE}"
         export EVENT_URL="${EVENT_URL}"
         export EVENT_DETAILS="${EVENT_DETAILS}"
+        export PR_NUMBER="${PR_NUMBER:-}"
+        export PR_TITLE="${PR_TITLE:-}"
         export REPORT_URL="${REPORT_URL}"
         
         # Now run node with all environment variables available
@@ -572,45 +584,93 @@ jobs:
           console.error('SUMMARY_MESSAGE:', process.env.SUMMARY_MESSAGE);
           console.error('');
           
+          // Build payload for Teams Adaptive Card format
+          // Power Automate will transform this into an Adaptive Card message
+          const status = process.env.STATUS || 'unknown';
+          const statusEmoji = process.env.STATUS_EMOJI || '⚠️';
+          const statusText = process.env.STATUS_TEXT || 'Unknown';
+          const statusColor = process.env.STATUS_COLOR || 'warning';
+          const total = parseInt(process.env.TOTAL || '0');
+          const passed = parseInt(process.env.PASSED || '0');
+          const failed = parseInt(process.env.FAILED || '0');
+          const skipped = parseInt(process.env.SKIPPED || '0');
+          
+          // Determine card color based on status
+          let cardColor = 'Attention'; // yellow/warning
+          if (status === 'passed') {
+            cardColor = 'Good'; // green
+          } else if (status === 'failed') {
+            cardColor = 'Attention'; // red (Teams uses Attention for errors)
+          }
+          
           const payload = {
-            status: process.env.STATUS || 'unknown',
-            statusEmoji: process.env.STATUS_EMOJI || '⚠️',
-            statusText: process.env.STATUS_TEXT || 'Unknown',
-            statusColor: process.env.STATUS_COLOR || 'warning',
+            // Core test results
+            status: status,
+            statusEmoji: statusEmoji,
+            statusText: statusText,
+            statusColor: statusColor,
+            cardColor: cardColor, // For Adaptive Card color
             metrics: {
-              total: parseInt(process.env.TOTAL || '0'),
-              passed: parseInt(process.env.PASSED || '0'),
-              failed: parseInt(process.env.FAILED || '0'),
-              skipped: parseInt(process.env.SKIPPED || '0')
+              total: total,
+              passed: passed,
+              failed: failed,
+              skipped: skipped
             },
             summary: process.env.SUMMARY_MESSAGE || '',
+            
+            // Author information
             author: {
               name: process.env.AUTHOR_NAME || '',
               username: process.env.AUTHOR_USERNAME || '',
               githubUrl: (process.env.GITHUB_SERVER_URL || 'https://github.com') + '/' + (process.env.AUTHOR_USERNAME || '')
             },
+            
+            // Repository information
             repository: {
               name: process.env.GITHUB_REPOSITORY || '',
               branch: process.env.GITHUB_REF_NAME || '',
               commit: process.env.GITHUB_SHA || '',
               commitShort: (process.env.GITHUB_SHA || '').substring(0, 7)
             },
+            
+            // Workflow information
             workflow: {
               name: process.env.GITHUB_WORKFLOW || '',
               runId: process.env.GITHUB_RUN_ID || '',
               runNumber: parseInt(process.env.GITHUB_RUN_NUMBER || '0'),
               runUrl: process.env.WORKFLOW_RUN_URL || ''
             },
+            
+            // Event information (PR or Commit)
             event: {
               type: process.env.EVENT_TYPE || '',
               url: process.env.EVENT_URL || '',
-              details: process.env.EVENT_DETAILS || ''
+              details: process.env.EVENT_DETAILS || '',
+              prNumber: process.env.PR_NUMBER || null,
+              prTitle: process.env.PR_TITLE || null
             },
+            
+            // Report information
             report: {
               url: process.env.REPORT_URL || '',
               instructions: 'Download the playwright-report artifact from the workflow run, extract and open index.html in a browser to view the full HTML report with detailed test results, screenshots, and traces.'
             },
-            timestamp: new Date().toISOString()
+            
+            // Timestamp
+            timestamp: new Date().toISOString(),
+            
+            // Additional fields for Adaptive Card formatting
+            adaptiveCard: {
+              title: statusEmoji + ' ' + process.env.GITHUB_WORKFLOW + ' - ' + statusText,
+              subtitle: process.env.SUMMARY_MESSAGE || '',
+              // Format for easy transformation in Power Automate
+              formattedMetrics: {
+                total: total.toString(),
+                passed: passed.toString(),
+                failed: failed.toString(),
+                skipped: skipped.toString()
+              }
+            }
           };
           
           fs.writeFileSync('/tmp/teams_payload.json', JSON.stringify(payload, null, 2));
