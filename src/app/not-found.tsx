@@ -4,7 +4,7 @@ import TopBar from "@/components/layout/topbar";
 import { Button } from "@/components/ui/button";
 
 
-// This is the not found page for the application is this
+// This is the not found page for the application is this  sdf
 export default function NotFound() {
   return (
     <div className="flex min-h-screen flex-col w-full bg-muted">
