@@ -182,9 +182,10 @@ jobs:
         TEST_EXIT_CODE=$?
         echo "exit_code=${TEST_EXIT_CODE}" >> $GITHUB_OUTPUT
         
-        # Don't exit with error code here - let continue-on-error handle it
-        # This allows parsing step to run even if tests fail
-        exit 0
+        # Exit with the actual test exit code
+        # continue-on-error: true will allow the workflow to continue, but we need to preserve the exit code
+        # for the workflow to show as failed when tests fail
+        exit $TEST_EXIT_CODE
       env:
         BASE_URL: http://localhost:3000
         CI: true
@@ -455,21 +456,29 @@ jobs:
         echo "::notice title=📄 Test Report::Download the 'playwright-report' artifact to view the full HTML test report"
     
     # Step 11.9: Send test results to Teams channel via Power Automate webhook
+    # This step ALWAYS runs (pass or fail) to send notifications to Teams
     - name: Send test results to Teams
-      if: always()
+      if: always()  # Run regardless of previous step outcomes (success or failure)
       run: |
+        # Get test results (may be empty if parsing step failed, but we still send notification)
         STATUS="${{ steps.test-results.outputs.status }}"
         TOTAL="${{ steps.test-results.outputs.total }}"
         PASSED="${{ steps.test-results.outputs.passed }}"
         FAILED="${{ steps.test-results.outputs.failed }}"
         SKIPPED="${{ steps.test-results.outputs.skipped }}"
         
-        # Set defaults if empty
+        # Set defaults if empty (ensures we always send a message, even if parsing failed)
         STATUS="${STATUS:-unknown}"
         TOTAL="${TOTAL:-0}"
         PASSED="${PASSED:-0}"
         FAILED="${FAILED:-0}"
         SKIPPED="${SKIPPED:-0}"
+        
+        echo "=== Sending Teams Notification ==="
+        echo "This notification will be sent regardless of test outcome (pass/fail/unknown)"
+        echo "Status: ${STATUS}"
+        echo "Metrics: Total=${TOTAL}, Passed=${PASSED}, Failed=${FAILED}, Skipped=${SKIPPED}"
+        echo ""
         
         # Determine status emoji and text
         if [ "$STATUS" == "failed" ]; then
@@ -572,112 +581,137 @@ jobs:
         node -e "
           const fs = require('fs');
           
-          // Debug: Log all environment variables
-          console.error('=== Node.js Environment Variables ===');
-          console.error('STATUS:', process.env.STATUS);
-          console.error('TOTAL:', process.env.TOTAL);
-          console.error('PASSED:', process.env.PASSED);
-          console.error('FAILED:', process.env.FAILED);
-          console.error('SKIPPED:', process.env.SKIPPED);
-          console.error('AUTHOR_NAME:', process.env.AUTHOR_NAME);
-          console.error('AUTHOR_USERNAME:', process.env.AUTHOR_USERNAME);
-          console.error('SUMMARY_MESSAGE:', process.env.SUMMARY_MESSAGE);
-          console.error('');
-          
-          // Build payload for Teams Adaptive Card format
-          // Power Automate will transform this into an Adaptive Card message
+          // Get all values from environment
           const status = process.env.STATUS || 'unknown';
           const statusEmoji = process.env.STATUS_EMOJI || '⚠️';
           const statusText = process.env.STATUS_TEXT || 'Unknown';
-          const statusColor = process.env.STATUS_COLOR || 'warning';
           const total = parseInt(process.env.TOTAL || '0');
           const passed = parseInt(process.env.PASSED || '0');
           const failed = parseInt(process.env.FAILED || '0');
           const skipped = parseInt(process.env.SKIPPED || '0');
+          const summary = process.env.SUMMARY_MESSAGE || '';
+          const authorName = process.env.AUTHOR_NAME || '';
+          const repoName = process.env.GITHUB_REPOSITORY || '';
+          const branch = process.env.GITHUB_REF_NAME || '';
+          const commitShort = (process.env.GITHUB_SHA || '').substring(0, 7);
+          const workflowName = process.env.GITHUB_WORKFLOW || '';
+          const runNumber = parseInt(process.env.GITHUB_RUN_NUMBER || '0');
+          const workflowRunUrl = process.env.WORKFLOW_RUN_URL || '';
+          const eventType = process.env.EVENT_TYPE || '';
+          const eventDetails = process.env.EVENT_DETAILS || '';
+          const eventUrl = process.env.EVENT_URL || '';
+          const prNumber = process.env.PR_NUMBER || null;
           
-          // Determine card color based on status
-          let cardColor = 'Attention'; // yellow/warning
+          // Determine card color and title text
+          let cardColor = 'Attention';
+          let titleText = statusEmoji + ' Playwright Tests ' + statusText;
           if (status === 'passed') {
-            cardColor = 'Good'; // green
+            cardColor = 'Good';
           } else if (status === 'failed') {
-            cardColor = 'Attention'; // red (Teams uses Attention for errors)
+            cardColor = 'Attention';
           }
           
-          const payload = {
-            // Core test results
-            status: status,
-            statusEmoji: statusEmoji,
-            statusText: statusText,
-            statusColor: statusColor,
-            cardColor: cardColor, // For Adaptive Card color
-            metrics: {
-              total: total,
-              passed: passed,
-              failed: failed,
-              skipped: skipped
-            },
-            summary: process.env.SUMMARY_MESSAGE || '',
-            
-            // Author information
-            author: {
-              name: process.env.AUTHOR_NAME || '',
-              username: process.env.AUTHOR_USERNAME || '',
-              githubUrl: (process.env.GITHUB_SERVER_URL || 'https://github.com') + '/' + (process.env.AUTHOR_USERNAME || '')
-            },
-            
-            // Repository information
-            repository: {
-              name: process.env.GITHUB_REPOSITORY || '',
-              branch: process.env.GITHUB_REF_NAME || '',
-              commit: process.env.GITHUB_SHA || '',
-              commitShort: (process.env.GITHUB_SHA || '').substring(0, 7)
-            },
-            
-            // Workflow information
-            workflow: {
-              name: process.env.GITHUB_WORKFLOW || '',
-              runId: process.env.GITHUB_RUN_ID || '',
-              runNumber: parseInt(process.env.GITHUB_RUN_NUMBER || '0'),
-              runUrl: process.env.WORKFLOW_RUN_URL || ''
-            },
-            
-            // Event information (PR or Commit)
-            event: {
-              type: process.env.EVENT_TYPE || '',
-              url: process.env.EVENT_URL || '',
-              details: process.env.EVENT_DETAILS || '',
-              prNumber: process.env.PR_NUMBER || null,
-              prTitle: process.env.PR_TITLE || null
-            },
-            
-            // Report information
-            report: {
-              url: process.env.REPORT_URL || '',
-              instructions: 'Download the playwright-report artifact from the workflow run, extract and open index.html in a browser to view the full HTML report with detailed test results, screenshots, and traces.'
-            },
-            
-            // Timestamp
-            timestamp: new Date().toISOString(),
-            
-            // Additional fields for Adaptive Card formatting
-            adaptiveCard: {
-              title: statusEmoji + ' ' + process.env.GITHUB_WORKFLOW + ' - ' + statusText,
-              subtitle: process.env.SUMMARY_MESSAGE || '',
-              // Format for easy transformation in Power Automate
-              formattedMetrics: {
-                total: total.toString(),
-                passed: passed.toString(),
-                failed: failed.toString(),
-                skipped: skipped.toString()
-              }
+          // Build actions array - conditionally include PR link
+          const actions = [
+            {
+              type: 'Action.OpenUrl',
+              title: '🔍 View Workflow Run',
+              url: workflowRunUrl
             }
+          ];
+          
+          // Add PR link if it's a Pull Request
+          if (prNumber && eventUrl) {
+            actions.push({
+              type: 'Action.OpenUrl',
+              title: '📄 View PR',
+              url: eventUrl
+            });
+          }
+          
+          // Build the Adaptive Card payload exactly as shown in Postman
+          const adaptiveCardPayload = {
+            type: 'message',
+            attachments: [
+              {
+                contentType: 'application/vnd.microsoft.card.adaptive',
+                content: {
+                  '\$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
+                  type: 'AdaptiveCard',
+                  version: '1.5',
+                  body: [
+                    {
+                      type: 'TextBlock',
+                      text: titleText,
+                      weight: 'Bolder',
+                      size: 'Large',
+                      color: cardColor
+                    },
+                    {
+                      type: 'TextBlock',
+                      text: summary,
+                      wrap: true
+                    },
+                    {
+                      type: 'FactSet',
+                      facts: [
+                        { title: 'Total Tests', value: total.toString() },
+                        { title: 'Passed', value: passed.toString() },
+                        { title: 'Failed', value: failed.toString() },
+                        { title: 'Skipped', value: skipped.toString() }
+                      ]
+                    },
+                    {
+                      type: 'Container',
+                      separator: true,
+                      items: [
+                        {
+                          type: 'TextBlock',
+                          text: '📦 Repository',
+                          weight: 'Bolder'
+                        },
+                        {
+                          type: 'FactSet',
+                          facts: [
+                            { title: 'Repo', value: repoName },
+                            { title: 'Branch', value: branch },
+                            { title: 'Commit', value: commitShort },
+                            { title: 'Author', value: authorName }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      type: 'Container',
+                      separator: true,
+                      items: [
+                        {
+                          type: 'TextBlock',
+                          text: '⚙️ Workflow',
+                          weight: 'Bolder'
+                        },
+                        {
+                          type: 'FactSet',
+                          facts: [
+                            { title: 'Name', value: workflowName },
+                            { title: 'Run #', value: runNumber.toString() },
+                            { title: 'Event', value: eventDetails }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  actions: actions
+                }
+              }
+            ]
           };
           
-          fs.writeFileSync('/tmp/teams_payload.json', JSON.stringify(payload, null, 2));
-          console.error('✅ JSON payload created successfully');
-          console.error('Payload status:', payload.status);
-          console.error('Payload metrics:', JSON.stringify(payload.metrics));
-          console.error('Payload author:', payload.author.name, '(@' + payload.author.username + ')');
+          // Write the Adaptive Card payload
+          fs.writeFileSync('/tmp/teams_payload.json', JSON.stringify(adaptiveCardPayload, null, 2));
+          console.error('✅ Adaptive Card payload created successfully');
+          console.error('Status:', status);
+          console.error('Metrics: Total=' + total + ', Passed=' + passed + ', Failed=' + failed + ', Skipped=' + skipped);
         "
         
         # Read the JSON payload from file
@@ -746,6 +780,29 @@ jobs:
           cat /tmp/teams_response.txt || true
         fi
       continue-on-error: true
+    
+    # Step 11.10: Fail workflow if tests failed
+    - name: Fail workflow if tests failed
+      if: always()
+      run: |
+        STATUS="${{ steps.test-results.outputs.status }}"
+        EXIT_CODE="${{ steps.run-tests.outputs.exit_code }}"
+        
+        # Set default if empty
+        STATUS="${STATUS:-unknown}"
+        EXIT_CODE="${EXIT_CODE:-0}"
+        
+        echo "Test Status: ${STATUS}"
+        echo "Test Exit Code: ${EXIT_CODE}"
+        
+        # Fail the workflow if tests failed
+        if [ "$STATUS" == "failed" ] || [ "$EXIT_CODE" != "0" ]; then
+          echo "❌ Tests failed! Failing workflow..."
+          exit 1
+        else
+          echo "✅ All tests passed!"
+          exit 0
+        fi
     
     # Step 12: Cleanup - Stop the server
     - name: Stop Next.js server
