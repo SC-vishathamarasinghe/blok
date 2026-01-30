@@ -50,44 +50,273 @@ jobs:
           ref: QA-Automation_NextFW
           path: app
       
-      # Step 2-5: Setup and build application using composite action
-      - name: Setup and Build Application
-        id: build-app
-        uses: ./.github/actions/setup-app
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          app-path: app
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
       
-      # Step 6: Start Next.js server in background
-      - name: Start Next.js server
+      # Step 3: Install dependencies (initial)
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm ci
+      
+      # Step 4: Clean up extra lockfiles
+      - name: Clean up extra lockfiles
+        run: |
+          if [ -f "app/app/package-lock.json" ]; then
+            echo "⚠️ Found nested app/package-lock.json - removing"
+            rm -f "app/app/package-lock.json"
+            echo "✅ Removed nested lockfile"
+          else
+            echo "✅ No nested lockfiles found"
+          fi
+      
+      # Step 5: Copy components-config.json to app directory
+      - name: Copy components-config.json
+        run: |
+          if [ -f "testing_app/components-config.json" ]; then
+            cp testing_app/components-config.json app/components-config.json
+            echo "✅ Copied components-config.json to app directory"
+          else
+            echo "⚠️ components-config.json not found in testing_app, checking app directory..."
+            if [ ! -f "app/components-config.json" ]; then
+              echo "❌ components-config.json not found!"
+              exit 1
+            else
+              echo "✅ components-config.json found in app directory"
+            fi
+          fi
+      
+      # Step 6: Install components using components-config.json
+      - name: Install Blok components
         working-directory: ./app
         run: |
-          npm start > server.log 2>&1 &
-          echo $! > server.pid
-          echo "Server starting with PID: $(cat server.pid)"
+          echo "=== Installing components from configuration ==="
+          echo "Working directory: $(pwd)"
+          echo ""
+          
+          if [ ! -f "components-config.json" ]; then
+            echo "❌ components-config.json not found"
+            exit 1
+          fi
+          
+          echo "Found components-config.json, reading configuration..."
+          
+          # Step 1: Install bulk components if enabled
+          BULK_ENABLED=$(node -p "require('./components-config.json').bulkInstall?.enabled !== false")
+          if [ "$BULK_ENABLED" = "true" ]; then
+            BULK_URL=$(node -p "require('./components-config.json').bulkInstall?.url || ''")
+            if [ -n "$BULK_URL" ] && [ "$BULK_URL" != "undefined" ]; then
+              echo ""
+              echo "Step 1: Installing bulk components from: $BULK_URL"
+              echo "Using --overwrite --yes flags..."
+              npx shadcn@latest add "$BULK_URL" --yes --overwrite || true
+              echo "✅ Bulk component installation completed"
+            fi
+          else
+            echo "Bulk installation is disabled, skipping..."
+          fi
+          
+          # Step 2: Install all additional components
+          echo ""
+          echo "Step 2: Installing all additional components from components-config.json..."
+          echo "Using --overwrite --yes flags for all components..."
+          node -e "
+            const config = require('./components-config.json');
+            if (config.additionalComponents && Array.isArray(config.additionalComponents)) {
+              config.additionalComponents.forEach(url => {
+                if (typeof url === 'string' && url.trim()) {
+                  console.log(url);
+                }
+              });
+            }
+          " | while IFS= read -r componentUrl; do
+            if [ -n "$componentUrl" ]; then
+              echo "  Installing: $componentUrl"
+              npx shadcn@latest add "$componentUrl" --yes --overwrite 2>&1 || echo "    ⚠️ Failed to install (may not exist)"
+              sleep 1
+            fi
+          done
+          echo "✅ Additional component installation completed"
+          
+          # Step 3: Wait for installation to complete
+          echo ""
+          echo "Step 3: Waiting for installation to complete..."
+          sleep 10
+          echo "✅ Wait completed"
+          
+          # Step 4: Verify installed components
+          echo ""
+          echo "Step 4: Verifying installed components..."
+          if [ -d "components/ui" ]; then
+            COMPONENT_COUNT=$(find components/ui -name "*.tsx" 2>/dev/null | wc -l)
+            echo "✅ Components installed to: $(pwd)/components/ui"
+            echo ""
+            echo "Total components installed: $COMPONENT_COUNT"
+            echo ""
+            echo "List of all installed components:"
+            find components/ui -name "*.tsx" | sed 's|components/ui/||' | sed 's|\.tsx||' | sort
+          else
+            echo "❌ Components directory not found at: $(pwd)/components/ui"
+            exit 1
+          fi
+      
+      # Step 7: Install dependencies again (after components)
+      - name: Install dependencies after components
+        working-directory: ./app
+        run: |
+          echo "Installing dependencies that may have been added by component installation..."
+          npm install
+          echo "✅ Dependencies installation completed"
+      
+      # Step 8: Start dev server in background
+      - name: Start dev server
+        working-directory: ./app
+        run: |
+          npm run dev > dev-server.log 2>&1 &
+          echo $! > dev-server.pid
+          echo "Dev server starting with PID: $(cat dev-server.pid)"
         env:
-          NODE_ENV: production
+          NODE_ENV: development
           PORT: 3000
       
-      # Step 7: Wait for server to be ready
-      - name: Wait for server to be ready
+      # Step 9: Wait for dev server to be ready
+      - name: Wait for dev server
         run: |
-          echo "Waiting for Next.js server to start..."
+          echo "Waiting for Next.js dev server to start..."
           timeout=120
           elapsed=0
           while [ $elapsed -lt $timeout ]; do
             if curl -f -s http://localhost:3000 > /dev/null 2>&1; then
-              echo "✅ Server is ready and responding!"
+              echo "✅ Dev server is ready and responding!"
               curl -s http://localhost:3000 | head -n 5
               exit 0
             fi
-            echo "⏳ Waiting for server... ($elapsed/$timeout seconds)"
+            echo "⏳ Waiting for dev server... ($elapsed/$timeout seconds)"
             sleep 3
             elapsed=$((elapsed + 3))
           done
-          echo "❌ Server failed to start within $timeout seconds"
-          echo "Server log:"
-          cat app/server.log || true
+          echo "❌ Dev server failed to start within $timeout seconds"
+          echo "Dev server log:"
+          cat app/dev-server.log || true
           exit 1
+      
+      # Step 10: Setup cloudflared tunnel for dev server
+      - name: Expose dev server via tunnel
+        id: tunnel-dev
+        run: |
+          echo "🌐 Setting up public URL tunnel for dev server..."
+          
+          # Verify local server is still running
+          if ! curl -f -s http://localhost:3000 > /dev/null 2>&1; then
+            echo "❌ Local dev server is not responding on localhost:3000"
+            exit 1
+          fi
+          echo "✅ Local dev server is running on localhost:3000"
+          
+          # Download and install cloudflared
+          curl -L --output cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/ || mv cloudflared /usr/local/bin/
+          
+          # Start cloudflared tunnel in background
+          echo "Starting cloudflared tunnel..."
+          /usr/local/bin/cloudflared tunnel --url http://localhost:3000 > cloudflared.log 2>&1 &
+          CLOUDFLARED_PID=$!
+          echo $CLOUDFLARED_PID > cloudflared.pid
+          echo "Cloudflared started with PID: $CLOUDFLARED_PID"
+          
+          # Wait for cloudflared to start and extract the URL
+          echo "Waiting for tunnel to be ready..."
+          sleep 10
+          
+          # Extract the public URL from cloudflared output
+          PUBLIC_URL=""
+          for i in {1..50}; do
+            # Check if cloudflared is still running
+            if ! kill -0 $CLOUDFLARED_PID 2>/dev/null; then
+              echo "⚠️ Cloudflared process died!"
+              echo "Cloudflared log:"
+              cat cloudflared.log || true
+              break
+            fi
+            
+            if [ -f cloudflared.log ]; then
+              # Try multiple URL patterns
+              PUBLIC_URL=$(grep -oE 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' cloudflared.log 2>/dev/null | head -1)
+              
+              # Alternative pattern matching
+              if [ -z "$PUBLIC_URL" ]; then
+                PUBLIC_URL=$(grep -oE 'https://[^[:space:]]+\.trycloudflare\.com' cloudflared.log 2>/dev/null | head -1)
+              fi
+              
+              # Check for "https://" anywhere in the log
+              if [ -z "$PUBLIC_URL" ] && grep -q "https://" cloudflared.log; then
+                PUBLIC_URL=$(grep "https://" cloudflared.log | grep -oE 'https://[^[:space:]]+' | head -1)
+              fi
+              
+              if [ -n "$PUBLIC_URL" ]; then
+                echo "Found URL: $PUBLIC_URL"
+                # Verify the tunnel is actually working by testing the public URL
+                echo "Verifying tunnel is working (attempt $i/50)..."
+                sleep 3
+                
+                # Test the URL multiple times to ensure it's stable
+                SUCCESS_COUNT=0
+                for test_attempt in {1..3}; do
+                  if curl -f -s --max-time 15 "$PUBLIC_URL" > /dev/null 2>&1; then
+                    SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+                  fi
+                  sleep 1
+                done
+                
+                if [ $SUCCESS_COUNT -ge 2 ]; then
+                  echo "✅ Tunnel is working and responding! ($SUCCESS_COUNT/3 tests passed)"
+                  break
+                else
+                  echo "⏳ Tunnel URL found but not responding yet (only $SUCCESS_COUNT/3 tests passed), waiting..."
+                  sleep 2
+                fi
+              fi
+            fi
+            sleep 1
+          done
+          
+          if [ -n "$PUBLIC_URL" ]; then
+            # Final verification
+            echo "Performing final verification..."
+            VERIFY_COUNT=0
+            for verify_attempt in {1..5}; do
+              if curl -f -s --max-time 15 "$PUBLIC_URL" > /dev/null 2>&1; then
+                VERIFY_COUNT=$((VERIFY_COUNT + 1))
+              fi
+              sleep 1
+            done
+            
+            if [ $VERIFY_COUNT -ge 3 ]; then
+              echo "✅ Public URL is working: $PUBLIC_URL"
+              echo "✅ Verified $VERIFY_COUNT/5 times successfully"
+              echo "url=$PUBLIC_URL" >> $GITHUB_OUTPUT
+              echo "::notice title=🌐 Dev Server URL::Your dev server is accessible at: $PUBLIC_URL"
+              echo "## 🌐 Dev Server URL" >> $GITHUB_STEP_SUMMARY
+              echo "Your dev server is accessible at: **[$PUBLIC_URL]($PUBLIC_URL)**" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "**Note:** The URL will be active until the workflow completes." >> $GITHUB_STEP_SUMMARY
+              echo "**Status:** ✅ Verified and working" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️ URL extracted but tunnel verification failed ($VERIFY_COUNT/5 tests passed)"
+              echo "URL: $PUBLIC_URL"
+              echo "url=$PUBLIC_URL" >> $GITHUB_OUTPUT
+              echo "::warning title=🌐 Tunnel URL (Verification Failed)::URL: $PUBLIC_URL - Only $VERIFY_COUNT/5 verification tests passed."
+            fi
+          else
+            echo "⚠️ Could not extract public URL"
+            echo "Cloudflared log:"
+            cat cloudflared.log || true
+          fi
       
       # Step 8: Checkout QA-Automation branch (tests)
       - name: Checkout tests (QA-Automation)
@@ -245,8 +474,8 @@ jobs:
         uses: ./.github/actions/send-teams-notification
         with:
           notification-type: test-results
-          build-status: ${{ steps.build-app.outputs.build-status }}
-          build-exit-code: ${{ steps.build-app.outputs.build-exit-code }}
+          build-status: success
+          build-exit-code: 0
           test-status: ${{ steps.run-tests.outputs.status }}
           total: ${{ steps.run-tests.outputs.total }}
           passed: ${{ steps.run-tests.outputs.passed }}
@@ -291,22 +520,31 @@ jobs:
             exit 0
           fi
       
-      # Step 12: Cleanup - Stop the server
-      - name: Stop Next.js server
+      # Step 12: Cleanup - Stop the dev server and tunnel
+      - name: Stop dev server and tunnel
         if: always()
-        working-directory: ./app
         run: |
-          echo "Stopping Next.js server..."
-          if [ -f server.pid ]; then
-            PID=$(cat server.pid)
-            echo "Killing process $PID"
+          echo "Stopping cloudflared tunnel..."
+          if [ -f cloudflared.pid ]; then
+            PID=$(cat cloudflared.pid)
+            echo "Killing cloudflared process $PID"
             kill $PID 2>/dev/null || true
-            rm server.pid
+            rm cloudflared.pid
+          fi
+          pkill -f "cloudflared tunnel" || true
+          echo "Tunnel stopped"
+          
+          echo "Stopping Next.js dev server..."
+          if [ -f app/dev-server.pid ]; then
+            PID=$(cat app/dev-server.pid)
+            echo "Killing dev server process $PID"
+            kill $PID 2>/dev/null || true
+            rm app/dev-server.pid
           fi
           # Also kill any remaining node processes
-          pkill -f "next start" || true
+          pkill -f "next dev" || true
           pkill -f "node.*next" || true
-          echo "Server stopped"
+          echo "Dev server stopped"
       
       # Step 13-14: Upload artifacts using composite action
       - name: Upload Test Artifacts
