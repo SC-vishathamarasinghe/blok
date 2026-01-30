@@ -108,7 +108,7 @@ jobs:
           # Check for component-related CSS variables
           echo ""
           echo "Checking for component CSS variables..."
-          if echo "$HTML_RESPONSE" | grep -q "--color-\|--radius\|--background"; then
+          if echo "$HTML_RESPONSE" | grep -qE "--color-|--radius|--background"; then
             echo "✅ CSS variables found (components should have styles)"
           else
             echo "⚠️ CSS variables not found in HTML"

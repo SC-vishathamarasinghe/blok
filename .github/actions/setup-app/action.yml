@@ -155,7 +155,7 @@ runs:
           echo "  globals.css size: $CSS_SIZE lines"
           
           # Check for key CSS variables that shadcn adds
-          if grep -q ":root" app/globals.css && grep -q "--background\|--foreground" app/globals.css; then
+          if grep -q ":root" app/globals.css && (grep -q "--background" app/globals.css || grep -q "--foreground" app/globals.css); then
             echo "  ✅ CSS variables found (shadcn updated the file)"
           else
             echo "  ⚠️ CSS variables not found - shadcn may not have updated globals.css properly"
@@ -250,7 +250,7 @@ runs:
         fi
         
         # Verify CSS variables are present (needed for components)
-        if ! grep -q "--background\|--foreground" app/globals.css; then
+        if ! grep -q "--background" app/globals.css && ! grep -q "--foreground" app/globals.css; then
           echo "⚠️ CSS variables not found - components may not style correctly"
         else
           echo "✅ CSS variables found in globals.css"
@@ -351,6 +351,24 @@ runs:
         echo "=== Forcing Tailwind to recognize new component files ==="
         echo ""
         
+        # CRITICAL: Ensure app files that import components are present
+        # Tailwind v4 scans files that import components, so we need to ensure
+        # the app files exist and import the components
+        echo "Verifying app files import components (required for Tailwind scanning)..."
+        if [ -f "app/page.tsx" ]; then
+          if grep -q "from.*@/components\|from.*components/ui" app/page.tsx 2>/dev/null; then
+            echo "  ✅ app/page.tsx imports components (Tailwind will scan these)"
+          else
+            echo "  ⚠️ app/page.tsx doesn't import components - Tailwind may not scan component files"
+          fi
+        fi
+        
+        if [ -f "app/layout.tsx" ]; then
+          if grep -q "from.*@/components\|from.*components/ui" app/layout.tsx 2>/dev/null; then
+            echo "  ✅ app/layout.tsx imports components"
+          fi
+        fi
+        
         # Touch globals.css to ensure it's seen as modified (forces CSS regeneration)
         if [ -f "app/globals.css" ]; then
           touch app/globals.css
@@ -369,6 +387,21 @@ runs:
             fi
           done
         fi
+        
+        # Verify component files contain Tailwind classes
+        echo ""
+        echo "Verifying components use Tailwind classes..."
+        SAMPLE_COUNT=0
+        CLASS_COUNT=0
+        find components/ui -name "*.tsx" -type f 2>/dev/null | head -10 | while read file; do
+          if [ -r "$file" ]; then
+            SAMPLE_COUNT=$((SAMPLE_COUNT + 1))
+            if grep -q "className=\|cn(" "$file" 2>/dev/null; then
+              CLASS_COUNT=$((CLASS_COUNT + 1))
+            fi
+          fi
+        done
+        echo "  Checked $SAMPLE_COUNT sample components, $CLASS_COUNT use Tailwind classes"
         
         # List component files to ensure they exist (helps with debugging)
         echo ""
@@ -412,10 +445,27 @@ runs:
                 echo "  Sample CSS file size: $CSS_SIZE bytes"
                 
                 # Check for component-related CSS classes/variables
-                if grep -q "bg-background\|text-foreground\|border-border" "$SAMPLE_CSS" 2>/dev/null; then
-                  echo "  ✅ CSS contains component styles (background, foreground, border)"
+                if grep -qE "bg-background|text-foreground|border-border" "$SAMPLE_CSS" 2>/dev/null; then
+                  echo "  ✅ CSS contains component utility classes"
                 else
-                  echo "  ⚠️ CSS may not contain component styles"
+                  echo "  ⚠️ CSS may not contain component utility classes"
+                fi
+                
+                # Check for common component classes that should be generated
+                echo ""
+                echo "  Checking for specific component classes in CSS:"
+                COMPONENT_CLASSES=("flex" "items-center" "gap-4" "rounded" "border" "p-4")
+                FOUND_COUNT=0
+                for class in "${COMPONENT_CLASSES[@]}"; do
+                  if grep -qE "\.${class}|\.${class}\s|${class}\{" "$SAMPLE_CSS" 2>/dev/null; then
+                    FOUND_COUNT=$((FOUND_COUNT + 1))
+                  fi
+                done
+                echo "    Found $FOUND_COUNT/${#COMPONENT_CLASSES[@]} common component classes"
+                
+                if [ $FOUND_COUNT -lt 3 ]; then
+                  echo "  ⚠️ WARNING: Very few component classes found in CSS!"
+                  echo "    This suggests Tailwind may not be scanning component files properly"
                 fi
               fi
             else
