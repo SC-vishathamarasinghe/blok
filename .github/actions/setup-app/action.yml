@@ -250,10 +250,34 @@ runs:
         fi
         
         # Verify CSS variables are present (needed for components)
-        if ! grep -q "--background" app/globals.css && ! grep -q "--foreground" app/globals.css; then
-          echo "⚠️ CSS variables not found - components may not style correctly"
-        else
+        if grep -qE "--background|--foreground" app/globals.css; then
           echo "✅ CSS variables found in globals.css"
+        else
+          echo "⚠️ CSS variables not found - components may not style correctly"
+        fi
+        
+        # CRITICAL: Verify :root block exists and is properly formatted
+        echo ""
+        echo "Verifying :root block structure..."
+        if grep -q ":root" app/globals.css; then
+          echo "  ✅ :root block found"
+          # Check if :root block has proper closing brace
+          ROOT_LINES=$(sed -n '/^:root {/,/^}/p' app/globals.css | wc -l)
+          if [ "$ROOT_LINES" -gt 5 ]; then
+            echo "  ✅ :root block appears to have content ($ROOT_LINES lines)"
+          else
+            echo "  ⚠️ :root block might be empty or malformed"
+          fi
+        else
+          echo "  ❌ :root block not found - CSS variables won't work!"
+          echo "  Adding :root block with essential CSS variables..."
+          echo "" >> app/globals.css
+          echo ":root {" >> app/globals.css
+          echo "  --radius: 0.5rem;" >> app/globals.css
+          echo "  --background: 0 0% 100%;" >> app/globals.css
+          echo "  --foreground: 0 0% 3.9%;" >> app/globals.css
+          echo "}" >> app/globals.css
+          echo "  ✅ Added basic :root block"
         fi
         
         echo ""
@@ -449,6 +473,20 @@ runs:
                   echo "  ✅ CSS contains component utility classes"
                 else
                   echo "  ⚠️ CSS may not contain component utility classes"
+                fi
+                
+                # CRITICAL: Check if CSS variables are in the generated CSS
+                echo ""
+                echo "  Checking if CSS variables are included in generated CSS:"
+                if grep -qE ":root|--background|--foreground|--color-" "$SAMPLE_CSS" 2>/dev/null; then
+                  echo "    ✅ CSS variables found in generated CSS (this is good!)"
+                  # Count how many CSS variables are present
+                  VAR_COUNT=$(grep -cE "--[a-z-]+:" "$SAMPLE_CSS" 2>/dev/null || echo "0")
+                  echo "    Found approximately $VAR_COUNT CSS variable definitions"
+                else
+                  echo "    ❌ CRITICAL: CSS variables NOT found in generated CSS!"
+                  echo "    This is the problem - CSS variables from globals.css aren't being included"
+                  echo "    The build is generating classes but not the CSS variable definitions"
                 fi
                 
                 # Check for common component classes that should be generated

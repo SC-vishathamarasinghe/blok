@@ -105,13 +105,24 @@ jobs:
             echo "⚠️ No CSS links found in HTML response"
           fi
           
-          # Check for component-related CSS variables
+          # Check for component-related CSS variables in the actual CSS file
           echo ""
-          echo "Checking for component CSS variables..."
-          if echo "$HTML_RESPONSE" | grep -qE "--color-|--radius|--background"; then
-            echo "✅ CSS variables found (components should have styles)"
-          else
-            echo "⚠️ CSS variables not found in HTML"
+          echo "Checking for component CSS variables in CSS file..."
+          CSS_URL=$(echo "$HTML_RESPONSE" | grep -oE 'href="[^"]*\.css[^"]*"' | sed 's/href="//;s/"//' | head -1)
+          if [ -n "$CSS_URL" ]; then
+            if [[ $CSS_URL == /* ]]; then
+              FULL_CSS_URL="http://localhost:3000$CSS_URL"
+            else
+              FULL_CSS_URL="http://localhost:3000/$CSS_URL"
+            fi
+            CSS_CONTENT=$(curl -s "$FULL_CSS_URL" 2>/dev/null || echo "")
+            if echo "$CSS_CONTENT" | grep -qE "--background|--foreground|--color-|:root"; then
+              echo "✅ CSS variables found in generated CSS file"
+              echo "  Found CSS variables in the actual CSS (styles should work)"
+            else
+              echo "⚠️ CSS variables NOT found in generated CSS file!"
+              echo "  This is the problem - CSS variables aren't being included in the build"
+            fi
           fi
           
           # Try to fetch a CSS file
