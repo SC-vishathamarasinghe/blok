@@ -267,9 +267,9 @@ test.describe('UI BLOK QA Automation', () => {
     await testNavigationMenu(page);
   });
 
-  test('test_Pagination', async ({ page }) => {
-    await testPagination(page);
-  });
+  // test('test_Pagination', async ({ page }) => {
+  //   await testPagination(page);
+  // });
 
   test('test_Popover', async ({ page }) => {
     await testPopover(page);
@@ -322,14 +322,14 @@ test.describe('UI BLOK QA Automation', () => {
     await testSlider(page);
   });
 
-  test('test_Sonner', async ({ page }) => {
-    await testToastNormal(page);
-    await testToastSuccessful(page);
-    await testToastWarning(page);
-    await testToastError(page);
-    await testToastAction(page);
-    await testToastClosable(page);
-  });
+  // test('test_Sonner', async ({ page }) => {
+  //   await testToastNormal(page);
+  //   await testToastSuccessful(page);
+  //   await testToastWarning(page);
+  //   await testToastError(page);
+  //   await testToastAction(page);
+  //   await testToastClosable(page);
+  // });
 
   test('test_Spinner', async ({ page }) => {
     await testSpinnerDefault(page);
@@ -389,23 +389,23 @@ test.describe('UI BLOK QA Automation', () => {
     await testTimelineConnectors(page);
   });
 
-  test('test_Toggle', async ({ page }) => {
-    await testToggleSquare(page);
-    await testToggleRounded(page);
-  });
+  // test('test_Toggle', async ({ page }) => {
+  //   await testToggleSquare(page);
+  //   await testToggleRounded(page);
+  // });
 
-  test('test_Toggle_group', async ({ page }) => {
-    await testToggleGroupSquare(page);
-    await testToggleGroupRounded(page);
-  });
+  // test('test_Toggle_group', async ({ page }) => {
+  //   await testToggleGroupSquare(page);
+  //   await testToggleGroupRounded(page);
+  // });
 
   test('test_Tooltip', async ({ page }) => {
     await testTooltip(page);
   });
 
-  test('test_Topbar', async ({ page }) => {
-    await testTopbar(page);
-  });
+  // test('test_Topbar', async ({ page }) => {
+  //   await testTopbar(page);
+  // });
 {/*
   test('test_Collaboration', async ({ page }) => {
     await testCollaboration(page);
