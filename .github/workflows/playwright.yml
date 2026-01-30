@@ -94,42 +94,136 @@ jobs:
         id: expose-url
         run: |
           echo "🌐 Setting up public URL tunnel..."
+          
+          # Verify local server is still running
+          if ! curl -f -s http://localhost:3000 > /dev/null 2>&1; then
+            echo "❌ Local server is not responding on localhost:3000"
+            exit 1
+          fi
+          echo "✅ Local server is running on localhost:3000"
+          
           # Download and install cloudflared
           curl -L --output cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
           chmod +x cloudflared
           sudo mv cloudflared /usr/local/bin/ || mv cloudflared /usr/local/bin/
           
           # Start cloudflared tunnel in background
+          echo "Starting cloudflared tunnel..."
           /usr/local/bin/cloudflared tunnel --url http://localhost:3000 > cloudflared.log 2>&1 &
-          echo $! > cloudflared.pid
+          CLOUDFLARED_PID=$!
+          echo $CLOUDFLARED_PID > cloudflared.pid
+          echo "Cloudflared started with PID: $CLOUDFLARED_PID"
           
           # Wait for cloudflared to start and extract the URL
           echo "Waiting for tunnel to be ready..."
-          sleep 5
+          sleep 10
           
-          # Extract the public URL from cloudflared output
+          # Extract the public URL from cloudflared output (check multiple patterns)
           PUBLIC_URL=""
-          for i in {1..30}; do
-            if [ -f cloudflared.log ] && grep -q "https://" cloudflared.log; then
-              PUBLIC_URL=$(grep -oE 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' cloudflared.log | head -1)
+          for i in {1..50}; do
+            # Check if cloudflared is still running
+            if ! kill -0 $CLOUDFLARED_PID 2>/dev/null; then
+              echo "⚠️ Cloudflared process died!"
+              echo "Cloudflared log:"
+              cat cloudflared.log || true
+              break
+            fi
+            
+            if [ -f cloudflared.log ]; then
+              # Try multiple URL patterns
+              PUBLIC_URL=$(grep -oE 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' cloudflared.log 2>/dev/null | head -1)
+              
+              # Alternative pattern matching
+              if [ -z "$PUBLIC_URL" ]; then
+                PUBLIC_URL=$(grep -oE 'https://[^[:space:]]+\.trycloudflare\.com' cloudflared.log 2>/dev/null | head -1)
+              fi
+              
+              # Check for "https://" anywhere in the log
+              if [ -z "$PUBLIC_URL" ] && grep -q "https://" cloudflared.log; then
+                PUBLIC_URL=$(grep "https://" cloudflared.log | grep -oE 'https://[^[:space:]]+' | head -1)
+              fi
+              
               if [ -n "$PUBLIC_URL" ]; then
-                break
+                echo "Found URL: $PUBLIC_URL"
+                # Verify the tunnel is actually working by testing the public URL
+                echo "Verifying tunnel is working (attempt $i/50)..."
+                sleep 3
+                
+                # Test the URL multiple times to ensure it's stable
+                SUCCESS_COUNT=0
+                for test_attempt in {1..3}; do
+                  if curl -f -s --max-time 15 "$PUBLIC_URL" > /dev/null 2>&1; then
+                    SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+                  fi
+                  sleep 1
+                done
+                
+                if [ $SUCCESS_COUNT -ge 2 ]; then
+                  echo "✅ Tunnel is working and responding! ($SUCCESS_COUNT/3 tests passed)"
+                  break
+                else
+                  echo "⏳ Tunnel URL found but not responding yet (only $SUCCESS_COUNT/3 tests passed), waiting..."
+                  sleep 2
+                fi
               fi
             fi
             sleep 1
           done
           
           if [ -n "$PUBLIC_URL" ]; then
-            echo "✅ Public URL: $PUBLIC_URL"
-            echo "url=$PUBLIC_URL" >> $GITHUB_OUTPUT
-            echo "::notice title=🌐 Public URL Available::Your site is accessible at: $PUBLIC_URL"
-            echo "## 🌐 Public URL" >> $GITHUB_STEP_SUMMARY
-            echo "Your site is accessible at: **[$PUBLIC_URL]($PUBLIC_URL)**" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
+            # Verify local server is still running
+            if ! curl -f -s http://localhost:3000 > /dev/null 2>&1; then
+              echo "❌ Local server stopped responding! Tunnel won't work without the server."
+              echo "Server log:"
+              cat app/server.log 2>/dev/null || echo "No server log found"
+            fi
+            
+            # Final verification
+            echo "Performing final verification..."
+            VERIFY_COUNT=0
+            for verify_attempt in {1..5}; do
+              if curl -f -s --max-time 15 "$PUBLIC_URL" > /dev/null 2>&1; then
+                VERIFY_COUNT=$((VERIFY_COUNT + 1))
+              fi
+              sleep 1
+            done
+            
+            if [ $VERIFY_COUNT -ge 3 ]; then
+              echo "✅ Public URL is working: $PUBLIC_URL"
+              echo "✅ Verified $VERIFY_COUNT/5 times successfully"
+              echo "url=$PUBLIC_URL" >> $GITHUB_OUTPUT
+              echo "::notice title=🌐 Public URL Available::Your site is accessible at: $PUBLIC_URL"
+              echo "## 🌐 Public URL" >> $GITHUB_STEP_SUMMARY
+              echo "Your site is accessible at: **[$PUBLIC_URL]($PUBLIC_URL)**" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "**Note:** The URL will be active until the workflow completes." >> $GITHUB_STEP_SUMMARY
+              echo "**Status:** ✅ Verified and working" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️ URL extracted but tunnel verification failed ($VERIFY_COUNT/5 tests passed)"
+              echo "URL: $PUBLIC_URL"
+              echo "This may take a few more seconds to become active, or there may be an issue."
+              echo ""
+              echo "Debugging info:"
+              echo "- Local server status:"
+              curl -I http://localhost:3000 2>&1 | head -3 || echo "  ❌ Not responding"
+              echo "- Cloudflared process:"
+              ps aux | grep cloudflared | grep -v grep || echo "  ❌ Not running"
+              echo "- Recent cloudflared log:"
+              tail -20 cloudflared.log 2>/dev/null || echo "  No log available"
+              
+              echo "url=$PUBLIC_URL" >> $GITHUB_OUTPUT
+              echo "::warning title=🌐 Tunnel URL (Verification Failed)::URL: $PUBLIC_URL - Only $VERIFY_COUNT/5 verification tests passed. May need a moment or there may be an issue."
+            fi
           else
-            echo "⚠️ Could not extract public URL, but tunnel may still be running"
-            echo "Check cloudflared.log for details:"
+            echo "⚠️ Could not extract public URL"
+            echo "Cloudflared log:"
             cat cloudflared.log || true
+            echo ""
+            echo "Checking if cloudflared process is running..."
+            ps aux | grep cloudflared | grep -v grep || echo "Cloudflared process not found"
+            echo ""
+            echo "Local server status:"
+            curl -I http://localhost:3000 2>&1 | head -3 || echo "Local server not responding"
           fi
       
       # Step 8: Checkout QA-Automation branch (tests)
