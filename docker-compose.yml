@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  nextjs-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: nextjs-dev
+    ports:
+      - "3000:3000"
+    # volumes:
+    #   # Mount source code for hot reload (optional - comment out if you want to test without hot reload)
+    #   - .:/app
+    #   - /app/node_modules
+    #   - /app/.next
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+

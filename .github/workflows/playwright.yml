@@ -50,31 +50,15 @@ jobs:
           ref: QA-Automation_NextFW
           path: app
       
-      # Step 2: Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-          cache: 'npm'
-          cache-dependency-path: app/package-lock.json
-      
-      # Step 3: Clean up extra lockfiles
-      - name: Clean up extra lockfiles
+      # Step 2: Copy Docker files and components-config.json to app directory
+      - name: Copy Docker files and config
         run: |
-          if [ -f "app/app/package-lock.json" ]; then
-            echo "⚠️ Found nested app/package-lock.json - removing"
-            rm -f "app/app/package-lock.json"
-            echo "✅ Removed nested lockfile"
-          else
-            echo "✅ No nested lockfiles found"
-          fi
-      
-      # Step 4: Copy components-config.json to app directory
-      - name: Copy components-config.json
-        run: |
+          echo "=== Copying Docker files and configuration ==="
+          
+          # Copy components-config.json
           if [ -f "testing_app/components-config.json" ]; then
             cp testing_app/components-config.json app/components-config.json
-            echo "✅ Copied components-config.json to app directory"
+            echo "✅ Copied components-config.json"
           else
             echo "⚠️ components-config.json not found in testing_app, checking app directory..."
             if [ ! -f "app/components-config.json" ]; then
@@ -84,137 +68,130 @@ jobs:
               echo "✅ components-config.json found in app directory"
             fi
           fi
-      
-      # Step 5: Install components BEFORE npm install (critical for Tailwind scanning)
-      - name: Install Blok components (before dependencies)
-        working-directory: ./app
-        run: |
-          echo "=== Installing components BEFORE npm install ==="
-          echo "This ensures components exist when dev server starts, so Tailwind scans them from the beginning"
-          echo "Working directory: $(pwd)"
-          echo ""
           
-          if [ ! -f "components-config.json" ]; then
-            echo "❌ components-config.json not found"
+          # Copy Dockerfile
+          if [ -f "testing_app/Dockerfile" ]; then
+            cp testing_app/Dockerfile app/Dockerfile
+            echo "✅ Copied Dockerfile"
+          else
+            echo "❌ Dockerfile not found in testing_app!"
             exit 1
           fi
           
-          echo "Found components-config.json, reading configuration..."
-          
-          # Install bulk components if enabled
-          BULK_ENABLED=$(node -p "require('./components-config.json').bulkInstall?.enabled !== false")
-          if [ "$BULK_ENABLED" = "true" ]; then
-            BULK_URL=$(node -p "require('./components-config.json').bulkInstall?.url || ''")
-            if [ -n "$BULK_URL" ] && [ "$BULK_URL" != "undefined" ]; then
-              echo ""
-              echo "Installing bulk components from: $BULK_URL"
-              echo "Using --overwrite --yes flags..."
-              npx shadcn@latest add "$BULK_URL" --yes --overwrite || true
-              echo "✅ Bulk component installation completed"
-            fi
+          # Copy install-components.sh
+          if [ -f "testing_app/install-components.sh" ]; then
+            cp testing_app/install-components.sh app/install-components.sh
+            echo "✅ Copied install-components.sh"
           else
-            echo "Bulk installation is disabled, skipping..."
+            echo "❌ install-components.sh not found in testing_app!"
+            exit 1
           fi
           
-          # Install all additional components
-          echo ""
-          echo "Installing all additional components from components-config.json..."
-          echo "Using --overwrite --yes flags for all components..."
-          node -e "
-            const config = require('./components-config.json');
-            if (config.additionalComponents && Array.isArray(config.additionalComponents)) {
-              config.additionalComponents.forEach(url => {
-                if (typeof url === 'string' && url.trim()) {
-                  console.log(url);
-                }
-              });
-            }
-          " | while IFS= read -r componentUrl; do
-            if [ -n "$componentUrl" ]; then
-              echo "  Installing: $componentUrl"
-              npx shadcn@latest add "$componentUrl" --yes --overwrite 2>&1 || echo "    ⚠️ Failed to install (may not exist)"
-              sleep 1
+          # Copy .dockerignore
+          if [ -f "testing_app/.dockerignore" ]; then
+            cp testing_app/.dockerignore app/.dockerignore
+            echo "✅ Copied .dockerignore"
+          fi
+      
+      # Step 3: Verify Docker files are in place
+      - name: Verify Docker setup
+        working-directory: ./app
+        run: |
+          echo "=== Verifying Docker setup ==="
+          
+          # Check required files exist
+          REQUIRED_FILES=("Dockerfile" "install-components.sh" "components-config.json" "components.json" "package.json" "tsconfig.json")
+          MISSING_FILES=()
+          
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              MISSING_FILES+=("$file")
+            else
+              echo "✅ $file found"
             fi
           done
-          echo "✅ Additional component installation completed"
           
-          # Wait for installation to complete
-          echo ""
-          echo "Waiting for installation to complete..."
-          sleep 10
-          echo "✅ Wait completed"
-          
-          # Verify installed components
-          echo ""
-          echo "Verifying installed components..."
-          if [ -d "components/ui" ]; then
-            COMPONENT_COUNT=$(find components/ui -name "*.tsx" 2>/dev/null | wc -l)
-            echo "✅ Components installed to: $(pwd)/components/ui"
-            echo ""
-            echo "Total components installed: $COMPONENT_COUNT"
-            echo ""
-            echo "List of all installed components:"
-            find components/ui -name "*.tsx" | sed 's|components/ui/||' | sed 's|\.tsx||' | sort
-          else
-            echo "❌ Components directory not found at: $(pwd)/components/ui"
+          if [ ${#MISSING_FILES[@]} -gt 0 ]; then
+            echo "❌ Missing required files:"
+            printf '  - %s\n' "${MISSING_FILES[@]}"
             exit 1
           fi
           
-          # Force filesystem sync to ensure all files are written to disk
-          echo ""
-          echo "Syncing filesystem to ensure all component files are written..."
-          sync 2>/dev/null || true
-          sleep 3
-          echo "✅ Filesystem synced"
-      
-      # Step 5.5: Brief pause before dependency installation
-      - name: Pause before dependency installation
-        working-directory: ./app
-        run: |
-          echo "⏳ Brief pause to ensure component files are fully written to disk..."
-          sleep 5
-          echo "✅ Ready to install dependencies"
-      
-      # Step 6: Install ALL dependencies (including new ones from components)
-      - name: Install dependencies (after components)
-        working-directory: ./app
-        run: |
-          echo "Installing all dependencies (including any new ones added by components)..."
-          echo "Using 'npm install' instead of 'npm ci' to handle dependency changes from components"
-          npm install
-          echo "✅ All dependencies installed"
+          # Verify Docker is available
+          if ! command -v docker &> /dev/null; then
+            echo "❌ Docker is not available!"
+            exit 1
+          else
+            echo "✅ Docker is available"
+            docker --version
+          fi
           
-          # Brief pause to ensure npm install fully completes
+          # Check .dockerignore exists (optional but recommended)
+          if [ -f ".dockerignore" ]; then
+            echo "✅ .dockerignore found"
+          else
+            echo "⚠️ .dockerignore not found (components may be copied from repo)"
+          fi
+          
+          echo "✅ Docker setup verified"
+      
+      # Step 4: Build Docker image
+      - name: Build Docker image
+        working-directory: ./app
+        run: |
+          echo "=== Building Docker image ==="
+          echo "This will install components and prepare the app in an isolated environment"
           echo ""
-          echo "⏳ Brief pause to ensure npm install fully completes..."
-          sleep 3
-          sync 2>/dev/null || true
-          echo "✅ Dependencies ready"
+          echo "Build context: $(pwd)"
+          echo "Files in build context:"
+          ls -la | head -20
+          echo ""
+          
+          # Build with progress output
+          docker build -t nextjs-app:dev --target dev . 2>&1 | tee docker-build.log
+          
+          # Check build success
+          if [ ${PIPESTATUS[0]} -eq 0 ]; then
+            echo "✅ Docker image built successfully"
+            echo ""
+            echo "Image details:"
+            docker images nextjs-app:dev --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+          else
+            echo "❌ Docker build failed!"
+            echo "Build log (last 50 lines):"
+            tail -50 docker-build.log || true
+            exit 1
+          fi
       
-      # Step 6.5: Pause before starting dev server
-      - name: Pause before starting dev server
-        working-directory: ./app
+      # Step 5: Run Docker container
+      - name: Run Docker container
         run: |
-          echo "⏳ Brief pause before starting dev server..."
-          echo "This ensures all files and dependencies are fully ready"
-          sleep 5
-          echo "✅ Ready to start dev server"
+          echo "=== Starting Docker container ==="
+          
+          # Remove any existing container with the same name
+          docker rm -f nextjs-dev 2>/dev/null || true
+          
+          # Start container
+          CONTAINER_ID=$(docker run -d \
+            --name nextjs-dev \
+            -p 3000:3000 \
+            nextjs-app:dev)
+          
+          if [ -n "$CONTAINER_ID" ]; then
+            echo "✅ Docker container started"
+            echo "Container ID: $CONTAINER_ID"
+            echo ""
+            echo "Container status:"
+            docker ps -f name=nextjs-dev --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+          else
+            echo "❌ Failed to start Docker container!"
+            exit 1
+          fi
       
-      # Step 7: Start dev server in background
-      - name: Start dev server
-        working-directory: ./app
-        run: |
-          npm run dev > dev-server.log 2>&1 &
-          echo $! > dev-server.pid
-          echo "Dev server starting with PID: $(cat dev-server.pid)"
-        env:
-          NODE_ENV: development
-          PORT: 3000
-      
-      # Step 8: Wait for dev server to be ready
+      # Step 6: Wait for dev server to be ready
       - name: Wait for dev server
         run: |
-          echo "Waiting for Next.js dev server to start..."
+          echo "Waiting for Next.js dev server to start in Docker container..."
           timeout=120
           elapsed=0
           while [ $elapsed -lt $timeout ]; do
@@ -228,11 +205,11 @@ jobs:
             elapsed=$((elapsed + 3))
           done
           echo "❌ Dev server failed to start within $timeout seconds"
-          echo "Dev server log:"
-          cat app/dev-server.log || true
+          echo "Docker container logs:"
+          docker logs nextjs-dev || true
           exit 1
       
-      # Step 9: Setup cloudflared tunnel for dev server
+      # Step 7: Setup cloudflared tunnel for dev server
       - name: Expose dev server via tunnel
         id: tunnel-dev
         run: |
@@ -353,7 +330,7 @@ jobs:
           ref: QA-Automation
           path: tests
       
-      # Step 9-11: Run tests using composite action
+      # Step 9: Run tests using composite action
       - name: Run Playwright Tests
         id: run-tests
         uses: ./.github/actions/run-tests
@@ -548,8 +525,8 @@ jobs:
             exit 0
           fi
       
-      # Step 12: Cleanup - Stop the dev server and tunnel
-      - name: Stop dev server and tunnel
+      # Step 12: Cleanup - Stop Docker container and tunnel
+      - name: Stop Docker container and tunnel
         if: always()
         run: |
           echo "Stopping cloudflared tunnel..."
@@ -562,17 +539,13 @@ jobs:
           pkill -f "cloudflared tunnel" || true
           echo "Tunnel stopped"
           
-          echo "Stopping Next.js dev server..."
-          if [ -f app/dev-server.pid ]; then
-            PID=$(cat app/dev-server.pid)
-            echo "Killing dev server process $PID"
-            kill $PID 2>/dev/null || true
-            rm app/dev-server.pid
-          fi
-          # Also kill any remaining node processes
-          pkill -f "next dev" || true
-          pkill -f "node.*next" || true
-          echo "Dev server stopped"
+          echo "Stopping Docker container..."
+          docker stop nextjs-dev 2>/dev/null || true
+          docker rm nextjs-dev 2>/dev/null || true
+          echo "✅ Docker container stopped and removed"
+          
+          # Clean up Docker image (optional - comment out if you want to keep it)
+          # docker rmi nextjs-app:dev 2>/dev/null || true
       
       # Step 13-14: Upload artifacts using composite action
       - name: Upload Test Artifacts
