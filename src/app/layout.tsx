@@ -99,7 +99,6 @@ export default function RootLayout({
       className="bg-subtle-bg text-foreground"
     >
       <head>
-        {/* Gainsight PX Tag – per official docs: add to <head> as close to opening as possible, below any dataLayer. Without this tag, data does not flow to PX. */}
         {gainsightPxTag ? (
           <script
             type="text/javascript"
