@@ -85,6 +85,8 @@ export const metadata: Metadata = {
   },
 };
 
+const gainsightPxTag = process.env.NEXT_PUBLIC_GAINSIGHT_PX_TAG?.trim() || "";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -96,6 +98,17 @@ export default function RootLayout({
       style={{ fontFamily: "'Inter', 'Segoe UI', system-ui" }}
       className="bg-subtle-bg text-foreground"
     >
+      <head>
+        {/* Gainsight PX Tag – per official docs: add to <head> as close to opening as possible, below any dataLayer. Without this tag, data does not flow to PX. */}
+        {gainsightPxTag ? (
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `(function(n,t,a,e,co){var i="aptrinsic";n[i]=n[i]||function(){(n[i].q=n[i].q||[]).push(arguments)};n[i].p=e;n[i].c=co;var r=t.createElement("script");r.async=!0;r.src=a+"?a="+e;var c=t.getElementsByTagName("script")[0];c.parentNode.insertBefore(r,c);})(window,document,"https://web-sdk-eu.aptrinsic.com/api/aptrinsic.js","${gainsightPxTag.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}");`,
+            }}
+          />
+        ) : null}
+      </head>
       <body className="flex grow">
         <StructuredData />
         <DirectionProvider>
