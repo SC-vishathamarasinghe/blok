@@ -1,7 +1,7 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { FilterBar, type FilterDefinition } from "@/components/ui/filter";
-import { useState } from "react";
 
 const productOptions = [
   { value: "XMCloud", label: "XM Cloud" },
@@ -66,17 +66,17 @@ export default function FilterDemo() {
     },
   ];
 
-  const handleChange = (key: string, value: unknown) => {
-    setFilterValues((prev) => ({ ...prev, [key]: value }));
-  };
+    const handleChange = useCallback((key: string, value: unknown) => {
+        setFilterValues((prev) => ({ ...prev, [key]: value }));
+    }, []);
 
-  const handleClearAll = () => {
-    setFilterValues({
-      search: "",
-      product: "",
-      products: [],
-    });
-  };
+    const handleClearAll = useCallback(() => {
+        setFilterValues({
+            search: "",
+            product: "",
+            products: [],
+        });
+    }, []);
 
   return (
     <FilterBar
