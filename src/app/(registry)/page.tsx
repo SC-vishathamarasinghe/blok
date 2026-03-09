@@ -252,7 +252,11 @@ export default function Home() {
           <Codeblocks
             code="npx shadcn@latest init"
             showLineNumbers={false}
-            copyCodeContext={{ location: "home", page_path: "/" }}
+            copyCodeContext={{
+              section: "shadcn_init",
+              path: "/",
+              page_type: "home",
+            }}
           />
           <p>
             During initialization, choose a base color when prompted. The CLI
@@ -288,7 +292,11 @@ export default function Home() {
           <Codeblocks
             code={`npx shadcn@latest add https://${process.env.NEXT_PUBLIC_REGISTRY_URL}/r/button.json`}
             showLineNumbers={false}
-            copyCodeContext={{ location: "home", page_path: "/" }}
+            copyCodeContext={{
+              section: "install_single",
+              path: "/",
+              page_type: "home",
+            }}
           />
           <Alert variant="primary" className="items-start">
             <AlertDescription className="flex flex-col gap-3 text-lg">
@@ -300,7 +308,11 @@ export default function Home() {
                 <Codeblocks
                   code={`npx shadcn@latest add https://${process.env.NEXT_PUBLIC_REGISTRY_URL}/r/blok-components.json`}
                   showLineNumbers={false}
-                  copyCodeContext={{ location: "home", page_path: "/" }}
+                  copyCodeContext={{
+                    section: "install_all",
+                    path: "/",
+                    page_type: "home",
+                  }}
                 />
               </div>
               <p className="max-w-full">
@@ -359,7 +371,11 @@ export default function MyComponent() {
           <Codeblocks
             code="npm run dev"
             showLineNumbers={false}
-            copyCodeContext={{ location: "home", page_path: "/" }}
+            copyCodeContext={{
+              section: "run_project",
+              path: "/",
+              page_type: "home",
+            }}
           />
           <p className="">
             Your application is now running with functional Blok components.

@@ -1,4 +1,28 @@
 /**
+ * Normalized payload for copy_code. Use `section` everywhere so Gainsight can segment by one field.
+ * - Home: shadcn_init | install_single | install_all | run_project
+ * - Primitives/Bloks detail: preview | installation | usage | examples
+ * - Other pages: rtl | mcp | migration
+ */
+export interface CopyCodePayload extends Record<string, unknown> {
+  /** Required. Where / what context the copy happened. */
+  section: string;
+  /** Pathname (e.g. "/", "/primitives/action-bar", "/mcp"). */
+  path?: string;
+  /** High-level context: primitive | blok | home | rtl | mcp | migration */
+  page_type?: string;
+  /** When on a primitives detail page. */
+  component_name?: string;
+  /** When on a bloks detail page. */
+  block_name?: string;
+  /** When section is "installation". */
+  package_manager?: string;
+  /** When section is "examples". */
+  example_id?: string;
+  example_title?: string;
+}
+
+/**
  * Telemetry event names for Gainsight PX.
  */
 export const TELEMETRY_EVENTS = {
@@ -8,6 +32,7 @@ export const TELEMETRY_EVENTS = {
   sidebar_nav_click: "sidebar_nav_click",
   topbar_search_result_click: "topbar_search_result_click",
   registry_card_click: "registry_card_click",
+  resources_card_click: "resources_card_click",
   // TopBar – theme & external links
   topbar_theme_toggle: "topbar_theme_toggle",
   topbar_link_click: "topbar_link_click",

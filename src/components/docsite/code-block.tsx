@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { TELEMETRY_EVENTS, track } from "@/lib/telemetry";
+import type { CopyCodePayload } from "@/lib/telemetry";
 import { mdiClipboardOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { cva } from "class-variance-authority";
@@ -12,18 +13,12 @@ export async function copyToClipboard(value: string) {
   await navigator.clipboard.writeText(value);
 }
 
-/** Optional context for copy_code telemetry on non-demo pages (e.g. home, rtl, mcp). */
-export interface CopyCodeContextProps {
-  location?: string;
-  page_path?: string;
-}
-
 export interface CodeblocksProps {
   variant?: "outline" | "filled";
   code: string;
   showLineNumbers?: boolean;
-  /** When set, copy triggers copy_code event. */
-  copyCodeContext?: CopyCodeContextProps;
+  /** When set, copy triggers copy_code with normalized payload (section, path, page_type, etc.). */
+  copyCodeContext?: CopyCodePayload;
 }
 
 const codeBlockVariants = cva("mt-16 sm:mt-0 flex rounded-lg", {
@@ -59,7 +54,7 @@ export function Codeblocks({
   const handleCopy = () => {
     copyToClipboard(code);
     setHasCopied(true);
-    if (copyCodeContext?.location ?? copyCodeContext?.page_path) {
+    if (copyCodeContext?.section) {
       track(TELEMETRY_EVENTS.copy_code, { ...copyCodeContext });
     }
   };
