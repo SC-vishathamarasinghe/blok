@@ -68,7 +68,7 @@ export default function DemoTab({
 
   const copyCodeContext: CopyCodeContext | undefined = componentName
     ? {
-        section: "preview",
+        section: section === "examples" ? "examples" : "preview",
         page_name: componentName,
         ...(section === "examples" && {
           example_id: exampleId,

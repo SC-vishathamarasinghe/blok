@@ -2,6 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TELEMETRY_EVENTS, track } from "@/lib/telemetry";
+import type { CopyCodePayload } from "@/lib/telemetry";
 import { mdiClipboardOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Check } from "lucide-react";
@@ -40,17 +41,22 @@ export default function InstallationCodeBlock({
       await navigator.clipboard.writeText(commands[activeTab]);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      const payload: Record<string, unknown> = {
+      const payload: CopyCodePayload = {
         section: "installation",
+        path: pathname ?? undefined,
+        page_type: pathname?.startsWith("/primitives/")
+          ? "primitive"
+          : pathname?.startsWith("/bloks/")
+            ? "blok"
+            : undefined,
         package_manager: activeTab,
+        ...(componentName &&
+          pathname?.startsWith("/primitives/") && {
+            component_name: componentName,
+          }),
+        ...(componentName &&
+          pathname?.startsWith("/bloks/") && { block_name: componentName }),
       };
-      if (componentName && pathname) {
-        if (pathname.startsWith("/primitives/")) {
-          payload.component_name = componentName;
-        } else if (pathname.startsWith("/bloks/")) {
-          payload.block_name = componentName;
-        }
-      }
       track(TELEMETRY_EVENTS.copy_code, payload);
     } catch (err) {
       console.error("Failed to copy text: ", err);
