@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/lib/icon";
 import { TELEMETRY_EVENTS, track } from "@/lib/telemetry";
+import type { CopyCodePayload } from "@/lib/telemetry";
 import { cn } from "@/lib/utils";
 import { mdiClipboardOutline } from "@mdi/js";
 import { Check } from "lucide-react";
@@ -10,16 +11,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import * as shiki from "shiki";
 
-/** Optional context for copy_code telemetry (e.g. section, page_name, example_id). */
+/** Context for copy_code telemetry. Section is required; others are added from pathname when on primitives/bloks. */
 export interface CopyCodeContext {
-  section?: string;
+  section: string;
   page_name?: string;
   package_manager?: string;
   example_id?: string;
   example_title?: string;
-  position?: string;
-  location?: string;
-  page_path?: string;
 }
 
 interface CodeBlockProps {
@@ -27,7 +25,7 @@ interface CodeBlockProps {
   lang?: string;
   showLineNumbers?: boolean;
   className?: string;
-  /** When set, copy triggers copy_code event with this context (and component_name/block_name from pathname). */
+  /** When set, copy triggers copy_code with normalized payload (section, path, page_type, component_name/block_name). */
   copyCodeContext?: CopyCodeContext;
 }
 
@@ -91,17 +89,33 @@ export function CodeBlock({
     await navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-    if (copyCodeContext) {
-      const payload: Record<string, unknown> = {
-        ...copyCodeContext,
+    if (copyCodeContext?.section) {
+      const payload: CopyCodePayload = {
+        section: copyCodeContext.section,
+        path: pathname ?? undefined,
+        page_type: pathname?.startsWith("/primitives/")
+          ? "primitive"
+          : pathname?.startsWith("/bloks/")
+            ? "blok"
+            : undefined,
+        ...(copyCodeContext.page_name &&
+          pathname?.startsWith("/primitives/") && {
+            component_name: copyCodeContext.page_name,
+          }),
+        ...(copyCodeContext.page_name &&
+          pathname?.startsWith("/bloks/") && {
+            block_name: copyCodeContext.page_name,
+          }),
+        ...(copyCodeContext.package_manager && {
+          package_manager: copyCodeContext.package_manager,
+        }),
+        ...(copyCodeContext.example_id && {
+          example_id: copyCodeContext.example_id,
+        }),
+        ...(copyCodeContext.example_title && {
+          example_title: copyCodeContext.example_title,
+        }),
       };
-      if (copyCodeContext.page_name && pathname) {
-        if (pathname.startsWith("/primitives/")) {
-          payload.component_name = copyCodeContext.page_name;
-        } else if (pathname.startsWith("/bloks/")) {
-          payload.block_name = copyCodeContext.page_name;
-        }
-      }
       track(TELEMETRY_EVENTS.copy_code, payload);
     }
   }

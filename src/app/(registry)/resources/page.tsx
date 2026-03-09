@@ -9,6 +9,7 @@ import ShadcnMcpThumb from "@/components/component-thumbs/shadcn-mcp";
 import WritingUITextThumb from "@/components/component-thumbs/writing-ui-text";
 import { ComponentGridCard } from "@/components/docsite/component-grid-card";
 import { Badge } from "@/components/ui/badge";
+import { TELEMETRY_EVENTS, track } from "@/lib/telemetry";
 
 const guidelinesItems = [
   {
@@ -60,7 +61,7 @@ const guidelinesItems = [
         <BlokFoundationsThumb />
       </div>
     ),
-  }
+  },
 ];
 
 const resourcesItems = [
@@ -173,6 +174,14 @@ export default function ResourcesPage() {
                 title={item.title}
                 href={item.href}
                 preview={item.preview}
+                onCardClick={() =>
+                  track(TELEMETRY_EVENTS.resources_card_click, {
+                    name: item.name,
+                    title: item.title,
+                    href: item.href,
+                    section: "public",
+                  })
+                }
               />
             ))}
           </div>
@@ -190,6 +199,14 @@ export default function ResourcesPage() {
                 title={item.title}
                 href={item.href}
                 preview={item.preview}
+                onCardClick={() =>
+                  track(TELEMETRY_EVENTS.resources_card_click, {
+                    name: item.name,
+                    title: item.title,
+                    href: item.href,
+                    section: "private",
+                  })
+                }
               />
             ))}
           </div>

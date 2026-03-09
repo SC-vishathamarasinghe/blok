@@ -73,6 +73,7 @@ export function ComponentGridCard({
           target="_blank"
           rel="noopener noreferrer"
           className="block h-full"
+          onClick={onCardClick}
         >
           {content}
         </a>
