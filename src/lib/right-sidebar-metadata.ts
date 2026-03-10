@@ -1023,6 +1023,32 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
       { id: "usage", title: "Usage" },
     ],
   },
+  "sidebar-rhs": {
+    links: {},
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+      {
+        id: "examples",
+        title: "Examples",
+        children: [
+          {
+            id: "sidebar-rhs-heading-with-tabs",
+            title: "Heading with Tabs",
+          },
+          {
+            id: "sidebar-rhs-brief",
+            title: "Brief",
+          },
+          {
+            id: "sidebar-rhs-brief-type",
+            title: "Brief Type",
+          },
+        ],
+      },
+    ],
+  },
   "all-site": {
     links: {},
   },

@@ -19,4 +19,9 @@ export const sidebarRhs = {
 </SidebarRHSProvider>`,
     ],
   },
+  components: {
+    "Heading with Tabs": { component: "sidebar-rhs-heading-with-tabs" },
+    Brief: { component: "sidebar-rhs-brief" },
+    "Brief Type": { component: "sidebar-rhs-brief-type" },
+  },
 };

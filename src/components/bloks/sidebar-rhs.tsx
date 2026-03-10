@@ -167,6 +167,8 @@ export function SidebarRHSTrigger({
 export interface SidebarRHSProps {
   /** Title shown in the sidebar header */
   title?: string;
+  /** Custom header content (overrides title if provided) */
+  header?: ReactNode;
   /** Content to display in the sidebar */
   children?: ReactNode;
   /** Main content area (shown on the left) */
@@ -183,6 +185,10 @@ export interface SidebarRHSProps {
   onWidthChange?: (width: string) => void;
   /** Additional className */
   className?: string;
+  /** Enable collapsible functionality (default: true) */
+  collapsible?: boolean;
+  /** Enable dock/undock functionality (default: true) */
+  dockable?: boolean;
 }
 
 // Helper function to parse width string to pixels
@@ -201,8 +207,9 @@ function formatWidth(pixels: number): string {
   return `${pixels}px`;
 }
 
-function DockButton() {
+function DockButton({ show }: { show?: boolean }) {
   const { toggleDock } = useSidebarRHS();
+  if (!show) return null;
   return (
     <div className="ml-auto flex items-center gap-2">
       <Button
@@ -219,8 +226,9 @@ function DockButton() {
   );
 }
 
-function UndockButton() {
+function UndockButton({ show }: { show?: boolean }) {
   const { toggleDock } = useSidebarRHS();
+  if (!show) return null;
   return (
     <div className="ml-auto flex items-center gap-2">
       <Button
@@ -239,6 +247,7 @@ function UndockButton() {
 
 export function SidebarRHS({
   title,
+  header,
   children,
   mainContent,
   width = "320px",
@@ -247,6 +256,8 @@ export function SidebarRHS({
   maxWidth = "800px",
   onWidthChange,
   className,
+  collapsible = false,
+  dockable = false,
 }: SidebarRHSProps) {
   const { isCollapsed, isDocked } = useSidebarRHS();
   const [currentWidth, setCurrentWidth] = useState(width);
@@ -437,12 +448,14 @@ export function SidebarRHS({
             )}
 
             {/* Collapse/Expand button - on the resize border */}
-            <SidebarRHSTrigger
-              className="absolute top-1/2 -translate-y-1/2 z-30"
-              style={{
-                left: isCollapsed ? "-40px" : "-20px",
-              }}
-            />
+            {collapsible && (
+              <SidebarRHSTrigger
+                className="absolute top-1/2 -translate-y-1/2 z-30"
+                style={{
+                  left: isCollapsed ? "-40px" : "-20px",
+                }}
+              />
+            )}
 
             <div
               className={cn(
@@ -453,9 +466,10 @@ export function SidebarRHS({
               )}
             >
               {/* Header */}
-              <div className="flex h-12 items-center justify-between border-b border-border px-4 shrink-0">
-                {title && <h2 className="text-lg font-semibold">{title}</h2>}
-                <DockButton />
+              <div className="flex h-12 items-center justify-between px-4 shrink-0">
+                {header ||
+                  (title && <h2 className="text-lg font-semibold">{title}</h2>)}
+                <DockButton show={dockable} />
               </div>
 
               {/* Content */}
@@ -497,12 +511,14 @@ export function SidebarRHS({
         )}
 
         {/* Collapse/Expand button - on the resize border */}
-        <SidebarRHSTrigger
-          className="absolute top-1/2 -translate-y-1/2 z-30"
-          style={{
-            left: isCollapsed ? "-40px" : "-20px",
-          }}
-        />
+        {collapsible && (
+          <SidebarRHSTrigger
+            className="absolute top-1/2 -translate-y-1/2 z-30"
+            style={{
+              left: isCollapsed ? "-40px" : "-20px",
+            }}
+          />
+        )}
 
         <div
           className={cn(
@@ -512,9 +528,10 @@ export function SidebarRHS({
           )}
         >
           {/* Header */}
-          <div className="flex h-12 items-center justify-between border-b border-border px-4 shrink-0">
-            {title && <h2 className="text-lg font-semibold">{title}</h2>}
-            <DockButton />
+          <div className="flex h-12 items-center justify-between px-4 shrink-0">
+            {header ||
+              (title && <h2 className="text-lg font-semibold">{title}</h2>)}
+            <DockButton show={dockable} />
           </div>
 
           {/* Content */}
@@ -581,14 +598,15 @@ export function SidebarRHS({
         <div className="flex h-full flex-col">
           {/* Header - draggable area */}
           <div
-            className="flex h-12 items-center justify-between border-b border-border px-4 shrink-0 cursor-grab active:cursor-grabbing"
+            className="flex h-12 items-center justify-between px-4 shrink-0 cursor-grab active:cursor-grabbing"
             {...listeners}
             {...attributes}
           >
-            {title && (
-              <h2 className="text-lg font-semibold select-none">{title}</h2>
-            )}
-            <UndockButton />
+            {header ||
+              (title && (
+                <h2 className="text-lg font-semibold select-none">{title}</h2>
+              ))}
+            <UndockButton show={dockable} />
           </div>
 
           {/* Content */}
