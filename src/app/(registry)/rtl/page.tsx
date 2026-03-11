@@ -146,7 +146,7 @@ export default function RTLPage() {
             showLineNumbers={false}
             code="pnpm add radix-ui"
             variant="outline"
-            copyCodeContext={{ location: "rtl", page_path: "/rtl" }}
+            copyCodeContext={{ section: "rtl", path: "/rtl", page_type: "rtl" }}
           />
         </div>
 

@@ -34,7 +34,7 @@ export function GainsightProvider({
     const anonId = ensureAnonymousUserId();
     if (anonId) {
       window.aptrinsic("identify", {
-        // id: anonId,
+        id: anonId,
         plan: "blok_docs_anonymous",
         source: "blok-site",
       });

@@ -39,3 +39,4 @@ export function track(
 }
 
 export { TELEMETRY_EVENTS } from "./events";
+export type { CopyCodePayload } from "./events";
