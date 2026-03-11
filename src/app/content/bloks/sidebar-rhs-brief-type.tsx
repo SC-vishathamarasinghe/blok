@@ -1,15 +1,20 @@
 "use client";
 
 import { SidebarRHS, SidebarRHSProvider } from "@/components/bloks/sidebar-rhs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Editable,
+  EditablePreview,
+  EditableTextarea,
+} from "@/components/ui/editable";
 import { Input } from "@/components/ui/input";
 import {
   SearchInput,
@@ -27,9 +32,11 @@ import {
   mdiClockOutline,
   mdiCommentOutline,
   mdiContentCopy,
+  mdiDotsHorizontal,
   mdiInformationOutline,
   mdiLayers,
   mdiMagnify,
+  mdiReplyOutline,
   mdiTrashCanOutline,
   mdiViewDashboard,
 } from "@mdi/js";
@@ -38,7 +45,7 @@ import { useState } from "react";
 function ExpandableDescription() {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const fullText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. amet sapien non amet.. Posuere parturient donec`;
+  const fullText = `Sitecore is a leading digital experience platform that empowers organizations to create, manage, and deliver personalized content across all channels. With its powerful content management system, marketers and developers can collaborate seamlessly to build engaging customer experiences. The platform offers advanced personalization capabilities, allowing businesses to deliver tailored content based on user behavior, preferences, and context. Sitecore's headless architecture enables content to be distributed across websites, mobile apps, IoT devices, and other digital touchpoints. The platform integrates with various marketing tools and analytics solutions, providing comprehensive insights into customer journeys and content performance. With robust security features, multi-language support, and scalable infrastructure, Sitecore helps enterprises deliver exceptional digital experiences that drive engagement, conversions, and customer loyalty. The platform's flexible deployment options, including cloud and on-premises solutions, ensure organizations can adapt to their specific needs and requirements.`;
 
   const truncatedText = fullText.substring(0, 200);
   const shouldTruncate = fullText.length > 200;
@@ -211,6 +218,145 @@ function UsageSection() {
   );
 }
 
+function CommentsSection() {
+  const [comments, setComments] = useState([
+    {
+      id: "1",
+      author: "Thomas Kelly",
+      avatar: "/ThomasKelly.png",
+      avatarFallback: "TK",
+      timestamp: "Yesterday",
+      text: "This looks great! I think we should consider adding more context here to help users understand the flow better.",
+    },
+    {
+      id: "2",
+      author: "Christian Hahn",
+      avatar: "/ChristianHahn.png",
+      avatarFallback: "CH",
+      timestamp: "8 hours ago",
+      text: "Agreed, let's move forward with this approach.",
+    },
+    {
+      id: "3",
+      author: "Thomas Kelly",
+      avatar: "/ThomasKelly.png",
+      avatarFallback: "TK",
+      timestamp: "10 minutes ago",
+      text: "Can we schedule a follow-up meeting?",
+    },
+    {
+      id: "4",
+      author: "Christian Hahn",
+      avatar: "/ChristianHahn.png",
+      avatarFallback: "CH",
+      timestamp: "9 minutes ago",
+      text: "Actually, let me check the requirements first and get back to you.",
+    },
+  ]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const handleEdit = (id: string, newText: string) => {
+    setComments(
+      comments.map((comment) =>
+        comment.id === id ? { ...comment, text: newText } : comment,
+      ),
+    );
+    setEditingId(null);
+  };
+
+  const handleDelete = (id: string) => {
+    setComments(comments.filter((comment) => comment.id !== id));
+  };
+
+  const handleStartEdit = (id: string) => {
+    setEditingId(id);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      {comments.map((comment) => {
+        const isEditing = editingId === comment.id;
+        return (
+          <div key={comment.id} className="flex gap-3">
+            {/* Avatar */}
+            <Avatar className="size-8 shrink-0">
+              <AvatarImage src={comment.avatar} alt={comment.author} />
+              <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                {comment.avatarFallback}
+              </AvatarFallback>
+            </Avatar>
+
+            {/* Comment Content */}
+            <div className="flex-1 min-w-0">
+              {/* Name and Timestamp Row */}
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-medium text-foreground">
+                  {comment.author}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {comment.timestamp}
+                </span>
+                <div className="flex items-center gap-1 ml-auto">
+                  <button
+                    className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                    aria-label="Reply"
+                  >
+                    <Icon path={mdiReplyOutline} className="size-4" />
+                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                        aria-label="More options"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Icon path={mdiDotsHorizontal} className="size-4" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => handleStartEdit(comment.id)}
+                      >
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDelete(comment.id)}
+                        className="text-destructive focus:text-destructive"
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+
+              {/* Comment Text - Editable only when Edit is clicked */}
+              {isEditing ? (
+                <Editable
+                  defaultValue={comment.text}
+                  onSubmit={(value) => handleEdit(comment.id, value)}
+                  onCancel={handleCancelEdit}
+                  submitOnBlur={true}
+                  startWithEditView={true}
+                >
+                  <EditablePreview className="text-sm text-foreground" />
+                  <EditableTextarea className="text-sm w-full min-h-[60px] resize-none" />
+                </Editable>
+              ) : (
+                <p className="text-sm text-foreground">{comment.text}</p>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function InfoSection() {
   const handleCopy = async (text: string) => {
     try {
@@ -294,38 +440,7 @@ function SidebarContent({ activeTab }: { activeTab: string }) {
     ),
     "/comments": (
       <div className="flex flex-col gap-4">
-        <Card>
-          <CardHeader className="border-b-0 pb-0">
-            <CardTitle>Comment</CardTitle>
-            <CardDescription>View and manage comments</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              This section displays comments and feedback related to the current
-              item.
-            </p>
-            <div className="space-y-2">
-              <div className="p-3 border border-border rounded-md">
-                <div className="flex items-start justify-between mb-1">
-                  <span className="text-sm font-semibold">John Doe</span>
-                  <span className="text-xs text-muted-foreground">2h ago</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Great work on this feature!
-                </p>
-              </div>
-              <div className="p-3 border border-border rounded-md">
-                <div className="flex items-start justify-between mb-1">
-                  <span className="text-sm font-semibold">Jane Smith</span>
-                  <span className="text-xs text-muted-foreground">5h ago</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Could we add more details here?
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <CommentsSection />
       </div>
     ),
     "/info": (

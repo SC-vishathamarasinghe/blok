@@ -51,7 +51,7 @@ import { Bar, BarChart, XAxis, YAxis } from "recharts";
 function ExpandableDescription() {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const fullText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. amet sapien non amet.. Posuere parturient donec`;
+  const fullText = `Sitecore is a leading digital experience platform that empowers organizations to create, manage, and deliver personalized content across all channels. With its powerful content management system, marketers and developers can collaborate seamlessly to build engaging customer experiences. The platform offers advanced personalization capabilities, allowing businesses to deliver tailored content based on user behavior, preferences, and context. Sitecore's headless architecture enables content to be distributed across websites, mobile apps, IoT devices, and other digital touchpoints. The platform integrates with various marketing tools and analytics solutions, providing comprehensive insights into customer journeys and content performance. With robust security features, multi-language support, and scalable infrastructure, Sitecore helps enterprises deliver exceptional digital experiences that drive engagement, conversions, and customer loyalty. The platform's flexible deployment options, including cloud and on-premises solutions, ensure organizations can adapt to their specific needs and requirements.`;
 
   const truncatedText = fullText.substring(0, 200);
   const shouldTruncate = fullText.length > 200;
@@ -160,7 +160,7 @@ function VersionsSection() {
     },
     {
       id: "v2",
-      title: "Lorem ipsum dolor sit ame...",
+      title: "initial design",
       version: "v2",
       status: "Last updated on Nov 1, 2024",
       icon: mdiPencilOutline,
@@ -170,7 +170,7 @@ function VersionsSection() {
     },
     {
       id: "v1",
-      title: "{VersionName}",
+      title: "First draft",
       version: "v1",
       status: "Last updated on Nov 1, 2024",
       icon: mdiPencilOutline,
@@ -261,7 +261,16 @@ function VersionsSection() {
             </AccordionTrigger>
             <AccordionContent className="px-3 pb-3">
               <p className="text-sm text-muted-foreground">
-                Version content details would go here...
+                {version.id === "v5" &&
+                  "This version includes final content review and correction of all typographical errors identified during the publishing process."}
+                {version.id === "v4" &&
+                  "Finalized content version with all approved changes and stakeholder feedback incorporated."}
+                {version.id === "v3" &&
+                  "Early iteration exploring different content approaches and ideation concepts."}
+                {version.id === "v2" &&
+                  "initial design and early content structure for review and feedback."}
+                {version.id === "v1" &&
+                  "First draft version created as the starting point for content development."}
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -602,19 +611,29 @@ function StatisticsSection() {
   return (
     <div className="flex flex-col gap-4">
       {/* Statistics Grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-[auto_auto] gap-4">
         {/* Total Variants */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 min-w-0">
           <label className="text-xs uppercase text-muted-foreground">
             Total Variants
           </label>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-foreground">18</span>
-            <div className="flex items-center gap-1.5">
-              <Badge size="sm" colorScheme="neutral" className="text-xs">
+            <span className="text-2xl font-bold text-foreground shrink-0">
+              18
+            </span>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Badge
+                size="sm"
+                colorScheme="neutral"
+                className="text-xs whitespace-nowrap"
+              >
                 3 Draft
               </Badge>
-              <Badge size="sm" colorScheme="success" className="text-xs">
+              <Badge
+                size="sm"
+                colorScheme="success"
+                className="text-xs whitespace-nowrap"
+              >
                 3 Active
               </Badge>
             </div>
@@ -622,7 +641,7 @@ function StatisticsSection() {
         </div>
 
         {/* Sites */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 shrink-0">
           <label className="text-xs uppercase text-muted-foreground">
             Sites
           </label>
