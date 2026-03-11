@@ -22,15 +22,15 @@ import {
   type StackNavigationElement,
   type StackNavigationItem,
 } from "@/components/ui/stack-navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Icon } from "@/lib/icon";
 import { cn } from "@/lib/utils";
 import {
   mdiArchiveOutline,
   mdiClockOutline,
-  mdiCommentOutline,
-  mdiContentCopy,
   mdiDotsHorizontal,
-  mdiInformationOutline,
+  mdiHistory,
+  mdiLayers,
   mdiPencilOutline,
   mdiPlus,
   mdiTrashCanOutline,
@@ -261,71 +261,165 @@ function VersionsSection() {
   );
 }
 
-function InfoSection() {
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-    }
-  };
+function UsageSection() {
+  const usedByItems = [
+    {
+      label: "Product Hero Banner",
+      language: "en-US",
+      count: 3,
+      status: "Draft",
+      statusColor: "neutral" as const,
+    },
+    {
+      label: "Homepage Layout",
+      language: "en-US",
+      count: 2,
+      status: "Published",
+      statusColor: "success" as const,
+      hasClockIcon: true,
+    },
+    {
+      label: "Navigation Menu",
+      language: "en-US",
+      count: 1,
+      status: "Published",
+      statusColor: "success" as const,
+      hasClockIcon: false,
+    },
+    {
+      label: "Footer Component",
+      language: "en-US",
+      count: 4,
+      status: "Queued",
+      statusColor: "warning" as const,
+    },
+    {
+      label: "Sidebar Widget",
+      language: "en-US",
+      count: 5,
+      status: "Archived",
+      statusColor: "neutral" as const,
+    },
+  ];
+
+  const usingItems = [
+    {
+      label: "Button Component",
+      language: "en-US",
+      count: 2,
+      status: "Published",
+      statusColor: "success" as const,
+      hasClockIcon: false,
+    },
+    {
+      label: "Card Layout",
+      language: "en-US",
+      count: 1,
+      status: "Draft",
+      statusColor: "neutral" as const,
+    },
+    {
+      label: "Image Gallery",
+      language: "en-US",
+      count: 3,
+      status: "Published",
+      statusColor: "success" as const,
+      hasClockIcon: true,
+    },
+    {
+      label: "Text Block",
+      language: "en-US",
+      count: 1,
+      status: "Queued",
+      statusColor: "warning" as const,
+    },
+  ];
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Details Title */}
-      <h3 className="text-base font-semibold text-foreground">Details</h3>
-      {/* Label */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Label</label>
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-foreground">The label</span>
-          <button
-            onClick={() => handleCopy("The label")}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Copy to clipboard"
-          >
-            <Icon path={mdiContentCopy} className="size-4" />
-          </button>
+    <Tabs defaultValue="used-by" className="flex flex-col gap-4">
+      <TabsList variant="soft-rounded" className="h-7">
+        <TabsTrigger
+          value="used-by"
+          variant="soft-rounded"
+          className="h-7 text-sm px-3"
+        >
+          Used by
+        </TabsTrigger>
+        <TabsTrigger
+          value="using"
+          variant="soft-rounded"
+          className="h-7 text-sm px-3"
+        >
+          Using
+        </TabsTrigger>
+      </TabsList>
+
+      {/* Description */}
+      <p className="text-sm text-muted-foreground">
+        All the items that this item is referenced in
+      </p>
+
+      {/* Usage Items List */}
+      <TabsContent value="used-by" className="mt-0">
+        <div className="flex flex-col">
+          {usedByItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-start justify-between py-2 first:pt-0"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-foreground">
+                  {item.label} {item.language}
+                </div>
+                <div className="text-xs text-muted-foreground mt-0.5">
+                  Used {item.count} {item.count === 1 ? "time" : "times"}
+                </div>
+              </div>
+              <Badge
+                size="sm"
+                colorScheme={item.statusColor}
+                className="shrink-0 ml-2"
+              >
+                {item.hasClockIcon && (
+                  <Icon path={mdiClockOutline} className="size-3" />
+                )}
+                {item.status}
+              </Badge>
+            </div>
+          ))}
         </div>
-      </div>
+      </TabsContent>
 
-      {/* Name */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Name</label>
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-foreground">Value</span>
-          <button
-            onClick={() => handleCopy("Value")}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Copy to clipboard"
-          >
-            <Icon path={mdiContentCopy} className="size-4" />
-          </button>
+      <TabsContent value="using" className="mt-0">
+        <div className="flex flex-col">
+          {usingItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-start justify-between py-2 first:pt-0"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-foreground">
+                  {item.label} {item.language}
+                </div>
+                <div className="text-xs text-muted-foreground mt-0.5">
+                  Used {item.count} {item.count === 1 ? "time" : "times"}
+                </div>
+              </div>
+              <Badge
+                size="sm"
+                colorScheme={item.statusColor}
+                className="shrink-0 ml-2"
+              >
+                {item.hasClockIcon && (
+                  <Icon path={mdiClockOutline} className="size-3" />
+                )}
+                {item.status}
+              </Badge>
+            </div>
+          ))}
         </div>
-      </div>
-
-      {/* Created by */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Created by</label>
-        <span className="text-sm font-medium text-foreground">Value</span>
-      </div>
-
-      {/* Created */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Created</label>
-        <span className="text-sm font-medium text-foreground">
-          Person, Date
-        </span>
-      </div>
-
-      {/* Updated */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Updated</label>
-        <span className="text-sm font-medium text-foreground">
-          Person, Date
-        </span>
-      </div>
-    </div>
+      </TabsContent>
+    </Tabs>
   );
 }
 
@@ -340,14 +434,14 @@ function SidebarContent({ activeTab }: { activeTab: string }) {
         <TodoSection />
       </div>
     ),
-    "/comments": (
+    "/versions": (
       <div className="flex flex-col gap-4">
         <VersionsSection />
       </div>
     ),
-    "/info": (
+    "/usage": (
       <div className="flex flex-col gap-4">
-        <InfoSection />
+        <UsageSection />
       </div>
     ),
   };
@@ -355,7 +449,7 @@ function SidebarContent({ activeTab }: { activeTab: string }) {
   return <>{tabContent[activeTab] || tabContent["/overview"]}</>;
 }
 
-export default function SidebarRHSBriefDemo() {
+export default function SidebarRHSContentDemo() {
   const [activeTab, setActiveTab] = useState("/overview");
 
   const navigationItems: StackNavigationElement[] = [
@@ -365,14 +459,14 @@ export default function SidebarRHSBriefDemo() {
       icon: <Icon path={mdiViewDashboard} />,
     },
     {
-      name: "Comment",
-      path: "/comments",
-      icon: <Icon path={mdiCommentOutline} />,
+      name: "Versions",
+      path: "/versions",
+      icon: <Icon path={mdiHistory} />,
     },
     {
-      name: "Info",
-      path: "/info",
-      icon: <Icon path={mdiInformationOutline} />,
+      name: "Usage",
+      path: "/usage",
+      icon: <Icon path={mdiLayers} />,
     },
   ];
 

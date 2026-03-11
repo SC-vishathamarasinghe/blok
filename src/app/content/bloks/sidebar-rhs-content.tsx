@@ -9,6 +9,12 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -22,21 +28,25 @@ import {
   type StackNavigationElement,
   type StackNavigationItem,
 } from "@/components/ui/stack-navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Icon } from "@/lib/icon";
 import { cn } from "@/lib/utils";
 import {
   mdiArchiveOutline,
+  mdiChartBar,
   mdiClockOutline,
-  mdiCommentOutline,
   mdiContentCopy,
   mdiDotsHorizontal,
   mdiInformationOutline,
+  mdiLayers,
   mdiPencilOutline,
   mdiPlus,
   mdiTrashCanOutline,
   mdiViewDashboard,
+  mdiViewListOutline,
 } from "@mdi/js";
 import { useState } from "react";
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
 function ExpandableDescription() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -261,6 +271,265 @@ function VersionsSection() {
   );
 }
 
+function UsageSection() {
+  // Insights chart data
+  const insightsChartData = [
+    { channel: "sitename", instances: 80, fill: "var(--chart-1)" },
+    { channel: "green-everbloo", instances: 80, fill: "var(--chart-1)" },
+    { channel: "sunstone-cliffs", instances: 65, fill: "var(--chart-1)" },
+    { channel: "whisperwind-p", instances: 65, fill: "var(--chart-1)" },
+    { channel: "shadowbrook", instances: 45, fill: "var(--chart-1)" },
+    { channel: "silverleaf-glade", instances: 45, fill: "var(--chart-1)" },
+    { channel: "emberg glow-for", instances: 30, fill: "var(--chart-1)" },
+    { channel: "frostpeak-mou", instances: 30, fill: "var(--chart-1)" },
+    { channel: "thunderclap-m", instances: 18, fill: "var(--chart-1)" },
+    { channel: "starlight-citadel", instances: 12, fill: "var(--chart-1)" },
+  ];
+
+  const insightsChartConfig = {
+    instances: {
+      label: "Instances",
+      color: "var(--chart-1)",
+    },
+    sitename: {
+      label: "{SiteName}",
+      color: "var(--chart-1)",
+    },
+    "green-everbloo": {
+      label: "Green Everbloo...",
+      color: "var(--chart-1)",
+    },
+    "sunstone-cliffs": {
+      label: "Sunstone Cliffs",
+      color: "var(--chart-1)",
+    },
+    "whisperwind-p": {
+      label: "Whisperwind P...",
+      color: "var(--chart-1)",
+    },
+    shadowbrook: {
+      label: "Shadowbrook...",
+      color: "var(--chart-1)",
+    },
+    "silverleaf-glade": {
+      label: "Silverleaf Glade",
+      color: "var(--chart-1)",
+    },
+    "emberg glow-for": {
+      label: "Emberglow For...",
+      color: "var(--chart-1)",
+    },
+    "frostpeak-mou": {
+      label: "Frostpeak Mou...",
+      color: "var(--chart-1)",
+    },
+    "thunderclap-m": {
+      label: "Thunderclap M...",
+      color: "var(--chart-1)",
+    },
+    "starlight-citadel": {
+      label: "Starlight Citadel",
+      color: "var(--chart-1)",
+    },
+  } satisfies ChartConfig;
+
+  // Sites chart data
+  const sitesChartData = [
+    { site: "production", instances: 85, fill: "var(--chart-1)" },
+    { site: "staging", instances: 70, fill: "var(--chart-1)" },
+    { site: "development", instances: 55, fill: "var(--chart-1)" },
+    { site: "qa", instances: 40, fill: "var(--chart-1)" },
+    { site: "demo", instances: 25, fill: "var(--chart-1)" },
+  ];
+
+  const sitesChartConfig = {
+    instances: {
+      label: "Instances",
+      color: "var(--chart-1)",
+    },
+    production: {
+      label: "Production",
+      color: "var(--chart-1)",
+    },
+    staging: {
+      label: "Staging",
+      color: "var(--chart-1)",
+    },
+    development: {
+      label: "Development",
+      color: "var(--chart-1)",
+    },
+    qa: {
+      label: "QA",
+      color: "var(--chart-1)",
+    },
+    demo: {
+      label: "Demo",
+      color: "var(--chart-1)",
+    },
+  } satisfies ChartConfig;
+
+  return (
+    <Tabs defaultValue="insights" className="flex flex-col gap-4">
+      <TabsList variant="soft-rounded" className="h-7">
+        <TabsTrigger
+          value="insights"
+          variant="soft-rounded"
+          className="h-7 text-sm px-3"
+        >
+          <Icon path={mdiChartBar} size={1.2} />
+          Insights
+        </TabsTrigger>
+        <TabsTrigger
+          value="sites"
+          variant="soft-rounded"
+          className="h-7 text-sm px-3"
+        >
+          <Icon path={mdiViewListOutline} size={1.2} />
+          Sites
+        </TabsTrigger>
+      </TabsList>
+
+      {/* Insights Tab Content */}
+      <TabsContent value="insights" className="mt-0">
+        <div className="flex flex-col gap-6">
+          {/* Total Rendered Instances */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs uppercase text-muted-foreground">
+              Total Rendered Instances
+            </label>
+            <span className="text-2xl font-bold text-foreground">240</span>
+          </div>
+
+          {/* Rendered Instances Per Channel Chart */}
+          <div className="flex flex-col gap-3">
+            <label className="text-xs uppercase text-muted-foreground">
+              Rendered Instances Per Channel
+            </label>
+            <ChartContainer
+              config={insightsChartConfig}
+              className="h-[400px] w-full"
+            >
+              <BarChart
+                accessibilityLayer
+                data={insightsChartData}
+                layout="vertical"
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+              >
+                <YAxis
+                  dataKey="channel"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  width={120}
+                  tickFormatter={(value) =>
+                    insightsChartConfig[
+                      value as keyof typeof insightsChartConfig
+                    ]?.label || value
+                  }
+                  className="text-xs"
+                />
+                <XAxis
+                  dataKey="instances"
+                  type="number"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  className="text-xs"
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Bar
+                  dataKey="instances"
+                  layout="vertical"
+                  radius={4}
+                  fill="var(--chart-1)"
+                />
+              </BarChart>
+            </ChartContainer>
+          </div>
+        </div>
+      </TabsContent>
+
+      {/* Sites Tab Content */}
+      <TabsContent value="sites" className="mt-0">
+        <div className="flex flex-col gap-6">
+          {/* Total Sites */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs uppercase text-muted-foreground">
+              Total Sites
+            </label>
+            <span className="text-2xl font-bold text-foreground">5</span>
+          </div>
+
+          {/* Instances Per Site Chart */}
+          <div className="flex flex-col gap-3">
+            <label className="text-xs uppercase text-muted-foreground">
+              Instances Per Site
+            </label>
+            <ChartContainer
+              config={sitesChartConfig}
+              className="h-[300px] w-full"
+            >
+              <BarChart
+                accessibilityLayer
+                data={sitesChartData}
+                layout="vertical"
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+              >
+                <YAxis
+                  dataKey="site"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  width={100}
+                  tickFormatter={(value) =>
+                    sitesChartConfig[value as keyof typeof sitesChartConfig]
+                      ?.label || value
+                  }
+                  className="text-xs"
+                />
+                <XAxis
+                  dataKey="instances"
+                  type="number"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  className="text-xs"
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Bar
+                  dataKey="instances"
+                  layout="vertical"
+                  radius={4}
+                  fill="var(--chart-1)"
+                />
+              </BarChart>
+            </ChartContainer>
+          </div>
+        </div>
+      </TabsContent>
+    </Tabs>
+  );
+}
+
 function InfoSection() {
   const handleCopy = async (text: string) => {
     try {
@@ -329,20 +598,55 @@ function InfoSection() {
   );
 }
 
+function StatisticsSection() {
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Statistics Grid */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* Total Variants */}
+        <div className="flex flex-col gap-1">
+          <label className="text-xs uppercase text-muted-foreground">
+            Total Variants
+          </label>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-foreground">18</span>
+            <div className="flex items-center gap-1.5">
+              <Badge size="sm" colorScheme="neutral" className="text-xs">
+                3 Draft
+              </Badge>
+              <Badge size="sm" colorScheme="success" className="text-xs">
+                3 Active
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Sites */}
+        <div className="flex flex-col gap-1">
+          <label className="text-xs uppercase text-muted-foreground">
+            Sites
+          </label>
+          <span className="text-2xl font-bold text-foreground">3</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SidebarContent({ activeTab }: { activeTab: string }) {
   const tabContent: Record<string, React.ReactNode> = {
     "/overview": (
       <div className="flex flex-col gap-6">
+        {/* Statistics Section */}
+        <StatisticsSection />
+
         {/* Description Section */}
         <ExpandableDescription />
-
-        {/* To do Section */}
-        <TodoSection />
       </div>
     ),
-    "/comments": (
+    "/usage": (
       <div className="flex flex-col gap-4">
-        <VersionsSection />
+        <UsageSection />
       </div>
     ),
     "/info": (
@@ -355,7 +659,7 @@ function SidebarContent({ activeTab }: { activeTab: string }) {
   return <>{tabContent[activeTab] || tabContent["/overview"]}</>;
 }
 
-export default function SidebarRHSBriefDemo() {
+export default function SidebarRHSContentDemo() {
   const [activeTab, setActiveTab] = useState("/overview");
 
   const navigationItems: StackNavigationElement[] = [
@@ -365,9 +669,9 @@ export default function SidebarRHSBriefDemo() {
       icon: <Icon path={mdiViewDashboard} />,
     },
     {
-      name: "Comment",
-      path: "/comments",
-      icon: <Icon path={mdiCommentOutline} />,
+      name: "Usage",
+      path: "/usage",
+      icon: <Icon path={mdiLayers} />,
     },
     {
       name: "Info",

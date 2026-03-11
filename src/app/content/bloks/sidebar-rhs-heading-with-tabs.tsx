@@ -2,120 +2,446 @@
 
 import { SidebarRHS, SidebarRHSProvider } from "@/components/bloks/sidebar-rhs";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   StackNavigation,
   type StackNavigationElement,
   type StackNavigationItem,
 } from "@/components/ui/stack-navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Icon } from "@/lib/icon";
 import { cn } from "@/lib/utils";
-import { mdiHistory, mdiLayers, mdiViewDashboard } from "@mdi/js";
+import {
+  mdiArchiveOutline,
+  mdiClockOutline,
+  mdiDotsHorizontal,
+  mdiHistory,
+  mdiLayers,
+  mdiPencilOutline,
+  mdiPlus,
+  mdiTrashCanOutline,
+  mdiViewDashboard,
+} from "@mdi/js";
 import { useState } from "react";
+
+function ExpandableDescription() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const fullText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. amet sapien non amet.. Posuere parturient donec`;
+
+  const truncatedText = fullText.substring(0, 200);
+  const shouldTruncate = fullText.length > 200;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="text-sm font-semibold">Description</h3>
+      <div className="relative">
+        <p className="text-sm text-foreground">
+          {isExpanded ? fullText : truncatedText}
+        </p>
+        {!isExpanded && shouldTruncate && (
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+        )}
+      </div>
+      {shouldTruncate && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-sm text-center text-foreground hover:underline cursor-pointer font-semibold"
+        >
+          {isExpanded ? "Read less" : "Read more"}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function TodoSection() {
+  const [todoChecked, setTodoChecked] = useState(true);
+  const [newTodoChecked, setNewTodoChecked] = useState(false);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="text-sm font-semibold">To do</h3>
+      <div className="space-y-3">
+        {/* Completed Todo Item */}
+        <div className="flex items-center gap-2 group">
+          <Checkbox
+            checked={todoChecked}
+            onCheckedChange={(checked) => setTodoChecked(checked === true)}
+            className="shrink-0"
+          />
+          <span className="text-sm flex-1">
+            <Badge size="sm" colorScheme="neutral" className="mr-1">
+              @Anne Schmeler
+            </Badge>
+            please review
+          </span>
+          <button
+            className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 text-muted-foreground hover:text-foreground"
+            aria-label="Delete todo"
+          >
+            <Icon path={mdiTrashCanOutline} size={0.9} />
+          </button>
+        </div>
+
+        {/* Add New Todo Input */}
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={newTodoChecked}
+            onCheckedChange={(checked) => setNewTodoChecked(checked === true)}
+            className="shrink-0"
+          />
+          <Input
+            type="text"
+            placeholder="Add new to-do, type @ to mention someone"
+            className="flex-1 border-0 bg-transparent px-0 py-0 h-auto text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VersionsSection() {
+  const versions = [
+    {
+      id: "v5",
+      title: "Final + Typo fixes",
+      version: "v5",
+      status: "Published on Nov 17, 2024",
+      icon: mdiClockOutline,
+      iconBg: "bg-green-100 dark:bg-green-900",
+      iconColor: "text-green-600 dark:text-green-400",
+      isActive: true,
+    },
+    {
+      id: "v4",
+      title: "Final content",
+      version: "v4",
+      status: "Archived on Nov 16, 2024",
+      icon: mdiArchiveOutline,
+      iconBg: "bg-gray-100 dark:bg-gray-800",
+      iconColor: "text-gray-600 dark:text-gray-400",
+      isActive: false,
+    },
+    {
+      id: "v3",
+      title: "Idiation",
+      version: "v3",
+      status: "Last updated on Nov 3, 2024",
+      icon: mdiPencilOutline,
+      iconBg: "bg-gray-100 dark:bg-gray-800",
+      iconColor: "text-gray-600 dark:text-gray-400",
+      isActive: false,
+    },
+    {
+      id: "v2",
+      title: "Lorem ipsum dolor sit ame...",
+      version: "v2",
+      status: "Last updated on Nov 1, 2024",
+      icon: mdiPencilOutline,
+      iconBg: "bg-gray-100 dark:bg-gray-800",
+      iconColor: "text-gray-600 dark:text-gray-400",
+      isActive: false,
+    },
+    {
+      id: "v1",
+      title: "{VersionName}",
+      version: "v1",
+      status: "Last updated on Nov 1, 2024",
+      icon: mdiPencilOutline,
+      iconBg: "bg-gray-100 dark:bg-gray-800",
+      iconColor: "text-gray-600 dark:text-gray-400",
+      isActive: false,
+    },
+  ];
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Header with Create button */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold">Versions</h3>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-primary hover:text-primary text-sm"
+        >
+          <Icon path={mdiPlus} className="mr-1.5" size={0.9} />
+          Create version
+        </Button>
+      </div>
+
+      {/* Versions Accordion */}
+      <Accordion type="single" collapsible className="w-full">
+        {versions.map((version) => (
+          <AccordionItem
+            key={version.id}
+            value={version.id}
+            className={cn(
+              version.isActive && "border border-primary rounded-md",
+            )}
+          >
+            <AccordionTrigger
+              className="px-3 py-3 hover:no-underline"
+              actions={
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon-xs"
+                      className="h-6 w-6 p-1"
+                    >
+                      <Icon
+                        path={mdiDotsHorizontal}
+                        className="size-4 text-muted-foreground"
+                      />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                    <DropdownMenuItem>Archive</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              }
+            >
+              <div className="flex items-start gap-3 flex-1 min-w-0">
+                {/* Icon */}
+                <div
+                  className={cn(
+                    "shrink-0 size-8 rounded-full flex items-center justify-center",
+                    version.iconBg,
+                  )}
+                >
+                  <Icon
+                    path={version.icon}
+                    className={cn("size-4", version.iconColor)}
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="flex items-baseline gap-2 mb-0.5 flex-wrap">
+                    <span className="text-sm font-semibold text-foreground break-words">
+                      {version.title}
+                    </span>
+                    <span className="text-sm text-muted-foreground shrink-0">
+                      {version.version}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground break-words">
+                    {version.status}
+                  </p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-3 pb-3">
+              <p className="text-sm text-muted-foreground">
+                Version content details would go here...
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
+  );
+}
+
+function UsageSection() {
+  const usedByItems = [
+    {
+      label: "Product Hero Banner",
+      language: "en-US",
+      count: 3,
+      status: "Draft",
+      statusColor: "neutral" as const,
+    },
+    {
+      label: "Homepage Layout",
+      language: "en-US",
+      count: 2,
+      status: "Published",
+      statusColor: "success" as const,
+      hasClockIcon: true,
+    },
+    {
+      label: "Navigation Menu",
+      language: "en-US",
+      count: 1,
+      status: "Published",
+      statusColor: "success" as const,
+      hasClockIcon: false,
+    },
+    {
+      label: "Footer Component",
+      language: "en-US",
+      count: 4,
+      status: "Queued",
+      statusColor: "warning" as const,
+    },
+    {
+      label: "Sidebar Widget",
+      language: "en-US",
+      count: 5,
+      status: "Archived",
+      statusColor: "neutral" as const,
+    },
+  ];
+
+  const usingItems = [
+    {
+      label: "Button Component",
+      language: "en-US",
+      count: 2,
+      status: "Published",
+      statusColor: "success" as const,
+      hasClockIcon: false,
+    },
+    {
+      label: "Card Layout",
+      language: "en-US",
+      count: 1,
+      status: "Draft",
+      statusColor: "neutral" as const,
+    },
+    {
+      label: "Image Gallery",
+      language: "en-US",
+      count: 3,
+      status: "Published",
+      statusColor: "success" as const,
+      hasClockIcon: true,
+    },
+    {
+      label: "Text Block",
+      language: "en-US",
+      count: 1,
+      status: "Queued",
+      statusColor: "warning" as const,
+    },
+  ];
+
+  return (
+    <Tabs defaultValue="used-by" className="flex flex-col gap-4">
+      <TabsList variant="soft-rounded" className="h-7">
+        <TabsTrigger
+          value="used-by"
+          variant="soft-rounded"
+          className="h-7 text-sm px-3"
+        >
+          Used by
+        </TabsTrigger>
+        <TabsTrigger
+          value="using"
+          variant="soft-rounded"
+          className="h-7 text-sm px-3"
+        >
+          Using
+        </TabsTrigger>
+      </TabsList>
+
+      {/* Description */}
+      <p className="text-sm text-muted-foreground">
+        All the items that this item is referenced in
+      </p>
+
+      {/* Usage Items List */}
+      <TabsContent value="used-by" className="mt-0">
+        <div className="flex flex-col">
+          {usedByItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-start justify-between py-2 first:pt-0"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-foreground">
+                  {item.label} {item.language}
+                </div>
+                <div className="text-xs text-muted-foreground mt-0.5">
+                  Used {item.count} {item.count === 1 ? "time" : "times"}
+                </div>
+              </div>
+              <Badge
+                size="sm"
+                colorScheme={item.statusColor}
+                className="shrink-0 ml-2"
+              >
+                {item.hasClockIcon && (
+                  <Icon path={mdiClockOutline} className="size-3" />
+                )}
+                {item.status}
+              </Badge>
+            </div>
+          ))}
+        </div>
+      </TabsContent>
+
+      <TabsContent value="using" className="mt-0">
+        <div className="flex flex-col">
+          {usingItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-start justify-between py-2 first:pt-0"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-foreground">
+                  {item.label} {item.language}
+                </div>
+                <div className="text-xs text-muted-foreground mt-0.5">
+                  Used {item.count} {item.count === 1 ? "time" : "times"}
+                </div>
+              </div>
+              <Badge
+                size="sm"
+                colorScheme={item.statusColor}
+                className="shrink-0 ml-2"
+              >
+                {item.hasClockIcon && (
+                  <Icon path={mdiClockOutline} className="size-3" />
+                )}
+                {item.status}
+              </Badge>
+            </div>
+          ))}
+        </div>
+      </TabsContent>
+    </Tabs>
+  );
+}
 
 function SidebarContent({ activeTab }: { activeTab: string }) {
   const tabContent: Record<string, React.ReactNode> = {
     "/overview": (
-      <div className="flex flex-col gap-4">
-        <Card>
-          <CardHeader className="border-b-0 pb-0">
-            <CardTitle>Overview</CardTitle>
-            <CardDescription>
-              Get a summary of all important information
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              This is the overview section. Here you can see a summary of all
-              the important information and key metrics.
-            </p>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between p-2 bg-muted rounded-md">
-                <span className="text-sm font-medium">Total Items</span>
-                <span className="text-sm font-bold">1,234</span>
-              </div>
-              <div className="flex items-center justify-between p-2 bg-muted rounded-md">
-                <span className="text-sm font-medium">Active Users</span>
-                <span className="text-sm font-bold">567</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex flex-col gap-6">
+        {/* Description Section */}
+        <ExpandableDescription />
+
+        {/* To do Section */}
+        <TodoSection />
       </div>
     ),
     "/versions": (
       <div className="flex flex-col gap-4">
-        <Card>
-          <CardHeader className="border-b-0 pb-0">
-            <CardTitle>Versions</CardTitle>
-            <CardDescription>
-              View and manage different versions of your project
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              This is the versions section. View and manage different versions
-              of your project, track changes, and compare versions.
-            </p>
-            <div className="space-y-2">
-              <div className="p-3 border border-border rounded-md">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-semibold">v2.1.0</span>
-                  <span className="text-xs text-muted-foreground">Latest</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Released 2 days ago
-                </p>
-              </div>
-              <div className="p-3 border border-border rounded-md">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-semibold">v2.0.5</span>
-                  <span className="text-xs text-muted-foreground">Stable</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Released 1 week ago
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <VersionsSection />
       </div>
     ),
     "/usage": (
       <div className="flex flex-col gap-4">
-        <Card>
-          <CardHeader className="border-b-0 pb-0">
-            <CardTitle>Usage</CardTitle>
-            <CardDescription>
-              Learn how to use this component effectively
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              This is the usage section. Learn how to use this component
-              effectively with examples and best practices.
-            </p>
-            <div className="space-y-2">
-              <div className="p-3 bg-muted rounded-md">
-                <h4 className="text-sm font-semibold mb-1">Basic Usage</h4>
-                <p className="text-xs text-muted-foreground">
-                  Import the component and wrap your content with the provider.
-                </p>
-              </div>
-              <div className="p-3 bg-muted rounded-md">
-                <h4 className="text-sm font-semibold mb-1">Custom Header</h4>
-                <p className="text-xs text-muted-foreground">
-                  Use the header prop to add custom navigation or controls.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <UsageSection />
       </div>
     ),
   };
@@ -157,7 +483,7 @@ export default function SidebarRHSHeadingWithTabsDemo() {
           "min-w-12 w-fit h-9 px-1.5 py-0.5 gap-0.5 rounded-md cursor-pointer overflow-hidden",
           "text-neutral-fg hover:bg-sidebar-accent transition-colors font-medium",
           isActive &&
-            "bg-primary-bg text-primary-fg hover:bg-primary-bg hover:text-primary-fg font-medium",
+            "bg-neutral-bg text-neutral-fg hover:bg-neutral-bg hover:text-neutral-fg font-medium",
         )}
         onClick={() => handleTabClick(item.path)}
         onContextMenu={(e) => e.preventDefault()}
@@ -191,9 +517,9 @@ export default function SidebarRHSHeadingWithTabsDemo() {
   );
 
   return (
-    <div className="h-[500px]">
+    <div className="h-[550px]">
       <SidebarRHSProvider>
-        <div className="relative w-full h-full flex border border-border rounded-lg overflow-hidden bg-body-bg">
+        <div className="w-full h-full flex bg-body-bg">
           {/* Main content area */}
           <main className="flex-1 overflow-auto p-4">
             <div className="space-y-4">
@@ -209,7 +535,7 @@ export default function SidebarRHSHeadingWithTabsDemo() {
           {/* Sidebar */}
           <SidebarRHS
             header={customHeader}
-            width="360px"
+            width="340px"
             minWidth="250px"
             maxWidth="600px"
             height="100%"

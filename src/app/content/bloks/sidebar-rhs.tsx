@@ -32,9 +32,9 @@ function SidebarContent() {
 
 export default function SidebarRHSDemo() {
   return (
-    <div className="h-[500px]">
+    <div className="h-[550px]">
       <SidebarRHSProvider>
-        <div className="relative w-full h-full flex border border-border rounded-lg overflow-hidden bg-body-bg">
+        <div className="w-full h-full flex bg-body-bg">
           {/* Main content area */}
           <main className="flex-1 overflow-auto p-4">
             <div className="space-y-4">
@@ -49,7 +49,7 @@ export default function SidebarRHSDemo() {
           {/* Sidebar */}
           <SidebarRHS
             title="Sidebar RHS"
-            width="360px"
+            width="340px"
             minWidth="250px"
             maxWidth="600px"
             height="100%"

@@ -168,6 +168,7 @@ import PinnedSitesSectionDemo from "@/app/content/bloks/pinned-site-section";
 import SidebarRHSDemo from "@/app/content/bloks/sidebar-rhs";
 import SidebarRHSBriefDemo from "@/app/content/bloks/sidebar-rhs-brief";
 import SidebarRHSBriefTypeDemo from "@/app/content/bloks/sidebar-rhs-brief-type";
+import SidebarRHSContentDemo from "@/app/content/bloks/sidebar-rhs-content";
 import SidebarRHSHeadingWithTabsDemo from "@/app/content/bloks/sidebar-rhs-heading-with-tabs";
 // BLOKS
 import SiteCardDemo from "@/app/content/bloks/site-card";
@@ -1285,5 +1286,10 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     name: "sidebar-rhs-brief-type",
     path: "src/app/content/bloks/sidebar-rhs-brief-type.tsx",
     component: SidebarRHSBriefTypeDemo,
+  },
+  "sidebar-rhs-content": {
+    name: "sidebar-rhs-content",
+    path: "src/app/content/bloks/sidebar-rhs-content.tsx",
+    component: SidebarRHSContentDemo,
   },
 };

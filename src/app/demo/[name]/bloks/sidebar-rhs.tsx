@@ -23,5 +23,6 @@ export const sidebarRhs = {
     "Heading with Tabs": { component: "sidebar-rhs-heading-with-tabs" },
     Brief: { component: "sidebar-rhs-brief" },
     "Brief Type": { component: "sidebar-rhs-brief-type" },
+    Content: { component: "sidebar-rhs-content" },
   },
 };

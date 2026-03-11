@@ -1045,6 +1045,10 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
             id: "sidebar-rhs-brief-type",
             title: "Brief Type",
           },
+          {
+            id: "sidebar-rhs-content",
+            title: "Content",
+          },
         ],
       },
     ],
