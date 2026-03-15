@@ -69,7 +69,7 @@ function ExpandableDescription() {
   );
 }
 
-function TodoSection() {
+function OverviewSection() {
   const [todoChecked, setTodoChecked] = useState(true);
   const [newTodoChecked, setNewTodoChecked] = useState(false);
 
@@ -440,7 +440,7 @@ function SidebarContent({ activeTab }: { activeTab: string }) {
         <ExpandableDescription />
 
         {/* To do Section */}
-        <TodoSection />
+        <OverviewSection />
       </div>
     ),
     "/versions": (
