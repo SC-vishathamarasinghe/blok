@@ -18,6 +18,7 @@ import {
   mdiInformationOutline,
   mdiPencilOutline,
 } from "@mdi/js";
+import { useMemo, useState } from "react";
 
 const rows = [
   {
@@ -63,13 +64,43 @@ const rows = [
 ];
 
 export default function TableDemo() {
-  const unusedForLintCheck = true; // intentional lint error for commit hook test
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+  const allSelected = useMemo(
+    () => rows.length > 0 && selectedIds.size === rows.length,
+    [selectedIds.size],
+  );
+  const someSelected = selectedIds.size > 0;
+
+  const toggleAll = () => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(rows.map((r) => r.id)));
+    }
+  };
+
+  const toggleRow = (id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   return (
     <Table size="md">
       <TableHeader>
         <TableRow>
           <TableHead checkboxColumn>
-            <Checkbox aria-label="Select all" />
+            <Checkbox
+              aria-label="Select all"
+              checked={
+                allSelected ? true : someSelected ? "indeterminate" : false
+              }
+              onCheckedChange={toggleAll}
+            />
           </TableHead>
           <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
@@ -82,9 +113,16 @@ export default function TableDemo() {
       </TableHeader>
       <TableBody>
         {rows.map((row) => (
-          <TableRow key={row.id}>
+          <TableRow
+            key={row.id}
+            data-state={selectedIds.has(row.id) ? "selected" : undefined}
+          >
             <TableCell checkboxColumn>
-              <Checkbox aria-label={`Select ${row.title}`} />
+              <Checkbox
+                aria-label={`Select ${row.title}`}
+                checked={selectedIds.has(row.id)}
+                onCheckedChange={() => toggleRow(row.id)}
+              />
             </TableCell>
             <TableCell>
               <span className="flex items-center gap-2">

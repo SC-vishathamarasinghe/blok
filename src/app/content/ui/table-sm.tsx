@@ -79,18 +79,18 @@ export default function TableSmDemo() {
             <TableCell>{row.col1}</TableCell>
             <TableCell>{row.col2}</TableCell>
             <TableCell>
-              <Badge colorScheme="neutral" size="md">
+              <Badge colorScheme="neutral" size="sm">
                 {row.label}
               </Badge>
             </TableCell>
             <TableCell>
               <span className="flex items-center gap-2">
-                <Avatar className="size-8 bg-teal-600 text-white">
-                  <AvatarFallback className="bg-teal-600 text-white text-sm">
+                <Avatar className="size-6 bg-teal-600 text-white">
+                  <AvatarFallback className="bg-teal-600 text-white text-xs">
                     {row.userInitials}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm">{row.dateTime}</span>
+                <span className="text-xs">{row.dateTime}</span>
               </span>
             </TableCell>
             <TableCell className="text-right">

@@ -94,8 +94,11 @@ function Table({
       >
         <div
           className={cn(
-            "w-full overflow-x-auto",
+            "w-full",
             hasVerticalScroll && "min-h-0 flex-1 overflow-y-auto",
+            hasVerticalScroll && maxWidth == null
+              ? "overflow-x-hidden"
+              : "overflow-x-auto",
           )}
         >
           <table
@@ -179,7 +182,7 @@ function TableHead({
   checkboxColumn,
   ...props
 }: TableHeadProps) {
-  const { size, pinnedColumnsCount } = useTableContext();
+  const { size } = useTableContext();
   const sizeStyles = TABLE_SIZE_STYLES[size].header;
   return (
     <th
@@ -191,7 +194,6 @@ function TableHead({
         "[&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         checkboxColumn && "w-12",
         pinned && "sticky left-0 z-20 bg-body-bg",
-        pinnedColumnsCount > 0 && "border-r border-border",
         className,
       )}
       {...props}
@@ -212,7 +214,7 @@ function TableCell({
   checkboxColumn,
   ...props
 }: TableCellProps) {
-  const { size, pinnedColumnsCount } = useTableContext();
+  const { size } = useTableContext();
   const sizeStyles = TABLE_SIZE_STYLES[size].cell;
   return (
     <td
@@ -224,7 +226,6 @@ function TableCell({
         "[&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         checkboxColumn && "w-12",
         pinned && "sticky left-0 z-20 bg-body-bg",
-        pinnedColumnsCount > 0 && "border-r border-border",
         className,
       )}
       {...props}

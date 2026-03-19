@@ -53,13 +53,13 @@ const rows = [
 
 export default function TablePinnedDemo() {
   return (
-    <Table size="md" maxWidth={400} pinnedColumnsCount={2}>
+    <Table size="md" maxWidth={560} pinnedColumnsCount={2}>
       <TableHeader>
         <TableRow>
           <TableHead className="min-w-[140px]" pinned>
             Label
           </TableHead>
-          <TableHead className="min-w-[80px] sticky left-[140px] z-20 bg-body-bg border-r border-border">
+          <TableHead className="min-w-[80px] sticky left-[140px] z-20 bg-body-bg">
             Label
           </TableHead>
           <TableHead>Label</TableHead>
@@ -84,7 +84,7 @@ export default function TablePinnedDemo() {
                 {row.title}
               </span>
             </TableCell>
-            <TableCell className="min-w-[80px] sticky left-[140px] z-20 bg-body-bg border-r border-border">
+            <TableCell className="min-w-[80px] sticky left-[140px] z-20 bg-body-bg">
               {row.col1}
             </TableCell>
             <TableCell>{row.col2}</TableCell>

@@ -887,10 +887,10 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
         id: "examples",
         title: "Examples",
         children: [
-          { id: "table-sm", title: "Small (sm)" },
-          { id: "table-lg", title: "Large (lg)" },
+          { id: "table-sm", title: "Small" },
+          { id: "table-lg", title: "Large" },
           { id: "table-sticky-scroll", title: "Sticky header & scroll" },
-          { id: "table-pinned", title: "Pinned columns" },
+          { id: "table-pinned", title: "Scroll & pin" },
         ],
       },
     ],
