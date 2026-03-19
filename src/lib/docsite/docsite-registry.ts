@@ -164,13 +164,16 @@ import TooltipDemo from "@/app/content/ui/tooltip";
 
 import AllSitesSectionDemo from "@/app/content/bloks/all-site-section";
 import CollaborationDemo from "@/app/content/bloks/collaboration";
+// BLOKS
+import DashboardWidgetDemo from "@/app/content/bloks/dashboard-widget";
+import DashboardWidgetTwoColumnDemo from "@/app/content/bloks/dashboard-widget-two-column";
+import DashboardWidgetTwoColumnWithSidebarDemo from "@/app/content/bloks/dashboard-widget-two-column-with-sidebar";
 import PinnedSitesSectionDemo from "@/app/content/bloks/pinned-site-section";
 import SidebarRHSDemo from "@/app/content/bloks/sidebar-rhs";
 import SidebarRHSBriefDemo from "@/app/content/bloks/sidebar-rhs-brief";
 import SidebarRHSBriefTypeDemo from "@/app/content/bloks/sidebar-rhs-brief-type";
 import SidebarRHSContentDemo from "@/app/content/bloks/sidebar-rhs-content";
 import SidebarRHSHeadingWithTabsDemo from "@/app/content/bloks/sidebar-rhs-heading-with-tabs";
-// BLOKS
 import SiteCardDemo from "@/app/content/bloks/site-card";
 import { ActionBarDemo } from "@/app/content/ui/action-bar";
 import CircularProgressDemo from "@/app/content/ui/circular-progress";
@@ -1247,6 +1250,21 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
   },
 
   // BLOKS
+  "dashboard-widget": {
+    name: "dashboard-widget",
+    path: "src/app/content/bloks/dashboard-widget.tsx",
+    component: DashboardWidgetDemo,
+  },
+  "dashboard-widget-two-column": {
+    name: "dashboard-widget-two-column",
+    path: "src/app/content/bloks/dashboard-widget-two-column.tsx",
+    component: DashboardWidgetTwoColumnDemo,
+  },
+  "dashboard-widget-two-column-with-sidebar": {
+    name: "dashboard-widget-two-column-with-sidebar",
+    path: "src/app/content/bloks/dashboard-widget-two-column-with-sidebar.tsx",
+    component: DashboardWidgetTwoColumnWithSidebarDemo,
+  },
   "site-card": {
     name: "site-card",
     path: "src/app/content/bloks/site-card.tsx",

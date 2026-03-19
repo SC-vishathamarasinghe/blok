@@ -1062,6 +1062,28 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
   "site-card": {
     links: {},
   },
+  "dashboard-widget": {
+    links: {},
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+      {
+        id: "examples",
+        title: "Examples",
+        children: [
+          {
+            id: "dashboard-widget-two-column",
+            title: "Two-column layout",
+          },
+          {
+            id: "dashboard-widget-two-column-with-sidebar",
+            title: "Two-column layout with Sidebar RHS",
+          },
+        ],
+      },
+    ],
+  },
   // ===== THEMING-SPECIFIC METADATA =====
 
   // "theming-colors": {
