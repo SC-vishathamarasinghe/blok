@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, PinOff } from "lucide-react";
+import type { ComponentProps } from "react";
 import { useState } from "react";
 
 interface SiteData {
@@ -60,7 +61,8 @@ export function SiteCard<T extends SiteData>({
   showDropdownMenu = true,
   footerButtons = [],
   dropdownActions = [],
-}: PinnedSiteCardProps<T>) {
+  ...props
+}: PinnedSiteCardProps<T> & ComponentProps<"div">) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleCardClick = (_e: React.MouseEvent) => {
@@ -83,6 +85,7 @@ export function SiteCard<T extends SiteData>({
 
   return (
     <Card
+      {...props}
       elevation="sm"
       style="outline"
       className={`group relative w-full cursor-pointer transition-all overflow-hidden p-0 gap-0 h-[226px] flex flex-col${

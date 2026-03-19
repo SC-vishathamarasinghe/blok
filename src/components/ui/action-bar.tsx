@@ -23,6 +23,7 @@ import {
   mdiDotsHorizontal,
   mdiTrashCanOutline,
 } from "@mdi/js";
+import type { ComponentProps } from "react";
 
 export interface ActionBarButton {
   label: string;
@@ -74,7 +75,8 @@ export function ActionBar({
   menuItems,
   className,
   align = "center",
-}: ActionBarProps) {
+  ...props
+}: ActionBarProps & ComponentProps<"div">) {
   const handleCancel = () => {
     onOpenChange?.(false);
     onCancel?.();
@@ -134,6 +136,7 @@ export function ActionBar({
         isOpen ? "translate-y-0" : "translate-y-full",
         className,
       )}
+      {...props}
     >
       <div
         className={cn(

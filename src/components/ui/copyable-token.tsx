@@ -5,6 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { ComponentProps } from "react";
 
 interface CopyableTokenProps {
   token: string;
@@ -14,7 +15,10 @@ async function copyToClipboard(value: string) {
   await navigator.clipboard.writeText(value);
 }
 
-export function CopyableToken({ token }: CopyableTokenProps) {
+export function CopyableToken({
+  token,
+  ...props
+}: CopyableTokenProps & ComponentProps<"code">) {
   const handleCopy = async () => {
     await copyToClipboard(token);
   };
@@ -23,6 +27,7 @@ export function CopyableToken({ token }: CopyableTokenProps) {
     <Tooltip>
       <TooltipTrigger asChild>
         <code
+          {...props}
           dir="ltr"
           onClick={handleCopy}
           className="cursor-pointer rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm hover:bg-muted/80 transition-colors inline-block"
