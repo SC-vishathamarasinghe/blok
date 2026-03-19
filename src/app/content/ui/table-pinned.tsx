@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Icon as UiIcon } from "@/components/ui/icon";
 import {
   Table,
@@ -22,57 +21,47 @@ import {
 const rows = [
   {
     id: 1,
-    title: "Product search",
-    col1: "Text",
-    col2: "Text",
-    col3: "Text",
+    title: "Product A",
+    col1: "Data 1",
+    col2: "Data 2",
+    col3: "Data 3",
     label: "Label",
     userInitials: "SA",
     dateTime: "Jul 01, 2024 10:37 PM",
   },
   {
     id: 2,
-    title: "Pricing",
-    col1: "Text",
-    col2: "Text",
-    col3: "Text",
+    title: "Product B",
+    col1: "Data 1",
+    col2: "Data 2",
+    col3: "Data 3",
     label: "Label",
-    userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
+    userInitials: "JD",
+    dateTime: "Jun 30, 2024 3:20 PM",
   },
   {
     id: 3,
-    title: "Features",
-    col1: "Text",
-    col2: "Text",
-    col3: "Text",
+    title: "Product C",
+    col1: "Data 1",
+    col2: "Data 2",
+    col3: "Data 3",
     label: "Label",
-    userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
-  },
-  {
-    id: 4,
-    title: "Support",
-    col1: "Text",
-    col2: "Text",
-    col3: "Text",
-    label: "Label",
-    userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
+    userInitials: "MK",
+    dateTime: "Jun 29, 2024 11:00 AM",
   },
 ];
 
-export default function TableDemo() {
-  const unusedForLintCheck = true; // intentional lint error for commit hook test
+export default function TablePinnedDemo() {
   return (
-    <Table size="md">
+    <Table size="md" maxWidth={400} pinnedColumnsCount={2}>
       <TableHeader>
         <TableRow>
-          <TableHead checkboxColumn>
-            <Checkbox aria-label="Select all" />
+          <TableHead className="min-w-[140px]" pinned>
+            Label
           </TableHead>
-          <TableHead>Label</TableHead>
-          <TableHead>Label</TableHead>
+          <TableHead className="min-w-[80px] sticky left-[140px] z-20 bg-body-bg border-r border-border">
+            Label
+          </TableHead>
           <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
@@ -83,10 +72,7 @@ export default function TableDemo() {
       <TableBody>
         {rows.map((row) => (
           <TableRow key={row.id}>
-            <TableCell checkboxColumn>
-              <Checkbox aria-label={`Select ${row.title}`} />
-            </TableCell>
-            <TableCell>
+            <TableCell className="min-w-[140px] font-semibold" pinned>
               <span className="flex items-center gap-2">
                 <UiIcon
                   path={mdiInformationOutline}
@@ -95,10 +81,12 @@ export default function TableDemo() {
                   size="sm"
                   className="shrink-0"
                 />
-                <span className="font-semibold">{row.title}</span>
+                {row.title}
               </span>
             </TableCell>
-            <TableCell>{row.col1}</TableCell>
+            <TableCell className="min-w-[80px] sticky left-[140px] z-20 bg-body-bg border-r border-border">
+              {row.col1}
+            </TableCell>
             <TableCell>{row.col2}</TableCell>
             <TableCell>{row.col3}</TableCell>
             <TableCell>

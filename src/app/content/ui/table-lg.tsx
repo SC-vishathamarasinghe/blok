@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Icon as UiIcon } from "@/components/ui/icon";
 import {
   Table,
@@ -22,56 +21,38 @@ import {
 const rows = [
   {
     id: 1,
-    title: "Product search",
+    title: "Project Alpha",
     col1: "Text",
     col2: "Text",
-    col3: "Text",
-    label: "Label",
-    userInitials: "SA",
+    label: "In progress",
+    userInitials: "JD",
     dateTime: "Jul 01, 2024 10:37 PM",
   },
   {
     id: 2,
-    title: "Pricing",
+    title: "Project Beta",
     col1: "Text",
     col2: "Text",
-    col3: "Text",
-    label: "Label",
-    userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
+    label: "Complete",
+    userInitials: "MK",
+    dateTime: "Jun 28, 2024 3:20 PM",
   },
   {
     id: 3,
-    title: "Features",
+    title: "Project Gamma",
     col1: "Text",
     col2: "Text",
-    col3: "Text",
-    label: "Label",
+    label: "Draft",
     userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
-  },
-  {
-    id: 4,
-    title: "Support",
-    col1: "Text",
-    col2: "Text",
-    col3: "Text",
-    label: "Label",
-    userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
+    dateTime: "Jun 25, 2024 11:00 AM",
   },
 ];
 
-export default function TableDemo() {
-  const unusedForLintCheck = true; // intentional lint error for commit hook test
+export default function TableLgDemo() {
   return (
-    <Table size="md">
+    <Table size="lg">
       <TableHeader>
         <TableRow>
-          <TableHead checkboxColumn>
-            <Checkbox aria-label="Select all" />
-          </TableHead>
-          <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
@@ -83,9 +64,6 @@ export default function TableDemo() {
       <TableBody>
         {rows.map((row) => (
           <TableRow key={row.id}>
-            <TableCell checkboxColumn>
-              <Checkbox aria-label={`Select ${row.title}`} />
-            </TableCell>
             <TableCell>
               <span className="flex items-center gap-2">
                 <UiIcon
@@ -100,7 +78,6 @@ export default function TableDemo() {
             </TableCell>
             <TableCell>{row.col1}</TableCell>
             <TableCell>{row.col2}</TableCell>
-            <TableCell>{row.col3}</TableCell>
             <TableCell>
               <Badge colorScheme="neutral" size="md">
                 {row.label}

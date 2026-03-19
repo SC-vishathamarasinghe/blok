@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Icon as UiIcon } from "@/components/ui/icon";
 import {
   Table,
@@ -22,56 +21,146 @@ import {
 const rows = [
   {
     id: 1,
-    title: "Product search",
+    title: "Row 1",
     col1: "Text",
     col2: "Text",
-    col3: "Text",
     label: "Label",
     userInitials: "SA",
     dateTime: "Jul 01, 2024 10:37 PM",
   },
   {
     id: 2,
-    title: "Pricing",
+    title: "Row 2",
     col1: "Text",
     col2: "Text",
-    col3: "Text",
     label: "Label",
-    userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
+    userInitials: "JD",
+    dateTime: "Jul 01, 2024 9:15 AM",
   },
   {
     id: 3,
-    title: "Features",
+    title: "Row 3",
     col1: "Text",
     col2: "Text",
-    col3: "Text",
     label: "Label",
-    userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
+    userInitials: "MK",
+    dateTime: "Jun 30, 2024 4:20 PM",
   },
   {
     id: 4,
-    title: "Support",
+    title: "Row 4",
     col1: "Text",
     col2: "Text",
-    col3: "Text",
     label: "Label",
     userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
+    dateTime: "Jun 30, 2024 11:00 AM",
+  },
+  {
+    id: 5,
+    title: "Row 5",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "AL",
+    dateTime: "Jun 29, 2024 2:45 PM",
+  },
+  {
+    id: 6,
+    title: "Row 6",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "JD",
+    dateTime: "Jun 29, 2024 8:30 AM",
+  },
+  {
+    id: 7,
+    title: "Row 7",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "MK",
+    dateTime: "Jun 28, 2024 6:00 PM",
+  },
+  {
+    id: 8,
+    title: "Row 8",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "SA",
+    dateTime: "Jun 28, 2024 1:15 PM",
+  },
+  {
+    id: 9,
+    title: "Row 9",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "AL",
+    dateTime: "Jun 27, 2024 9:45 AM",
+  },
+  {
+    id: 10,
+    title: "Row 10",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "JD",
+    dateTime: "Jun 27, 2024 3:30 PM",
+  },
+  {
+    id: 11,
+    title: "Row 11",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "MK",
+    dateTime: "Jun 26, 2024 10:20 AM",
+  },
+  {
+    id: 12,
+    title: "Row 12",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "SA",
+    dateTime: "Jun 26, 2024 5:00 PM",
+  },
+  {
+    id: 13,
+    title: "Row 13",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "AL",
+    dateTime: "Jun 25, 2024 11:40 AM",
+  },
+  {
+    id: 14,
+    title: "Row 14",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "JD",
+    dateTime: "Jun 25, 2024 7:15 PM",
+  },
+  {
+    id: 15,
+    title: "Row 15",
+    col1: "Text",
+    col2: "Text",
+    label: "Label",
+    userInitials: "MK",
+    dateTime: "Jun 24, 2024 2:00 PM",
   },
 ];
 
-export default function TableDemo() {
-  const unusedForLintCheck = true; // intentional lint error for commit hook test
+export default function TableStickyScrollDemo() {
   return (
-    <Table size="md">
+    <Table size="md" maxHeight={320} stickyHeader>
       <TableHeader>
         <TableRow>
-          <TableHead checkboxColumn>
-            <Checkbox aria-label="Select all" />
-          </TableHead>
-          <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
           <TableHead>Label</TableHead>
@@ -83,9 +172,6 @@ export default function TableDemo() {
       <TableBody>
         {rows.map((row) => (
           <TableRow key={row.id}>
-            <TableCell checkboxColumn>
-              <Checkbox aria-label={`Select ${row.title}`} />
-            </TableCell>
             <TableCell>
               <span className="flex items-center gap-2">
                 <UiIcon
@@ -100,7 +186,6 @@ export default function TableDemo() {
             </TableCell>
             <TableCell>{row.col1}</TableCell>
             <TableCell>{row.col2}</TableCell>
-            <TableCell>{row.col3}</TableCell>
             <TableCell>
               <Badge colorScheme="neutral" size="md">
                 {row.label}
