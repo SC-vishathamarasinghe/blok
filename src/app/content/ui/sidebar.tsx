@@ -17,7 +17,7 @@ export default function SidebarDemo() {
   return (
     <div className="flex h-[350px] w-full">
       <SidebarProvider>
-        <Sidebar className="w-62">
+        <Sidebar className="w-62 bg-white">
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel>Navigation</SidebarGroupLabel>
@@ -39,7 +39,7 @@ export default function SidebarDemo() {
                   </SidebarMenuItem>
 
                   <SidebarMenuItem>
-                    <SidebarMenuButton>
+                    <SidebarMenuButton disabled>
                       <Icon path={mdiCog} />
                       <span>Settings</span>
                     </SidebarMenuButton>
@@ -47,21 +47,6 @@ export default function SidebarDemo() {
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
-
-            <SidebarGroup>
-              <SidebarGroupLabel>Settings</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Icon path={mdiCog} />
-                      <span>Settings</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-
           </SidebarContent>
         </Sidebar>
       </SidebarProvider>
