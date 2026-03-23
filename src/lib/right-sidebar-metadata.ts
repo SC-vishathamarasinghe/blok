@@ -1073,6 +1073,10 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
         title: "Examples",
         children: [
           {
+            id: "dashboard-widget-white-bg-large",
+            title: "White bg large",
+          },
+          {
             id: "dashboard-widget-gray-bg-large",
             title: "Gray bg large",
           },

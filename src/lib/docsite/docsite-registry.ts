@@ -169,6 +169,7 @@ import DashboardWidgetDemo from "@/app/content/bloks/dashboard-widget";
 import DashboardWidgetGrayBgLargeDemo from "@/app/content/bloks/dashboard-widget-gray-bg-large";
 import DashboardWidgetMarketplaceAppsDemo from "@/app/content/bloks/dashboard-widget-marketplace-apps";
 import DashboardWidgetTwoColumnDemo from "@/app/content/bloks/dashboard-widget-two-column";
+import DashboardWidgetWhiteBgLargeDemo from "@/app/content/bloks/dashboard-widget-white-bg-large";
 import DashboardWidgetWhiteBgSmallDemo from "@/app/content/bloks/dashboard-widget-white-bg-small";
 
 import PinnedSitesSectionDemo from "@/app/content/bloks/pinned-site-section";
@@ -1257,6 +1258,11 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     name: "dashboard-widget",
     path: "src/app/content/bloks/dashboard-widget.tsx",
     component: DashboardWidgetDemo,
+  },
+  "dashboard-widget-white-bg-large": {
+    name: "dashboard-widget-white-bg-large",
+    path: "src/app/content/bloks/dashboard-widget-white-bg-large.tsx",
+    component: DashboardWidgetWhiteBgLargeDemo,
   },
   "dashboard-widget-gray-bg-large": {
     name: "dashboard-widget-gray-bg-large",

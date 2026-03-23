@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DashboardWidget,
   DashboardWidgetAction,
@@ -5,11 +7,22 @@ import {
   DashboardWidgetDescription,
   DashboardWidgetHeader,
   DashboardWidgetTitle,
+  DashboardWidgetToolbar,
 } from "@/components/bloks/dashboard-widget";
 import { Button } from "@/components/ui/button";
+import { FilterSingleSelect } from "@/components/ui/filter";
 import { ChevronRight } from "lucide-react";
+import { useState } from "react";
 
-export default function DashboardWidgetDemo() {
+const filterOptions = [
+  { value: "all", label: "All projects" },
+  { value: "active", label: "Active" },
+  { value: "archived", label: "Archived" },
+];
+
+export default function DashboardWidgetWhiteBgLargeDemo() {
+  const [filterValue, setFilterValue] = useState<string>("");
+
   return (
     <div className="w-[960px] max-w-full">
       <DashboardWidget type="white-bg-large">
@@ -33,6 +46,15 @@ export default function DashboardWidgetDemo() {
             </Button>
           </DashboardWidgetAction>
         </DashboardWidgetHeader>
+        <DashboardWidgetToolbar>
+          <FilterSingleSelect
+            value={filterValue}
+            onChange={setFilterValue}
+            options={filterOptions}
+            placeholder="Filter"
+            className="w-fit"
+          />
+        </DashboardWidgetToolbar>
         <DashboardWidgetContent>
           <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
             Widget content area
