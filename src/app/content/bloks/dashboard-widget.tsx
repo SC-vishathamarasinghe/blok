@@ -1,6 +1,17 @@
 "use client";
 
-import { DashboardWidget } from "@/components/bloks/dashboard-widget";
+import {
+  DashboardWidget,
+  DashboardWidgetAction,
+  DashboardWidgetContent,
+  DashboardWidgetDescription,
+  DashboardWidgetHeader,
+  DashboardWidgetTitle,
+  DashboardWidgetToolbar,
+} from "@/components/bloks/dashboard-widget";
+import { Button } from "@/components/ui/button";
+import { FilterSingleSelect } from "@/components/ui/filter";
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 const filterOptions = [
@@ -14,22 +25,41 @@ export default function DashboardWidgetDemo() {
 
   return (
     <div className="w-[960px] max-w-full">
-      <DashboardWidget
-        name="Projects"
-        description="Overview of your recent projects and their status"
-        goToHref="#"
-        onGoTo={() => console.log("Go to Projects")}
-        filter={{
-          value: filterValue,
-          onChange: setFilterValue,
-          options: filterOptions,
-          placeholder: "Filter",
-        }}
-        variant="white-bg-large"
-      >
-        <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
-          Widget content area
-        </div>
+      <DashboardWidget type="white-bg-large">
+        <DashboardWidgetHeader>
+          <DashboardWidgetTitle>Projects</DashboardWidgetTitle>
+          <DashboardWidgetDescription>
+            Overview of your recent projects and their status
+          </DashboardWidgetDescription>
+          <DashboardWidgetAction>
+            <Button
+              variant="link"
+              size="sm"
+              colorScheme="primary"
+              className="text-sm font-medium -m-1 p-1"
+              asChild
+            >
+              <a href="#">
+                Go to Projects
+                <ChevronRight className="ml-0.5 h-4 w-4" />
+              </a>
+            </Button>
+          </DashboardWidgetAction>
+        </DashboardWidgetHeader>
+        <DashboardWidgetToolbar>
+          <FilterSingleSelect
+            value={filterValue}
+            onChange={setFilterValue}
+            options={filterOptions}
+            placeholder="Filter"
+            className="w-fit"
+          />
+        </DashboardWidgetToolbar>
+        <DashboardWidgetContent>
+          <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
+            Widget content area
+          </div>
+        </DashboardWidgetContent>
       </DashboardWidget>
     </div>
   );

@@ -5,8 +5,32 @@ export const dashboardWidget = {
   },
   usage: {
     usage: [
-      `import { DashboardWidget } from "@/components/bloks/dashboard-widget";`,
-      `<DashboardWidget name="Widget name" goToHref="/path" />`,
+      `import {
+  DashboardWidget,
+  DashboardWidgetHeader,
+  DashboardWidgetTitle,
+  DashboardWidgetDescription,
+  DashboardWidgetAction,
+  DashboardWidgetToolbar,
+  DashboardWidgetContent,
+} from "@/components/bloks/dashboard-widget";`,
+      `<DashboardWidget>
+  <DashboardWidgetHeader>
+    <DashboardWidgetTitle>Widget name</DashboardWidgetTitle>
+    <DashboardWidgetDescription>Optional description</DashboardWidgetDescription>
+    <DashboardWidgetAction>
+      <Button variant="link" size="sm" colorScheme="primary" asChild>
+        <a href="/path">Go to Widget name <ChevronRight /></a>
+      </Button>
+    </DashboardWidgetAction>
+  </DashboardWidgetHeader>
+  <DashboardWidgetToolbar>
+    {/* Optional: filters, actions, or any custom toolbar content */}
+  </DashboardWidgetToolbar>
+  <DashboardWidgetContent>
+    {/* Your widget content */}
+  </DashboardWidgetContent>
+</DashboardWidget>`,
     ],
   },
   components: {
