@@ -467,7 +467,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
     <li
       data-slot="sidebar-menu-item"
       data-sidebar="menu-item"
-      className={cn("group/menu-item relative h-10 min-w-20 max-w-60", className)}
+      className={cn("group/menu-item relative h-10 min-w-20 max-w-60 flex justify-between items-center", className)}
       {...props}
     />
   )
@@ -479,8 +479,6 @@ const sidebarMenuButtonVariants = cva(
     variants: {
       variant: {
         default: "hover:bg-(--color-neutral-100) hover:text-neutral-fg",
-        outline:
-          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-(--color-neutral-100) hover:text-neutral-fg hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
       },
       size: {
         default: "text-sm",
@@ -517,6 +515,7 @@ function SidebarMenuButton({
       data-sidebar="menu-button"
       data-size={size}
       data-active={isActive}
+      data-disabled={props.disabled ? true : undefined}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
       {...props}
     />
@@ -561,16 +560,24 @@ function SidebarMenuAction({
       data-slot="sidebar-menu-action"
       data-sidebar="menu-action"
       className={cn(
-        "absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        "absolute right-1 -translate-y-0.5 flex aspect-square h-8 items-center justify-center rounded-md p-0 text-neutral-fg ring-sidebar-ring outline-hidden transition-transform",
+        "peer-hover/menu-button:text-neutral-fg peer-active/menu-button:text-primary-fg",
+        "hover:bg-transparent hover:text-primary-fg focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 cursor-pointer",
+
+        "peer-data-[disabled=true]/menu-button:pointer-events-none peer-data-[disabled=true]/menu-button:opacity-50",
+
         // Increases the hit area of the button on mobile.
         "after:absolute after:-inset-2 md:after:hidden",
         "peer-data-[size=sm]/menu-button:top-1",
         "peer-data-[size=default]/menu-button:top-1.5",
         "peer-data-[size=lg]/menu-button:top-2.5",
+
         "group-data-[collapsible=icon]:hidden",
+
         showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground data-[state=open]:opacity-100 md:opacity-0",
-        className
+          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0",
+        
+          className
       )}
       {...props}
     />
