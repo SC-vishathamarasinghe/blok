@@ -4,7 +4,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -17,7 +16,7 @@ export default function SidebarDemo() {
   return (
     <div className="flex h-[350px] w-full">
       <SidebarProvider>
-        <Sidebar className="w-62 bg-white">
+        <Sidebar className="w-62">
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel>Navigation</SidebarGroupLabel>

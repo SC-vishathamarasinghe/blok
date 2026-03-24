@@ -4,7 +4,7 @@ export default function SidebarDefaultDemo() {
     return (
         <div className="flex h-[350px] w-full">
             <SidebarProvider>
-                <Sidebar className="w-62 bg-white">
+                <Sidebar className="w-62">
                     <SidebarContent>
                         <SidebarMenu>
                             <SidebarMenuItem>
