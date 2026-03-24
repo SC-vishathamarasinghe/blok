@@ -22,33 +22,39 @@ import {
 const rows = [
   {
     id: 1,
-    title: "Product A",
-    col1: "Data 1",
-    col2: "Data 2",
-    col3: "Data 3",
-    label: "Label",
-    userInitials: "SA",
-    dateTime: "Jul 01, 2024 10:37 PM",
+    title: "Blok",
+    currentUsers: "48k+",
+    col2: "Design tokens · React · Storybook",
+    label: "GA",
+    userInitials: "BK",
+    dateTime: "Mar 12, 2025 2:15 PM",
   },
   {
     id: 2,
-    title: "Product B",
-    col1: "Data 1",
-    col2: "Data 2",
-    col3: "Data 3",
-    label: "Label",
-    userInitials: "JD",
-    dateTime: "Jun 30, 2024 3:20 PM",
+    title: "Component Builder",
+    currentUsers: "125k+",
+    col2: "Figma · design–dev handoff",
+    label: "Preview",
+    userInitials: "CB",
+    dateTime: "Mar 11, 2025 9:40 AM",
   },
   {
     id: 3,
-    title: "Product C",
-    col1: "Data 1",
-    col2: "Data 2",
-    col3: "Data 3",
-    label: "Label",
-    userInitials: "MK",
-    dateTime: "Jun 29, 2024 11:00 AM",
+    title: "Sitecore AI",
+    currentUsers: "890k+",
+    col2: "Copilots · XM · Content Hub",
+    label: "Beta",
+    userInitials: "AI",
+    dateTime: "Mar 10, 2025 4:22 PM",
+  },
+  {
+    id: 4,
+    title: "XM Cloud",
+    currentUsers: "2.4M+",
+    col2: "Edge · Search · headless APIs",
+    label: "GA",
+    userInitials: "XM",
+    dateTime: "Mar 09, 2025 11:05 AM",
   },
 ];
 
@@ -58,24 +64,23 @@ export default function TablePinnedDemo() {
       <Table size="md" maxWidth={560} pinnedColumnsCount={2}>
         <TableHeader>
           <TableRow>
-            <TableHead className="min-w-[140px] sticky left-0 z-40 bg-body-bg">
-              Label
+            <TableHead className="sticky left-0 z-40 w-[200px] min-w-[200px] max-w-[200px] bg-body-bg">
+              Product
             </TableHead>
-            <TableHead className="min-w-[80px] sticky left-[140px] z-30 bg-body-bg">
-              Label
+            <TableHead className="sticky left-[200px] z-30 w-[132px] min-w-[132px] max-w-[132px] bg-body-bg text-right text-xs">
+              Current users
             </TableHead>
-            <TableHead className="relative z-0">Label</TableHead>
-            <TableHead className="relative z-0">Label</TableHead>
-            <TableHead className="relative z-0">Label</TableHead>
-            <TableHead className="relative z-0">Label</TableHead>
+            <TableHead className="relative z-0">Capabilities</TableHead>
+            <TableHead className="relative z-0">Availability</TableHead>
+            <TableHead className="relative z-0">Last activity</TableHead>
             <TableHead className="relative z-0 text-right" aria-hidden />
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell className="min-w-[140px] font-semibold sticky left-0 z-40 bg-body-bg">
-                <span className="flex items-center gap-2">
+              <TableCell className="sticky left-0 z-40 w-[200px] min-w-[200px] max-w-[200px] bg-body-bg font-semibold">
+                <span className="flex min-w-0 items-center gap-2">
                   <UiIcon
                     path={mdiInformationOutline}
                     variant="subtle"
@@ -83,14 +88,13 @@ export default function TablePinnedDemo() {
                     size="sm"
                     className="shrink-0"
                   />
-                  {row.title}
+                  <span className="min-w-0 truncate">{row.title}</span>
                 </span>
               </TableCell>
-              <TableCell className="min-w-[80px] sticky left-[140px] z-30 bg-body-bg">
-                {row.col1}
+              <TableCell className="sticky left-[200px] z-30 w-[132px] min-w-[132px] max-w-[132px] bg-body-bg text-right tabular-nums font-medium">
+                {row.currentUsers}
               </TableCell>
               <TableCell className="relative z-0">{row.col2}</TableCell>
-              <TableCell className="relative z-0">{row.col3}</TableCell>
               <TableCell className="relative z-0">
                 <Badge colorScheme="neutral" size="md">
                   {row.label}

@@ -25,30 +25,35 @@ import {
 const rows = [
   {
     id: 1,
-    title: "Item A",
-    col1: "Text",
-    col2: "Text",
-    label: "Active",
-    userInitials: "JD",
-    dateTime: "Jun 15, 2024 2:30 PM",
+    title: "Blok",
+    category: "Developer experience",
+    label: "GA",
+    userInitials: "BK",
+    dateTime: "Mar 12, 2025 2:15 PM",
   },
   {
     id: 2,
-    title: "Item B",
-    col1: "Text",
-    col2: "Text",
-    label: "Draft",
-    userInitials: "MK",
-    dateTime: "Jun 14, 2024 9:15 AM",
+    title: "Component Builder",
+    category: "Composable authoring",
+    label: "Preview",
+    userInitials: "CB",
+    dateTime: "Mar 11, 2025 9:40 AM",
   },
   {
     id: 3,
-    title: "Item C",
-    col1: "Text",
-    col2: "Text",
-    label: "Active",
-    userInitials: "SA",
-    dateTime: "Jun 13, 2024 5:45 PM",
+    title: "Sitecore AI",
+    category: "Intelligent automation",
+    label: "Beta",
+    userInitials: "AI",
+    dateTime: "Mar 10, 2025 4:22 PM",
+  },
+  {
+    id: 4,
+    title: "XM Cloud",
+    category: "Composable DXP",
+    label: "GA",
+    userInitials: "XM",
+    dateTime: "Mar 09, 2025 11:05 AM",
   },
 ];
 
@@ -79,7 +84,7 @@ export default function TableSmDemo() {
   };
 
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-4xl">
       <Table size="sm">
         <TableHeader>
           <TableRow>
@@ -92,11 +97,10 @@ export default function TableSmDemo() {
                 onCheckedChange={toggleAll}
               />
             </TableHead>
-            <TableHead>Label</TableHead>
-            <TableHead>Label</TableHead>
-            <TableHead>Label</TableHead>
-            <TableHead>Label</TableHead>
-            <TableHead>Label</TableHead>
+            <TableHead>Product</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Availability</TableHead>
+            <TableHead>Last activity</TableHead>
             <TableHead className="text-right" aria-hidden />
           </TableRow>
         </TableHeader>
@@ -125,8 +129,7 @@ export default function TableSmDemo() {
                   <span className="font-semibold">{row.title}</span>
                 </span>
               </TableCell>
-              <TableCell>{row.col1}</TableCell>
-              <TableCell>{row.col2}</TableCell>
+              <TableCell>{row.category}</TableCell>
               <TableCell>
                 <Badge colorScheme="neutral" size="sm">
                   {row.label}
