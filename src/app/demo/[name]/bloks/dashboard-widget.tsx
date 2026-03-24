@@ -34,7 +34,7 @@ export const dashboardWidget = {
     ],
   },
   components: {
-    "White background": { component: "dashboard-widget-white-bg-large" },
-    "Gray background": { component: "dashboard-widget-gray-bg-large" },
+    "White widget": { component: "dashboard-widget-white-bg-large" },
+    "Gray widget": { component: "dashboard-widget-gray-bg-large" },
   },
 };
