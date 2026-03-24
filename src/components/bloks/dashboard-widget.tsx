@@ -2,18 +2,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type * as React from "react";
 
-/**
- * Dashboard widget types (3 main types by size):
- * - gray-bg-large: Large widget with gray background
- * - white-bg-large: Large widget with white background (same size/dimensions as gray-bg-large)
- * - white-bg-small: Small widget for RHS column
- * - marketplace-apps: Small widget with icon and settings (same size/dimensions as white-bg-small)
- */
-export type DashboardWidgetType =
-  | "gray-bg-large"
-  | "white-bg-large"
-  | "white-bg-small"
-  | "marketplace-apps";
+export type DashboardWidgetType = "gray-bg-large" | "white-bg-large";
 
 function DashboardWidget({
   type = "white-bg-large",
@@ -25,8 +14,6 @@ function DashboardWidget({
   children?: React.ReactNode;
 }) {
   const isGrayBg = type === "gray-bg-large";
-  const isSmallVariant =
-    type === "white-bg-small" || type === "marketplace-apps";
 
   return (
     <Card
@@ -34,10 +21,8 @@ function DashboardWidget({
       padding="md"
       data-slot="dashboard-widget"
       className={cn(
-        "overflow-hidden w-full",
+        "overflow-hidden w-full min-w-[420px]",
         isGrayBg && "bg-neutral-50",
-        isSmallVariant && "max-w-[420px]",
-        !isSmallVariant && "min-w-[420px]",
         className,
       )}
     >
