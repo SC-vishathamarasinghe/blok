@@ -28,22 +28,16 @@ import { cn } from "@/lib/utils";
 import { mdiCheck, mdiChevronDown, mdiClose, mdiMagnify } from "@mdi/js";
 import { Select as SelectPrimitive } from "radix-ui";
 import * as React from "react";
+import type { ComponentProps } from "react";
 
-/** Fixed width for all filter dropdowns (320px) to match design. */
 const FILTER_DROPDOWN_WIDTH = "w-54 min-w-54";
 
-/** Dropdown container: rounded corners, border, shadow, padding (per design). */
 const FILTER_DROPDOWN_CONTAINER =
   "rounded-lg border border-border bg-popover text-popover-foreground shadow-md outline-none";
 
-/**
- * Shared trigger surface for filter single- & multi-select (matches SelectTrigger defaults +
- * filter tweaks). Popover triggers use Radix `data-state=open` like Select.
- */
 const FILTER_SELECT_TRIGGER_CLASSNAME =
   "border-border text-md text-neutral-fg font-semibold outline-none focus-visible:ring-1 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 bg-body-bg hover:bg-neutral-bg dark:bg-input/30 dark:hover:bg-input/50 flex w-fit min-w-0 max-w-full items-center justify-between gap-2 rounded-md border-1 px-3 py-2 whitespace-nowrap transition-[color] h-10 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:border-primary data-[state=open]:border-2 data-[state=open]:bg-primary-bg data-[state=open]:text-primary-fg data-[state=open]:hover:bg-primary-bg [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&>svg]:!text-current [&>svg]:!opacity-100";
 
-/** Select dropdown for FilterSingleSelect only: native scroll, no Radix scroll up/down buttons. */
 function FilterSingleSelectContent({
   className,
   children,
@@ -78,7 +72,6 @@ function FilterSingleSelectContent({
   );
 }
 
-/** Labels to show in the trigger vs how many additional selections exist (overflow is rendered outside `truncate` so it stays visible). */
 function getMultiSelectDisplayParts(
   labels: string[],
   maxDisplayItems: number,
@@ -130,11 +123,8 @@ export interface FilterSingleSelectProps {
   options: FilterOption[];
   placeholder?: string;
   groupLabel?: string;
-  /** When provided, renders multiple groups instead of a single groupLabel + options. */
   groups?: FilterSingleSelectGroup[];
-  /** When true, shows a search input in the dropdown and filters options. */
   searchable?: boolean;
-  /** When true (default) and searchable, shows the search bar. Set false to use list dropdown without search. */
   showSearch?: boolean;
   searchPlaceholder?: string;
   noResultsText?: string;
@@ -145,7 +135,6 @@ export interface FilterSingleSelectProps {
   helperText?: string;
   "aria-describedby"?: string;
   renderOption?: (option: FilterOption) => React.ReactNode;
-  /** Optional class for the dropdown content (e.g. to adjust padding). */
   dropdownClassName?: string;
 }
 
@@ -156,15 +145,11 @@ export interface FilterMultiSelectProps {
   options: FilterOption[];
   placeholder?: string;
   groupLabel?: string;
-  /** When provided, renders multiple group sections (same pattern as single-select). */
   groups?: FilterSingleSelectGroup[];
-  /** When true, shows a search input in the dropdown and filters options. */
   searchable?: boolean;
-  /** When true (default) and searchable, shows the search bar. Set false to use list dropdown without search. */
   showSearch?: boolean;
   searchPlaceholder?: string;
   noResultsText?: string;
-  /** When set, caps the trigger width (px). When omitted, the trigger grows with its content. */
   maxButtonWidth?: number;
   displayMode?: "text" | "badge";
   maxDisplayItems?: number;
@@ -178,7 +163,6 @@ export interface FilterMultiSelectProps {
   renderOption?: (option: FilterOption) => React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** Optional class for the dropdown content (e.g. to adjust padding). */
   dropdownClassName?: string;
 }
 
@@ -201,7 +185,10 @@ export interface FilterBarProps {
 
 // FILTER INPUT COMPONENT
 
-const FilterInput = React.forwardRef<HTMLInputElement, FilterInputProps>(
+const FilterInput = React.forwardRef<
+  HTMLInputElement,
+  FilterInputProps & Omit<ComponentProps<"div">, "onChange" | "ref">
+>(
   (
     {
       value: controlledValue,
@@ -217,6 +204,7 @@ const FilterInput = React.forwardRef<HTMLInputElement, FilterInputProps>(
       name,
       helperText,
       "aria-describedby": ariaDescribedBy,
+      ...props
     },
     ref,
   ) => {
@@ -246,7 +234,7 @@ const FilterInput = React.forwardRef<HTMLInputElement, FilterInputProps>(
     };
 
     return (
-      <div className={cn(width, className)}>
+      <div className={cn(width, className)} {...props}>
         <SearchInput>
           <SearchInputLeftElement>
             <Icon path={icon} />
@@ -286,7 +274,7 @@ FilterInput.displayName = "FilterInput";
 
 const FilterSingleSelect = React.forwardRef<
   HTMLButtonElement,
-  FilterSingleSelectProps
+  FilterSingleSelectProps & Omit<ComponentProps<"div">, "onChange" | "ref">
 >(
   (
     {
@@ -309,6 +297,7 @@ const FilterSingleSelect = React.forwardRef<
       "aria-describedby": ariaDescribedBy,
       renderOption,
       dropdownClassName,
+      ...props
     },
     ref,
   ) => {
@@ -382,7 +371,10 @@ const FilterSingleSelect = React.forwardRef<
 
     if (searchable) {
       return (
-        <div className={cn("relative inline-flex w-fit flex-col", className)}>
+        <div
+          className={cn("relative inline-flex w-fit flex-col", className)}
+          {...props}
+        >
           <div className="relative inline-flex w-fit">
             <Popover
               open={open}
@@ -546,7 +538,10 @@ const FilterSingleSelect = React.forwardRef<
     }
 
     return (
-      <div className={cn("relative inline-flex w-fit flex-col", className)}>
+      <div
+        className={cn("relative inline-flex w-fit flex-col", className)}
+        {...props}
+      >
         <div className="relative inline-flex w-fit">
           <Select
             value={value}
@@ -664,7 +659,7 @@ FilterSingleSelect.displayName = "FilterSingleSelect";
 
 const FilterMultiSelect = React.forwardRef<
   HTMLButtonElement,
-  FilterMultiSelectProps
+  FilterMultiSelectProps & Omit<ComponentProps<"div">, "onChange" | "ref">
 >(
   (
     {
@@ -693,6 +688,7 @@ const FilterMultiSelect = React.forwardRef<
       open: controlledOpen,
       onOpenChange,
       dropdownClassName,
+      ...props
     },
     ref,
   ) => {
@@ -841,7 +837,10 @@ const FilterMultiSelect = React.forwardRef<
     );
 
     return (
-      <div className={cn("relative inline-flex w-fit flex-col", className)}>
+      <div
+        className={cn("relative inline-flex w-fit flex-col", className)}
+        {...props}
+      >
         {name && <input type="hidden" name={name} value={values.join(",")} />}
         <div
           className="relative inline-flex w-fit max-w-full"
@@ -1115,7 +1114,8 @@ function FilterBar({
   direction = "horizontal",
   gap = "gap-3",
   className,
-}: FilterBarProps) {
+  ...props
+}: FilterBarProps & Omit<ComponentProps<"div">, "onChange">) {
   const renderFilter = (filter: FilterDefinition) => {
     const filterKey = `${filter.type}-${filter.key}`;
     const filterValue = values[filter.key];
@@ -1163,6 +1163,7 @@ function FilterBar({
         gap,
         className,
       )}
+      {...props}
     >
       {filters.map(renderFilter)}
       {showClearAll && onClearAll && (
