@@ -275,6 +275,10 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
           { id: "combobox-custom-items", title: "Custom Items" },
           { id: "combobox-auto-highlight", title: "Auto Highlight" },
           { id: "combobox-input-group", title: "Input Group" },
+          {
+            id: "combobox-with-description",
+            title: "Combobox With Description",
+          },
         ],
       },
     ],
@@ -406,6 +410,10 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
             title: "Dropdown Menu Avatar Only",
           },
           { id: "dropdown-menu-icon-color", title: "Dropdown Menu Icon Color" },
+          {
+            id: "dropdown-menu-with-description",
+            title: "Dropdown Menu With Description",
+          },
         ],
       },
     ],
