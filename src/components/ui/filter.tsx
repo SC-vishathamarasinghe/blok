@@ -108,7 +108,11 @@ export interface FilterBarProps {
 
 // FILTER INPUT COMPONENT
 
-const FilterInput = React.forwardRef<HTMLInputElement, FilterInputProps>(
+const FilterInput = React.forwardRef<
+  HTMLInputElement,
+  FilterInputProps &
+    Omit<React.HTMLAttributes<HTMLDivElement>, keyof FilterInputProps>
+>(
   (
     {
       value: controlledValue,
@@ -124,6 +128,7 @@ const FilterInput = React.forwardRef<HTMLInputElement, FilterInputProps>(
       name,
       helperText,
       "aria-describedby": ariaDescribedBy,
+      ...props
     },
     ref,
   ) => {
@@ -153,7 +158,7 @@ const FilterInput = React.forwardRef<HTMLInputElement, FilterInputProps>(
     };
 
     return (
-      <div className={cn(width, className)}>
+      <div className={cn(width, className)} {...props}>
         <SearchInput>
           <SearchInputLeftElement>
             <Icon path={icon} />
@@ -193,7 +198,8 @@ FilterInput.displayName = "FilterInput";
 
 const FilterSingleSelect = React.forwardRef<
   HTMLButtonElement,
-  FilterSingleSelectProps
+  FilterSingleSelectProps &
+    Omit<React.HTMLAttributes<HTMLDivElement>, keyof FilterSingleSelectProps>
 >(
   (
     {
@@ -210,6 +216,7 @@ const FilterSingleSelect = React.forwardRef<
       helperText,
       "aria-describedby": ariaDescribedBy,
       renderOption,
+      ...props
     },
     ref,
   ) => {
@@ -268,7 +275,10 @@ const FilterSingleSelect = React.forwardRef<
     };
 
     return (
-      <div className={cn("relative inline-flex w-fit flex-col", className)}>
+      <div
+        className={cn("relative inline-flex w-fit flex-col", className)}
+        {...props}
+      >
         <div className="relative inline-flex w-fit">
           <Select
             value={value}
@@ -365,7 +375,8 @@ FilterSingleSelect.displayName = "FilterSingleSelect";
 
 const FilterMultiSelect = React.forwardRef<
   HTMLButtonElement,
-  FilterMultiSelectProps
+  FilterMultiSelectProps &
+    Omit<React.HTMLAttributes<HTMLDivElement>, keyof FilterMultiSelectProps>
 >(
   (
     {
@@ -387,6 +398,7 @@ const FilterMultiSelect = React.forwardRef<
       renderOption,
       open: controlledOpen,
       onOpenChange,
+      ...props
     },
     ref,
   ) => {
@@ -470,7 +482,10 @@ const FilterMultiSelect = React.forwardRef<
     const hasValues = values.length > 0;
 
     return (
-      <div className={cn("relative inline-flex w-fit flex-col", className)}>
+      <div
+        className={cn("relative inline-flex w-fit flex-col", className)}
+        {...props}
+      >
         {name && <input type="hidden" name={name} value={values.join(",")} />}
         <div className="relative inline-flex w-fit">
           <Popover open={open} onOpenChange={handleOpenChange}>
@@ -659,7 +674,8 @@ function FilterBar({
   direction = "horizontal",
   gap = "gap-3",
   className,
-}: FilterBarProps) {
+  ...props
+}: FilterBarProps & Omit<React.ComponentProps<"div">, keyof FilterBarProps>) {
   const renderFilter = (filter: FilterDefinition) => {
     const filterKey = `${filter.type}-${filter.key}`;
     const filterValue = values[filter.key];
@@ -707,6 +723,7 @@ function FilterBar({
         gap,
         className,
       )}
+      {...props}
     >
       {filters.map(renderFilter)}
       {showClearAll && onClearAll && (

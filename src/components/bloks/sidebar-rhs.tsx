@@ -2,7 +2,7 @@
 
 import { Icon } from "@/lib/icon";
 import { mdiChevronRight, mdiClose, mdiWindowRestore } from "@mdi/js";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import {
   createContext,
   useCallback,
@@ -135,11 +135,13 @@ export function SidebarRHSTrigger({
   className,
   style,
   children,
-}: SidebarRHSTriggerProps) {
+  ...props
+}: SidebarRHSTriggerProps & ComponentProps<"button">) {
   const { toggleCollapse, isCollapsed } = useSidebarRHS();
 
   return (
     <Button
+      {...props}
       variant="outline"
       size="icon"
       className={cn(
@@ -258,7 +260,8 @@ export function SidebarRHS({
   className,
   collapsible = false,
   dockable = false,
-}: SidebarRHSProps) {
+  ...props
+}: SidebarRHSProps & ComponentProps<"div">) {
   const { isCollapsed, isDocked } = useSidebarRHS();
   const [currentWidth, setCurrentWidth] = useState(width);
   const [isResizing, setIsResizing] = useState(false);
@@ -412,6 +415,7 @@ export function SidebarRHS({
       return (
         <div
           ref={containerRef}
+          {...props}
           className={cn(
             "relative w-full flex border border-border rounded-lg overflow-hidden bg-body-bg",
             className,
@@ -484,6 +488,7 @@ export function SidebarRHS({
     return (
       <div
         ref={containerRef}
+        {...props}
         className={cn(
           "relative bg-body-bg border-l border-border shrink-0 overflow-x-visible",
           isCollapsed && "border-l-0",
@@ -578,6 +583,7 @@ export function SidebarRHS({
     return (
       <div
         ref={combinedRef}
+        {...props}
         className={cn(
           "fixed z-50 bg-body-bg border border-border rounded-lg shadow-lg overflow-hidden",
           // Disable transitions during drag and resize for instant movement

@@ -2,6 +2,7 @@
 
 import { SiteCard } from "@/components/bloks/site-card";
 import EmptyPin from "@/lib/empty-pin.svg";
+import type { ComponentProps } from "react";
 
 const getSvgUrl = (svg: unknown): string => {
   if (typeof svg === "string") {
@@ -59,12 +60,13 @@ export function PinnedSitesSection<T extends SiteData>({
   onUnpin,
   getFooterButtons,
   getDropdownActions,
-}: PinnedSitesProps<T>) {
+  ...props
+}: PinnedSitesProps<T> & ComponentProps<"div">) {
   const pinnedSiteIdsSet = new Set(pinnedSiteIds);
   const pinnedSites = allSites.filter((site) => pinnedSiteIdsSet.has(site.id));
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6" {...props}>
       {/* Pinned Sites Section */}
       <section className="w-full bg-subtle-bg rounded-lg p-6">
         {/* Header */}

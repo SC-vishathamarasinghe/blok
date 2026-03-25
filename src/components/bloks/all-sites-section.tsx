@@ -1,6 +1,7 @@
 "use client";
 
 import { SiteCard } from "@/components/bloks/site-card";
+import type { ComponentProps } from "react";
 
 interface SiteData {
   id: string;
@@ -45,11 +46,12 @@ export function AllSitesSection<T extends SiteData>({
   pinnedSiteIds = [],
   getFooterButtons,
   getDropdownActions,
-}: AllSitesProps<T>) {
+  ...props
+}: AllSitesProps<T> & ComponentProps<"div">) {
   const pinnedSiteIdsSet = new Set(pinnedSiteIds);
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6" {...props}>
       {/* All Sites Section */}
       <section className="w-full bg-subtle-bg rounded-lg p-6">
         <div className="mb-4">

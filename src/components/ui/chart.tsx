@@ -120,6 +120,7 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
+  ...props
 }: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
   React.ComponentProps<"div"> & {
     hideLabel?: boolean;
@@ -178,6 +179,7 @@ function ChartTooltipContent({
         "border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl",
         className,
       )}
+      {...props}
     >
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
@@ -258,6 +260,7 @@ function ChartLegendContent({
   payload,
   verticalAlign = "bottom",
   nameKey,
+  ...props
 }: React.ComponentProps<"div"> &
   Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
     hideIcon?: boolean;
@@ -276,6 +279,7 @@ function ChartLegendContent({
         verticalAlign === "top" ? "pb-3" : "pt-3",
         className,
       )}
+      {...props}
     >
       {payload.map((item) => {
         const key = `${nameKey || item.dataKey || "value"}`;

@@ -208,7 +208,8 @@ export function Collaboration<T extends User = User>({
   emptySearchMessage,
   allUsersAddedMessage = "All available users have been added",
   noUsersAvailableMessage = "No users available to add",
-}: CollaborationProps<T>) {
+  ...props
+}: CollaborationProps<T> & React.ComponentProps<"div">) {
   const [isUsersOpen, setIsUsersOpen] = useState(false);
   const [isAddUsersOpen, setIsAddUsersOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -277,7 +278,7 @@ export function Collaboration<T extends User = User>({
   const isEmpty = userCount === 0;
 
   return (
-    <div className={`w-fit ${className ?? ""}`}>
+    <div className={`w-fit ${className ?? ""}`} {...props}>
       {/* First Popover: Avatar -> Users Card */}
       <Popover open={isUsersOpen} onOpenChange={handleUsersOpenChange}>
         <PopoverTrigger asChild>

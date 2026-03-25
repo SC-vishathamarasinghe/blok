@@ -2,7 +2,7 @@
 
 import { Icon } from "@/lib/icon";
 import { mdiDotsGrid } from "@mdi/js";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -63,9 +63,10 @@ export default function Topbar({
   rightSideItems = [],
   menuButton,
   className,
-}: TopbarProps) {
+  ...props
+}: TopbarProps & ComponentProps<"header">) {
   return (
-    <header className={`border-b bg-body-bg ${className ?? ""}`}>
+    <header className={`border-b bg-body-bg ${className ?? ""}`} {...props}>
       <div className="flex h-16 items-center px-4">
         {/* Left section: Menu button + Logo + Brand */}
         <div className="flex items-center gap-4">
