@@ -72,6 +72,7 @@ import DropdownMenuAvatarOnlyDemo from "@/app/content/ui/dropdown-menu-avatar-on
 import DropdownMenuCheckboxesDemo from "@/app/content/ui/dropdown-menu-checkboxes";
 import DropdownMenuIconColorDemo from "@/app/content/ui/dropdown-menu-icon-color";
 import DropdownMenuRadioGroupDemo from "@/app/content/ui/dropdown-menu-radio-group";
+import DropdownMenuWithDescriptionDemo from "@/app/content/ui/dropdown-menu-with-description";
 import EmptyStatesErrorDemo from "@/app/content/ui/empty-states-error";
 import EmptyStatesNoSearchResultsDemo from "@/app/content/ui/empty-states-no-search-results";
 import EmptyStatesNothingCreatedDemo from "@/app/content/ui/empty-states-nothing-created";
@@ -183,6 +184,7 @@ import ComboboxWithCustomItemsDemo from "@/app/content/ui/combobox-custom-items"
 import ComboboxWithGroupsAndSeparatorDemo from "@/app/content/ui/combobox-groups";
 import ComboxboxInputGroupDemo from "@/app/content/ui/combobox-input-group";
 import ComboboxMultipleDemo from "@/app/content/ui/combobox-multiple";
+import ComboboxWithDescriptionDemo from "@/app/content/ui/combobox-with-description";
 import EditableDemo from "@/app/content/ui/editable";
 import EditableTextareaDemo from "@/app/content/ui/editable-textarea";
 import FieldDemo from "@/app/content/ui/field";
@@ -213,16 +215,16 @@ import KbdGroupDemo from "@/app/content/ui/kbd-group";
 import KbdShortcutDemo from "@/app/content/ui/kbd-shortcut";
 import KbdTooltipDemo from "@/app/content/ui/kbd-tooltip";
 import SelectReactDemo from "@/app/content/ui/select-react";
+import SidebarDefaultDemo from "@/app/content/ui/sidebar-default";
+import SidebarIconCombinationDemo from "@/app/content/ui/sidebar-icon-combination";
+import SidebarLeadingIconDemo from "@/app/content/ui/sidebar-leading-icon";
+import SidebarTrailingIconDemo from "@/app/content/ui/sidebar-trailing-icon";
 import SpinnerSizeDemo from "@/app/content/ui/spinner-size";
 import StepperDemo from "@/app/content/ui/stepper";
 import TimelineDemo from "@/app/content/ui/timeline";
 import TimelineConnectorVariantsDemo from "@/app/content/ui/timeline-connector-variants";
 import TimelineSizesDemo from "@/app/content/ui/timeline-sizes";
 import TimelineVariantsDemo from "@/app/content/ui/timeline-variants";
-import SidebarDefaultDemo from "@/app/content/ui/sidebar-default";
-import SidebarLeadingIconDemo from "@/app/content/ui/sidebar-leading-icon";
-import SidebarTrailingIconDemo from "@/app/content/ui/sidebar-trailing-icon";
-import SidebarIconCombinationDemo from "@/app/content/ui/sidebar-icon-combination";
 
 export interface DocsiteRegistryEntry {
   name: string;
@@ -502,6 +504,11 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     path: "src/app/content/ui/combobox-multiple.tsx",
     component: ComboboxMultipleDemo,
   },
+  "combobox-with-description": {
+    name: "combobox-with-description",
+    path: "src/app/content/ui/combobox-with-description.tsx",
+    component: ComboboxWithDescriptionDemo,
+  },
   "combobox-clear-button": {
     name: "combobox-clear-button",
     path: "src/app/content/ui/combobox-clear-button.tsx",
@@ -621,6 +628,11 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     name: "dropdown-menu-icon-color",
     path: "src/app/content/ui/dropdown-menu-icon-color.tsx",
     component: DropdownMenuIconColorDemo,
+  },
+  "dropdown-menu-with-description": {
+    name: "dropdown-menu-with-Description",
+    path: "src/app/content/ui/dropdown-menu-with-description.tsx",
+    component: DropdownMenuWithDescriptionDemo,
   },
   editable: {
     name: "editable",
