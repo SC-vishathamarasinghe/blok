@@ -18,7 +18,6 @@ type DescItem = {
   description: string;
 };
 
-/** XM Cloud authoring: pages, components, forms (no repeated "Sitecore" on titles). */
 const itemsAuthoring: DescItem[] = [
   {
     title: "XM Cloud",
@@ -45,7 +44,6 @@ const itemsAuthoring: DescItem[] = [
   },
 ];
 
-/** Delivery, design system, and customer data (separate example). */
 const itemsPlatform: DescItem[] = [
   {
     title: "Experience Edge",
