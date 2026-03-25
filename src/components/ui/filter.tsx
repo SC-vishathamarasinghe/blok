@@ -78,18 +78,21 @@ function FilterSingleSelectContent({
   );
 }
 
-/** Show first N selected labels, comma-separated, then "+X" for the rest. Used for both text and badge display. */
-function formatMultiSelectDisplay(
+/** Labels to show in the trigger vs how many additional selections exist (overflow is rendered outside `truncate` so it stays visible). */
+function getMultiSelectDisplayParts(
   labels: string[],
   maxDisplayItems: number,
-): string {
-  if (labels.length === 0) return "";
-  if (labels.length <= maxDisplayItems) {
-    return labels.join(", ");
+): { shownLabels: string[]; overflowCount: number } {
+  if (labels.length === 0) {
+    return { shownLabels: [], overflowCount: 0 };
   }
-  const shown = labels.slice(0, maxDisplayItems);
-  const overflow = labels.length - maxDisplayItems;
-  return `${shown.join(", ")} +${overflow}`;
+  if (labels.length <= maxDisplayItems) {
+    return { shownLabels: labels, overflowCount: 0 };
+  }
+  return {
+    shownLabels: labels.slice(0, maxDisplayItems),
+    overflowCount: labels.length - maxDisplayItems,
+  };
 }
 
 export interface FilterOption {
@@ -161,7 +164,7 @@ export interface FilterMultiSelectProps {
   showSearch?: boolean;
   searchPlaceholder?: string;
   noResultsText?: string;
-  /** Max width of the filter button (px). Default 320. */
+  /** When set, caps the trigger width (px). When omitted, the trigger grows with its content. */
   maxButtonWidth?: number;
   displayMode?: "text" | "badge";
   maxDisplayItems?: number;
@@ -680,7 +683,7 @@ const FilterMultiSelect = React.forwardRef<
       maxDisplayItems = 3,
       showClear = true,
       showSelectedCount = false,
-      maxButtonWidth = 320,
+      maxButtonWidth,
       className,
       disabled = false,
       name,
@@ -728,10 +731,12 @@ const FilterMultiSelect = React.forwardRef<
       [ref],
     );
 
-    const displayListText = React.useMemo(
-      () => formatMultiSelectDisplay(selectedLabels, maxDisplayItems),
+    const displayParts = React.useMemo(
+      () => getMultiSelectDisplayParts(selectedLabels, maxDisplayItems),
       [selectedLabels, maxDisplayItems],
     );
+
+    const isButtonWidthConstrained = maxButtonWidth != null;
 
     const handleOpenChange = (newOpen: boolean) => {
       if (!isOpenControlled) {
@@ -840,7 +845,9 @@ const FilterMultiSelect = React.forwardRef<
         {name && <input type="hidden" name={name} value={values.join(",")} />}
         <div
           className="relative inline-flex w-fit max-w-full"
-          style={{ maxWidth: maxButtonWidth }}
+          style={
+            isButtonWidthConstrained ? { maxWidth: maxButtonWidth } : undefined
+          }
         >
           <Popover open={open} onOpenChange={handleOpenChangeWithSearch}>
             <PopoverTrigger asChild>
@@ -850,13 +857,23 @@ const FilterMultiSelect = React.forwardRef<
                 disabled={disabled}
                 aria-describedby={describedBy}
                 aria-expanded={open}
-                style={{ maxWidth: maxButtonWidth }}
+                style={
+                  isButtonWidthConstrained
+                    ? { maxWidth: maxButtonWidth }
+                    : undefined
+                }
                 className={cn(
                   FILTER_SELECT_TRIGGER_CLASSNAME,
                   hasValues && "pr-8 overflow-hidden",
                 )}
               >
-                <span className="flex min-w-0 flex-1 items-center gap-0.5 overflow-hidden text-left pointer-events-none">
+                <span
+                  className={cn(
+                    "flex items-center gap-0.5 text-left pointer-events-none",
+                    isButtonWidthConstrained &&
+                      "min-w-0 flex-1 overflow-hidden",
+                  )}
+                >
                   <span
                     className={cn(
                       "font-semibold shrink-0",
@@ -886,14 +903,28 @@ const FilterMultiSelect = React.forwardRef<
                         </span>
                         <span
                           className={cn(
-                            "min-w-0 flex-1 truncate font-normal",
+                            "font-normal",
+                            isButtonWidthConstrained
+                              ? "min-w-0 flex-1 truncate"
+                              : "shrink-0",
                             open && "text-primary-fg",
                             !open && "text-neutral-fg",
                           )}
                           title={selectedLabels.join(", ")}
                         >
-                          {displayListText}
+                          {displayParts.shownLabels.join(", ")}
                         </span>
+                        {displayParts.overflowCount > 0 && (
+                          <span
+                            className={cn(
+                              "shrink-0 font-normal",
+                              open && "text-primary-fg",
+                              !open && "text-neutral-fg",
+                            )}
+                          >
+                            +{displayParts.overflowCount}
+                          </span>
+                        )}
                         <span className="sr-only">
                           {selectedLabels.join(", ")}
                         </span>
@@ -902,7 +933,13 @@ const FilterMultiSelect = React.forwardRef<
                   {hasValues && displayMode === "badge" && (
                     <>
                       <span className="text-neutral-fg shrink-0">:</span>
-                      <span className="flex items-center gap-1.5 flex-nowrap min-w-0 flex-1 overflow-hidden ml-0.5">
+                      <span
+                        className={cn(
+                          "flex items-center gap-1.5 flex-nowrap ml-0.5",
+                          isButtonWidthConstrained &&
+                            "min-w-0 flex-1 overflow-hidden",
+                        )}
+                      >
                         {values.slice(0, maxDisplayItems).map((val) => {
                           const label = allMultiOptions.find(
                             (opt) => opt.value === val,

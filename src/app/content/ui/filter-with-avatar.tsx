@@ -80,7 +80,6 @@ export default function FilterWithAvatarDemo() {
         searchable
         showSearch={false}
         noResultsText="No results found"
-        maxDisplayItems={2}
         renderOption={renderOptionWithAvatar}
       />
     </div>

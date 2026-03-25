@@ -62,7 +62,6 @@ export default function FilterWithSearchDemo() {
         searchable
         searchPlaceholder="Search"
         noResultsText="No results found"
-        maxDisplayItems={2}
       />
     </div>
   );
