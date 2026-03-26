@@ -72,6 +72,7 @@ import DropdownMenuAvatarOnlyDemo from "@/app/content/ui/dropdown-menu-avatar-on
 import DropdownMenuCheckboxesDemo from "@/app/content/ui/dropdown-menu-checkboxes";
 import DropdownMenuIconColorDemo from "@/app/content/ui/dropdown-menu-icon-color";
 import DropdownMenuRadioGroupDemo from "@/app/content/ui/dropdown-menu-radio-group";
+import DropdownMenuWithDescriptionDemo from "@/app/content/ui/dropdown-menu-with-description";
 import EmptyStatesErrorDemo from "@/app/content/ui/empty-states-error";
 import EmptyStatesNoSearchResultsDemo from "@/app/content/ui/empty-states-no-search-results";
 import EmptyStatesNothingCreatedDemo from "@/app/content/ui/empty-states-nothing-created";
@@ -137,7 +138,10 @@ import SwitchDemo from "@/app/content/ui/switch";
 import SwitchDangerDemo from "@/app/content/ui/switch-danger";
 import SwitchSuccessDemo from "@/app/content/ui/switch-success";
 import TableDemo from "@/app/content/ui/table";
-import { DataTableDemo } from "@/app/content/ui/table-data";
+import TableLgDemo from "@/app/content/ui/table-lg";
+import TablePinnedDemo from "@/app/content/ui/table-pinned";
+import TableSmDemo from "@/app/content/ui/table-sm";
+import TableStickyScrollDemo from "@/app/content/ui/table-sticky-scroll";
 import TabsDemo from "@/app/content/ui/tabs";
 import TabsWithIconsDemo from "@/app/content/ui/tabs-icons";
 import TabsLineVariantDemo from "@/app/content/ui/tabs-line";
@@ -164,13 +168,17 @@ import TooltipDemo from "@/app/content/ui/tooltip";
 
 import AllSitesSectionDemo from "@/app/content/bloks/all-site-section";
 import CollaborationDemo from "@/app/content/bloks/collaboration";
+// BLOKS
+import DashboardWidgetDemo from "@/app/content/bloks/dashboard-widget";
+import DashboardWidgetGrayBgLargeDemo from "@/app/content/bloks/dashboard-widget-gray-bg-large";
+import DashboardWidgetWhiteBgLargeDemo from "@/app/content/bloks/dashboard-widget-white-bg-large";
+
 import PinnedSitesSectionDemo from "@/app/content/bloks/pinned-site-section";
 import SidebarRHSDemo from "@/app/content/bloks/sidebar-rhs";
 import SidebarRHSBriefDemo from "@/app/content/bloks/sidebar-rhs-brief";
 import SidebarRHSBriefTypeDemo from "@/app/content/bloks/sidebar-rhs-brief-type";
 import SidebarRHSContentDemo from "@/app/content/bloks/sidebar-rhs-content";
 import SidebarRHSHeadingWithTabsDemo from "@/app/content/bloks/sidebar-rhs-heading-with-tabs";
-// BLOKS
 import SiteCardDemo from "@/app/content/bloks/site-card";
 import { ActionBarDemo } from "@/app/content/ui/action-bar";
 import CircularProgressDemo from "@/app/content/ui/circular-progress";
@@ -180,6 +188,7 @@ import ComboboxWithCustomItemsDemo from "@/app/content/ui/combobox-custom-items"
 import ComboboxWithGroupsAndSeparatorDemo from "@/app/content/ui/combobox-groups";
 import ComboxboxInputGroupDemo from "@/app/content/ui/combobox-input-group";
 import ComboboxMultipleDemo from "@/app/content/ui/combobox-multiple";
+import ComboboxWithDescriptionDemo from "@/app/content/ui/combobox-with-description";
 import EditableDemo from "@/app/content/ui/editable";
 import EditableTextareaDemo from "@/app/content/ui/editable-textarea";
 import FieldDemo from "@/app/content/ui/field";
@@ -201,6 +210,8 @@ import FilterDemo from "@/app/content/ui/filter";
 import FilterInputDemo from "@/app/content/ui/filter-input";
 import FilterMultiSelectDemo from "@/app/content/ui/filter-multi-select";
 import FilterSingleSelectDemo from "@/app/content/ui/filter-single-select";
+import FilterWithAvatarDemo from "@/app/content/ui/filter-with-avatar";
+import FilterWithSearchDemo from "@/app/content/ui/filter-with-search";
 import InputGroupDemo from "@/app/content/ui/input-group";
 import InputGroupDropdownDemo from "@/app/content/ui/input-group-dropdown";
 import InputGroupURLDemo from "@/app/content/ui/input-group-url";
@@ -210,6 +221,10 @@ import KbdGroupDemo from "@/app/content/ui/kbd-group";
 import KbdShortcutDemo from "@/app/content/ui/kbd-shortcut";
 import KbdTooltipDemo from "@/app/content/ui/kbd-tooltip";
 import SelectReactDemo from "@/app/content/ui/select-react";
+import SidebarDefaultDemo from "@/app/content/ui/sidebar-default";
+import SidebarIconCombinationDemo from "@/app/content/ui/sidebar-icon-combination";
+import SidebarLeadingIconDemo from "@/app/content/ui/sidebar-leading-icon";
+import SidebarTrailingIconDemo from "@/app/content/ui/sidebar-trailing-icon";
 import SpinnerSizeDemo from "@/app/content/ui/spinner-size";
 import StepperDemo from "@/app/content/ui/stepper";
 import TimelineDemo from "@/app/content/ui/timeline";
@@ -495,6 +510,11 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     path: "src/app/content/ui/combobox-multiple.tsx",
     component: ComboboxMultipleDemo,
   },
+  "combobox-with-description": {
+    name: "combobox-with-description",
+    path: "src/app/content/ui/combobox-with-description.tsx",
+    component: ComboboxWithDescriptionDemo,
+  },
   "combobox-clear-button": {
     name: "combobox-clear-button",
     path: "src/app/content/ui/combobox-clear-button.tsx",
@@ -614,6 +634,11 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     name: "dropdown-menu-icon-color",
     path: "src/app/content/ui/dropdown-menu-icon-color.tsx",
     component: DropdownMenuIconColorDemo,
+  },
+  "dropdown-menu-with-description": {
+    name: "dropdown-menu-with-Description",
+    path: "src/app/content/ui/dropdown-menu-with-description.tsx",
+    component: DropdownMenuWithDescriptionDemo,
   },
   editable: {
     name: "editable",
@@ -774,6 +799,16 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     name: "filter-multi-select",
     path: "src/app/content/ui/filter-multi-select.tsx",
     component: FilterMultiSelectDemo,
+  },
+  "filter-with-search": {
+    name: "filter-with-search",
+    path: "src/app/content/ui/filter-with-search.tsx",
+    component: FilterWithSearchDemo,
+  },
+  "filter-with-avatar": {
+    name: "filter-with-avatar",
+    path: "src/app/content/ui/filter-with-avatar.tsx",
+    component: FilterWithAvatarDemo,
   },
   icon: {
     name: "icon",
@@ -1000,6 +1035,26 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     path: "src/app/content/ui/sidebar.tsx",
     component: SidebarDemo,
   },
+  "sidebar-default": {
+    name: "sidebar-default",
+    path: "src/app/content/ui/sidebar-default.tsx",
+    component: SidebarDefaultDemo,
+  },
+  "sidebar-leading-icon": {
+    name: "sidebar-leading-icon",
+    path: "src/app/content/ui/sidebar-leading-icon.tsx",
+    component: SidebarLeadingIconDemo,
+  },
+  "sidebar-trailing-icon": {
+    name: "sidebar-trailing-icon",
+    path: "src/app/content/ui/sidebar-trailing-icon.tsx",
+    component: SidebarTrailingIconDemo,
+  },
+  "sidebar-icon-combination": {
+    name: "sidebar-icon-combination",
+    path: "src/app/content/ui/sidebar-icon-combination.tsx",
+    component: SidebarIconCombinationDemo,
+  },
   skeleton: {
     name: "skeleton",
     path: "src/app/content/ui/skeleton.tsx",
@@ -1100,10 +1155,25 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
     path: "src/app/content/ui/table.tsx",
     component: TableDemo,
   },
-  "table-data": {
-    name: "table-data",
-    path: "src/app/content/ui/table-data.tsx",
-    component: DataTableDemo,
+  "table-lg": {
+    name: "table-lg",
+    path: "src/app/content/ui/table-lg.tsx",
+    component: TableLgDemo,
+  },
+  "table-pinned": {
+    name: "table-pinned",
+    path: "src/app/content/ui/table-pinned.tsx",
+    component: TablePinnedDemo,
+  },
+  "table-sm": {
+    name: "table-sm",
+    path: "src/app/content/ui/table-sm.tsx",
+    component: TableSmDemo,
+  },
+  "table-sticky-scroll": {
+    name: "table-sticky-scroll",
+    path: "src/app/content/ui/table-sticky-scroll.tsx",
+    component: TableStickyScrollDemo,
   },
   tabs: {
     name: "tabs",
@@ -1247,6 +1317,21 @@ export const docsiteRegistry: Record<string, DocsiteRegistryEntry> = {
   },
 
   // BLOKS
+  "dashboard-widget": {
+    name: "dashboard-widget",
+    path: "src/app/content/bloks/dashboard-widget.tsx",
+    component: DashboardWidgetDemo,
+  },
+  "dashboard-widget-white-bg-large": {
+    name: "dashboard-widget-white-bg-large",
+    path: "src/app/content/bloks/dashboard-widget-white-bg-large.tsx",
+    component: DashboardWidgetWhiteBgLargeDemo,
+  },
+  "dashboard-widget-gray-bg-large": {
+    name: "dashboard-widget-gray-bg-large",
+    path: "src/app/content/bloks/dashboard-widget-gray-bg-large.tsx",
+    component: DashboardWidgetGrayBgLargeDemo,
+  },
   "site-card": {
     name: "site-card",
     path: "src/app/content/bloks/site-card.tsx",

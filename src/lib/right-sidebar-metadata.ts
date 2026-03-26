@@ -275,6 +275,10 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
           { id: "combobox-custom-items", title: "Custom Items" },
           { id: "combobox-auto-highlight", title: "Auto Highlight" },
           { id: "combobox-input-group", title: "Input Group" },
+          {
+            id: "combobox-with-description",
+            title: "Combobox With Description",
+          },
         ],
       },
     ],
@@ -406,6 +410,10 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
             title: "Dropdown Menu Avatar Only",
           },
           { id: "dropdown-menu-icon-color", title: "Dropdown Menu Icon Color" },
+          {
+            id: "dropdown-menu-with-description",
+            title: "Dropdown Menu With Description",
+          },
         ],
       },
     ],
@@ -494,6 +502,8 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
           { id: "filter-input", title: "Filter Input" },
           { id: "filter-single-select", title: "Filter Single Select" },
           { id: "filter-multi-select", title: "Filter Multi Select" },
+          { id: "filter-with-search", title: "Filter with Search" },
+          { id: "filter-with-avatar", title: "Filter with image/avatar" },
         ],
       },
     ],
@@ -748,6 +758,21 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
       figma:
         "https://www.figma.com/design/x0CUbrC5Kjcuk64VPCnbgz/Blok-Components?m=auto&node-id=6990-12387&t=NScvPldB3fxBBWL8-1",
     },
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+      {
+        id: "examples",
+        title: "Examples",
+        children: [
+          { id: "sidebar-default", title: "Default" },
+          { id: "sidebar-leading-icon", title: "Leading Icon" },
+          { id: "sidebar-trailing-icon", title: "Trailing Icon" },
+          { id: "sidebar-icon-combination", title: "Icon Combination" },
+        ],
+      },
+    ],
   },
   skeleton: {
     links: {
@@ -875,7 +900,9 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
     links: {
       shadcn: "https://ui.shadcn.com/docs/components/table",
       figma:
-        "https://www.figma.com/design/x0CUbrC5Kjcuk64VPCnbgz/Blok-Components?m=auto&node-id=6748-14476&t=NScvPldB3fxBBWL8-1",
+        "https://www.figma.com/design/liab04R7gzEYiK1AtveQ6q/Blok?m=auto&node-id=8769-14689&t=ibDyUmE486XYfSEr-1",
+      platformPatterns:
+        "https://www.figma.com/design/n8ChYyFGZENvDIu9Wn4Qvm/%F0%9F%8D%A2-Platform-patterns?node-id=213-26296&t=uX2Skywrdq7CSQr1-1",
     },
     sections: [
       { id: "preview", title: "Preview" },
@@ -884,7 +911,12 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
       {
         id: "examples",
         title: "Examples",
-        children: [{ id: "table-data", title: "Data table" }],
+        children: [
+          { id: "table-sm", title: "Small" },
+          { id: "table-lg", title: "Large" },
+          { id: "table-sticky-scroll", title: "Sticky header & scroll" },
+          { id: "table-pinned", title: "Scroll & pin" },
+        ],
       },
     ],
   },
@@ -1061,6 +1093,28 @@ export const rightSidebarMetadata: Record<string, RightSidebarMetadata> = {
   },
   "site-card": {
     links: {},
+  },
+  "dashboard-widget": {
+    links: {},
+    sections: [
+      { id: "preview", title: "Preview" },
+      { id: "installation", title: "Installation" },
+      { id: "usage", title: "Usage" },
+      {
+        id: "examples",
+        title: "Examples",
+        children: [
+          {
+            id: "dashboard-widget-white-bg-large",
+            title: "White widget",
+          },
+          {
+            id: "dashboard-widget-gray-bg-large",
+            title: "Gray widget",
+          },
+        ],
+      },
+    ],
   },
   // ===== THEMING-SPECIFIC METADATA =====
 

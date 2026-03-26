@@ -233,7 +233,8 @@ export function StackNavigation({
   colorScheme = "neutral",
   pathname: providedPathname,
   onItemClick,
-}: StackNavigationProps) {
+  ...props
+}: StackNavigationProps & React.ComponentProps<"aside">) {
   // Use provided pathname or fall back to window.location.pathname
   const [clientPathname, setClientPathname] = React.useState("");
 
@@ -267,6 +268,7 @@ export function StackNavigation({
             className,
           ),
       )}
+      {...props}
     >
       {/* HEADER */}
       {!isHorizontal && header && (
