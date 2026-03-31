@@ -21,7 +21,7 @@ export default function FieldInputTypesDemo() {
         <FieldGroup>
           <Field>
             <FieldLabel htmlFor="field-color">Input color</FieldLabel>
-            <Input id="field-color" type="color" />
+            <Input id="field-color" type="color" autoComplete="off" />
           </Field>
           <Field>
             <FieldLabel>Date Picker</FieldLabel>
@@ -51,7 +51,7 @@ export default function FieldInputTypesDemo() {
           </Field>
           <Field>
             <FieldLabel htmlFor="field-number">Input number</FieldLabel>
-            <Input id="field-number" type="number" placeholder="Enter number" />
+            <Input id="field-number" type="number" autoComplete="off" placeholder="Enter number" />
           </Field>
           <Field>
             <FieldLabel htmlFor="field-search">Input search</FieldLabel>
@@ -59,7 +59,7 @@ export default function FieldInputTypesDemo() {
           </Field>
           <Field>
             <FieldLabel htmlFor="field-tel">Input tel</FieldLabel>
-            <Input id="field-tel" type="tel" placeholder="Enter phone number" />
+            <Input id="field-tel" type="tel" name="tel" autoComplete="tel" placeholder="Enter phone number" />
           </Field>
           <Field>
             <FieldLabel>Time Picker</FieldLabel>
@@ -73,6 +73,8 @@ export default function FieldInputTypesDemo() {
             <Input
               id="field-url"
               type="url"
+              name="url"
+              autoComplete="url"
               placeholder="https://example.com"
             />
           </Field>
