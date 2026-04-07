@@ -528,11 +528,79 @@ export default function TopBar() {
 
           {/* Mobile Nav Dropdown — client-only Radix to avoid hydration id drift */}
           <div className="lg:hidden">
-            <MobileNavDropdown
-              pathname={pathname}
-              clickedHref={clickedHref}
-              setClickedHref={setClickedHref}
-            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Open navigation menu"
+                >
+                  <Icon path={mdiMenu} size={1} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {navItems.map((item) => {
+                  const normalizedPathname = pathname.replace(/\/$/, "") || "/";
+                  const normalizedHref = item.href.replace(/\/$/, "") || "/";
+                  let isActive =
+                    normalizedPathname === normalizedHref ||
+                    (normalizedHref !== "/" &&
+                      normalizedPathname.startsWith(`${normalizedHref}/`)) ||
+                    clickedHref === item.href;
+
+                  // Special handling for registry pages
+                  if (pathname.startsWith("/registry/")) {
+                    const segments = pathname.split("/").filter(Boolean);
+                    const itemName = segments[segments.length - 1];
+
+                    if (itemName) {
+                      const registryItem = getRegistryItem(itemName);
+
+                      if (registryItem) {
+                        // If this is a UI component and we're checking "Primitives"
+                        if (
+                          item.name === "Primitives" &&
+                          registryItem.type === "registry:ui"
+                        ) {
+                          isActive = true;
+                        }
+                        // If this is a block/component and we're checking "Bloks"
+                        else if (
+                          item.name === "Bloks" &&
+                          (registryItem.type === "registry:block" ||
+                            registryItem.type === "registry:component")
+                        ) {
+                          isActive = true;
+                        }
+                      }
+                    }
+                  }
+
+                  return (
+                    <DropdownMenuItem asChild key={item.name}>
+                      <Link
+                        href={item.href}
+                        onClick={() => {
+                          setClickedHref(item.href);
+                          track(TELEMETRY_EVENTS.topbar_nav_click, {
+                            link: item.href,
+                            label: item.name,
+                            is_mobile: true,
+                          });
+                        }}
+                        className={`${
+                          isActive
+                            ? "bg-primary-background text-primary-fg hover:bg-primary-background hover:text-primary-fg"
+                            : "hover:bg-muted hover:text-foreground"
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -555,14 +623,14 @@ export default function TopBar() {
                 onKeyDown={handleKeyDown}
                 ref={inputRef}
               />
-              {searchQuery && (
-                <SearchInputRightElement>
+              <SearchInputRightElement className="min-w-8 shrink-0">
+                {searchQuery ? (
                   <SearchInputClearButton
                     onClear={() => setSearchQuery("")}
                     tooltipLabel="Clear search"
                   />
-                </SearchInputRightElement>
-              )}
+                ) : null}
+              </SearchInputRightElement>
             </SearchInput>
 
             {showSearchResults && (
