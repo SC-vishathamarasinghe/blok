@@ -56,7 +56,15 @@ type JiraScanDocInfo =
   | { kind: "error"; message: string };
 
 function escapeMdTableCell(text: string): string {
-  return text.replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
+  return text
+    .replace(/\\/g, "\\\\")
+    .replace(/\|/g, "\\|")
+    .replace(/\r?\n/g, " ");
+}
+
+function escapeMarkdownCode(value: string): string {
+  // Escape backslashes first, then backticks, for safe use in Markdown code spans.
+  return value.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
 }
 
 function writeScanDoc(params: {
@@ -88,7 +96,7 @@ function writeScanDoc(params: {
     "",
     "| Field | Value |",
     "| --- | --- |",
-    `| Name | \`${params.scanName.replace(/`/g, "\\`")}\` |`,
+    `| Name | \`${escapeMarkdownCode(params.scanName)}\` |`,
     `| Region | ${params.region} |`,
     `| Pages (localhost) | ${scannedSummary} |`,
     `| Scan project id | ${id} |`,
