@@ -555,14 +555,14 @@ export default function TopBar() {
                 onKeyDown={handleKeyDown}
                 ref={inputRef}
               />
-              {searchQuery && (
-                <SearchInputRightElement>
+              <SearchInputRightElement className="min-w-8 shrink-0">
+                {searchQuery ? (
                   <SearchInputClearButton
                     onClear={() => setSearchQuery("")}
                     tooltipLabel="Clear search"
                   />
-                </SearchInputRightElement>
-              )}
+                ) : null}
+              </SearchInputRightElement>
             </SearchInput>
 
             {showSearchResults && (
