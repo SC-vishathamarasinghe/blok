@@ -41,11 +41,7 @@ export default function InputGroupDemo() {
         <InputGroupAddon align="inline-end">
           <Tooltip>
             <TooltipTrigger asChild>
-              <InputGroupButton
-                className="rounded-full"
-                size="icon-xs"
-                aria-label="Information"
-              >
+              <InputGroupButton className="rounded-full" size="icon-xs" aria-label="Information">
                 <Icon path={mdiInformationOutline} size={0.9} />
               </InputGroupButton>
             </TooltipTrigger>
@@ -55,11 +51,7 @@ export default function InputGroupDemo() {
       </InputGroup>
       {/* Dropdown */}
       <InputGroup>
-        <InputGroupInput
-          autoComplete="off"
-          placeholder="Enter file name"
-          aria-label="File name"
-        />
+        <InputGroupInput autoComplete="off" placeholder="Enter file name" aria-label="File name" />
         <InputGroupAddon align="inline-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
