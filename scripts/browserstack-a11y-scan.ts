@@ -1,6 +1,12 @@
 import { execFileSync, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
@@ -8,6 +14,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { Local } from "browserstack-local";
 
 const _cwd = process.cwd();
+const SCAN_DOC = resolve(_cwd, "docs", "a11y", "browserstack-scan.md");
 
 async function loadRegistry(): Promise<{
   getBlocks: () => { name: string }[];
@@ -48,6 +55,118 @@ type JiraScanDocInfo =
   | { kind: "created"; key: string; browseUrl: string }
   | { kind: "skipped"; reason: string }
   | { kind: "error"; message: string };
+
+function escapeMdTableCell(text: string): string {
+  return text
+    .replace(/\\/g, "\\\\")
+    .replace(/\|/g, "\\|")
+    .replace(/\r?\n/g, " ");
+}
+
+function escapeMarkdownCode(value: string): string {
+  // Escape backslashes first, then backticks, for safe use in Markdown code spans.
+  return value.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
+}
+
+function writeScanDoc(params: {
+  scanName: string;
+  region: string;
+  scannedUrls: string[];
+  scanId?: number;
+  scanRunId?: number;
+  dashboardUrl: string;
+  completed: boolean;
+  errorMessage?: string;
+  localPagesShownAsLocalhost?: boolean;
+  jira?: JiraScanDocInfo;
+}): void {
+  mkdirSync(resolve(_cwd, "docs", "a11y"), { recursive: true });
+  const id = params.scanId !== undefined ? String(params.scanId) : "—";
+  const runId = params.scanRunId !== undefined ? String(params.scanRunId) : "—";
+  const n = params.scannedUrls.length;
+  const scannedSummary =
+    n === 1
+      ? params.scannedUrls[0]
+      : `${n} URLs (first: ${params.scannedUrls[0]})`;
+  const lines = [
+    "# BrowserStack accessibility scan",
+    "",
+    `**Last update:** ${new Date().toISOString()}`,
+    "",
+    "## Scan",
+    "",
+    "| Field | Value |",
+    "| --- | --- |",
+    `| Name | \`${escapeMarkdownCode(params.scanName)}\` |`,
+    `| Region | ${params.region} |`,
+    `| Pages (localhost) | ${scannedSummary} |`,
+    `| Scan project id | ${id} |`,
+    `| Scan run id | ${runId} |`,
+    `| Status | ${params.completed ? "completed" : "failed or incomplete"} |`,
+    "",
+  ];
+  if (params.localPagesShownAsLocalhost) {
+    lines.push(
+      "*The Website Scanner API sends the same pages as `bs-local.com` for the Local tunnel; in your browser they are **localhost** (e.g. `http://localhost:3000`).*",
+      "",
+    );
+  }
+  if (n > 1) {
+    const cap = 50;
+    lines.push("## URLs (this run)", "");
+    for (const u of params.scannedUrls.slice(0, cap)) {
+      lines.push(`- ${u}`);
+    }
+    if (n > cap) {
+      lines.push(`- … and ${n - cap} more`);
+    }
+    lines.push("");
+  }
+  lines.push(
+    "## Dashboard",
+    "",
+    `Open the report: [BrowserStack Website Scanner — ${params.scanName}](${params.dashboardUrl})`,
+    "",
+    "In the app: **Accessibility Testing** → **Website scan** → select this scan → **Scan runs**.",
+    "",
+  );
+  if (params.jira) {
+    lines.push("## Jira", "", "| Field | Value |", "| --- | --- |");
+    if (params.jira.kind === "created") {
+      lines.push(
+        "| Status | Created |",
+        `| Issue | [\`${params.jira.key}\`](${params.jira.browseUrl}) |`,
+        `| Browse | ${params.jira.browseUrl} |`,
+        "",
+      );
+    } else if (params.jira.kind === "skipped") {
+      lines.push(
+        "| Status | Skipped |",
+        `| Reason | ${escapeMdTableCell(params.jira.reason)} |`,
+        "",
+      );
+    } else {
+      lines.push(
+        "| Status | Error |",
+        `| Message | ${escapeMdTableCell(params.jira.message)} |`,
+        "",
+      );
+    }
+  }
+  if (params.errorMessage) {
+    lines.push("## Error", "", params.errorMessage, "");
+  }
+  lines.push(
+    "## Settings (this run)",
+    "",
+    "- WCAG: **2.1 AA** (`wcag21aa`)",
+    "- Advanced rules: **on**",
+    "- Needs review: **on**",
+    "",
+  );
+  writeFileSync(SCAN_DOC, `${lines.join("\n")}\n`, "utf8");
+  console.log(`Wrote ${SCAN_DOC}`);
+}
 
 function parseEnvLine(line: string): [string, string] | undefined {
   const trimmed = line.trim();
@@ -1208,7 +1327,7 @@ async function main(): Promise<void> {
       const state = status.data?.status;
       if (state === "completed") {
         console.log("Scan status: completed");
-        await runJiraIntegration({
+        const jiraDoc = await runJiraIntegration({
           scanName,
           region,
           scannedUrls: urls,
@@ -1216,12 +1335,34 @@ async function main(): Promise<void> {
           scanRunId,
           dashboardUrl,
         });
+        writeScanDoc({
+          scanName,
+          region,
+          scannedUrls: urls,
+          scanId,
+          scanRunId,
+          dashboardUrl,
+          completed: true,
+          localPagesShownAsLocalhost: isLocalhostUrl(urls[0] ?? ""),
+          jira: jiraDoc,
+        });
         openInBrowser(dashboardUrl);
         console.log(`Dashboard: ${dashboardUrl}`);
         return;
       }
       if (state === "failed") {
         const err = "Scan status: failed";
+        writeScanDoc({
+          scanName,
+          region,
+          scannedUrls: urls,
+          scanId,
+          scanRunId,
+          dashboardUrl,
+          completed: false,
+          errorMessage: err,
+          localPagesShownAsLocalhost: isLocalhostUrl(urls[0] ?? ""),
+        });
         openInBrowser(dashboardUrl);
         throw new Error(err);
       }
@@ -1232,8 +1373,35 @@ async function main(): Promise<void> {
     }
 
     const err = `Stopped waiting after ${Math.round(maxWaitMs / 60_000)} min — the scan may still be processing on BrowserStack (especially with many URLs). Open the dashboard for scan run ${scanRunId} or set BROWSERSTACK_A11Y_POLL_MS higher.`;
+    writeScanDoc({
+      scanName,
+      region,
+      scannedUrls: urls,
+      scanId,
+      scanRunId,
+      dashboardUrl,
+      completed: false,
+      errorMessage: err,
+      localPagesShownAsLocalhost: isLocalhostUrl(urls[0] ?? ""),
+    });
     openInBrowser(dashboardUrl);
     throw new Error(err);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (!existsSync(SCAN_DOC)) {
+      writeScanDoc({
+        scanName,
+        region,
+        scannedUrls: urls,
+        scanId,
+        scanRunId,
+        dashboardUrl,
+        completed: false,
+        errorMessage: msg,
+        localPagesShownAsLocalhost: isLocalhostUrl(urls[0] ?? ""),
+      });
+    }
+    throw e;
   } finally {
     if (startedLocalTunnel && localTunnel) {
       await new Promise<void>((resolveStop) => {
