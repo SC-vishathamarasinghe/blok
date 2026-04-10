@@ -19,7 +19,6 @@
 .DS_Store
 *.pem
 
-
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -37,9 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 .idea
-
-# BrowserStack Local (node bindings log)
-local.log
-browserstack-local.log
 
 /public/r
