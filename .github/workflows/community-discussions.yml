@@ -17,13 +17,13 @@ concurrency:
 
 jobs:
   discussion-opened:
-    name: Discussion opened — triage comment
+    name: Discussion opened — welcome comment
     if: github.event.action == 'created'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Post triage comment, label, optional Teams
+      - name: Post welcome comment, label, optional Teams
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISCUSSION_MENTIONS_BUG_REPORTS: ${{ vars.DISCUSSION_MENTIONS_BUG_REPORTS }}

@@ -1,6 +1,7 @@
 /**
  * GitHub GraphQL helpers for Discussions — more reliable than REST for some repos/tokens.
  * @see https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment
+ * @see https://docs.github.com/en/graphql/reference/mutations#addlabelstolabelable
  */
 
 const MUTATION_ADD_COMMENT = `
@@ -22,6 +23,29 @@ query DiscussionCommentBodies($id: ID!) {
         nodes {
           body
         }
+      }
+    }
+  }
+}
+`;
+
+const QUERY_REPO_LABEL = `
+query RepoLabelByName($owner: String!, $name: String!, $label: String!) {
+  repository(owner: $owner, name: $name) {
+    label(name: $label) {
+      id
+      name
+    }
+  }
+}
+`;
+
+const MUTATION_ADD_LABELS_TO_LABELABLE = `
+mutation AddLabelsToLabelable($labelableId: ID!, $labelIds: [ID!]!) {
+  addLabelsToLabelable(input: { labelableId: $labelableId, labelIds: $labelIds }) {
+    labelable {
+      ... on Discussion {
+        id
       }
     }
   }
@@ -107,4 +131,64 @@ export async function getDiscussionCommentBodiesGraphql(params: {
   const nodes = data.node.comments?.nodes;
   if (!Array.isArray(nodes)) return [];
   return nodes.map((n) => n.body || "").filter(Boolean);
+}
+
+async function getRepositoryLabelId(
+  token: string,
+  owner: string,
+  repo: string,
+  labelName: string,
+): Promise<string> {
+  type LabelData = {
+    repository?: { label?: { id: string; name?: string } | null } | null;
+  };
+  const data = await graphqlRequest<LabelData>({
+    token,
+    query: QUERY_REPO_LABEL,
+    variables: { owner, name: repo, label: labelName },
+  });
+  const id = data.repository?.label?.id;
+  if (!id) {
+    throw new Error(
+      `GraphQL: repository label "${labelName}" not found. Create it under Issues → Labels (discussions use the same label set).`,
+    );
+  }
+  return id;
+}
+
+/**
+ * Adds existing repository labels to a discussion by name (GraphQL).
+ * Discussions implement `Labelable`; REST `PUT .../discussions/{n}/labels` often returns 404 on github.com.
+ */
+export async function addDiscussionLabelsByName(params: {
+  token: string;
+  owner: string;
+  repo: string;
+  discussionNodeId: string;
+  labelNames: string[];
+}): Promise<void> {
+  const unique = [
+    ...new Set(params.labelNames.map((n) => n.trim()).filter(Boolean)),
+  ];
+  if (!unique.length) return;
+
+  const labelIds = await Promise.all(
+    unique.map((name) =>
+      getRepositoryLabelId(params.token, params.owner, params.repo, name),
+    ),
+  );
+
+  type AddLabelsData = {
+    addLabelsToLabelable?: {
+      labelable?: { id: string } | null;
+    } | null;
+  };
+  await graphqlRequest<AddLabelsData>({
+    token: params.token,
+    query: MUTATION_ADD_LABELS_TO_LABELABLE,
+    variables: {
+      labelableId: params.discussionNodeId,
+      labelIds,
+    },
+  });
 }

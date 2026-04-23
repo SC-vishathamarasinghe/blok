@@ -5,6 +5,7 @@
 import { readFileSync } from "node:fs";
 import {
   addDiscussionCommentGraphql,
+  addDiscussionLabelsByName,
   getDiscussionCommentBodiesGraphql,
 } from "./github-discussion-graphql";
 import {
@@ -185,25 +186,37 @@ async function main(): Promise<void> {
   }
 
   try {
-    const currentRaw = await gh(
-      "GET",
-      `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}/labels`,
-      null,
-    );
-    const currentLabels = Array.isArray(currentRaw)
-      ? (currentRaw as DiscussionLabel[])
-      : [];
-    const names = new Set(
-      currentLabels.map((l) => l.name).filter(Boolean) as string[],
-    );
-    names.add("tracked");
-    await gh(
-      "PUT",
-      `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}/labels`,
-      {
-        labels: [...names],
-      },
-    );
+    if (discussion.node_id) {
+      await addDiscussionLabelsByName({
+        token: ghToken,
+        owner,
+        repo: repoName,
+        discussionNodeId: discussion.node_id,
+        labelNames: ["tracked"],
+      });
+      console.log("Applied label tracked (GraphQL)");
+    } else {
+      const currentRaw = await gh(
+        "GET",
+        `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}/labels`,
+        null,
+      );
+      const currentLabels = Array.isArray(currentRaw)
+        ? (currentRaw as DiscussionLabel[])
+        : [];
+      const names = new Set(
+        currentLabels.map((l) => l.name).filter(Boolean) as string[],
+      );
+      names.add("tracked");
+      await gh(
+        "PUT",
+        `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}/labels`,
+        {
+          labels: [...names],
+        },
+      );
+      console.log("Applied label tracked (REST)");
+    }
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.warn("Could not set tracked label:", msg);
