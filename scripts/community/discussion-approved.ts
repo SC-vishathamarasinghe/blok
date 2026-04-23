@@ -4,6 +4,10 @@
  */
 import { readFileSync } from "node:fs";
 import {
+  addDiscussionCommentGraphql,
+  getDiscussionCommentBodiesGraphql,
+} from "./github-discussion-graphql";
+import {
   isJiraConfigured,
   notifyJira,
   typeFromDiscussionSlug,
@@ -20,7 +24,10 @@ if (!repoFull || !token || !eventPath) {
   );
   process.exit(1);
 }
+const ghToken = token;
 const [owner, repoName] = repoFull.split("/");
+const ownerEnc = encodeURIComponent(owner);
+const repoEnc = encodeURIComponent(repoName);
 
 interface DiscussionComment {
   body?: string;
@@ -51,10 +58,10 @@ async function gh(
   path: string,
   body: Record<string, unknown> | null,
 ): Promise<unknown> {
-  const res = await fetch(`${api}${path}`, {
+  const res = await fetch(`${api.replace(/\/+$/, "")}${path}`, {
     method,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${ghToken}`,
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
       ...(body ? { "Content-Type": "application/json" } : {}),
@@ -100,15 +107,24 @@ async function main(): Promise<void> {
 
   const dnum = discussion.number;
 
-  const commentsRaw = await gh(
-    "GET",
-    `/repos/${owner}/${repoName}/discussions/${dnum}/comments`,
-    null,
-  );
-  const list = Array.isArray(commentsRaw)
-    ? (commentsRaw as DiscussionComment[])
-    : [];
-  const bodies = list.map((c) => c.body || "").join("\n");
+  let bodies: string;
+  if (discussion.node_id) {
+    const graphqlBodies = await getDiscussionCommentBodiesGraphql({
+      token: ghToken,
+      discussionNodeId: discussion.node_id,
+    });
+    bodies = graphqlBodies.join("\n");
+  } else {
+    const commentsRaw = await gh(
+      "GET",
+      `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}/comments`,
+      null,
+    );
+    const list = Array.isArray(commentsRaw)
+      ? (commentsRaw as DiscussionComment[])
+      : [];
+    bodies = list.map((c) => c.body || "").join("\n");
+  }
   if (/Tracked in #\d+/i.test(bodies)) {
     console.log("Discussion already linked to an issue; skipping.");
     process.exit(0);
@@ -120,7 +136,7 @@ async function main(): Promise<void> {
     try {
       const full = (await gh(
         "GET",
-        `/repos/${owner}/${repoName}/discussions/${dnum}`,
+        `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}`,
         null,
       )) as { body?: string; title?: string };
       discBody = full.body || "";
@@ -138,7 +154,7 @@ async function main(): Promise<void> {
 
   const issueBody = `Created from discussion #${dnum}: ${discussion.html_url}\n\n---\n\n${discBody || "_No description._"}`;
 
-  const issue = (await gh("POST", `/repos/${owner}/${repoName}/issues`, {
+  const issue = (await gh("POST", `/repos/${ownerEnc}/${repoEnc}/issues`, {
     title: issueTitle,
     body: issueBody.slice(0, 65000),
     labels: ["needs-triage"],
@@ -151,14 +167,27 @@ async function main(): Promise<void> {
     throw new Error("Issue creation response missing number or html_url");
   }
 
-  await gh("POST", `/repos/${owner}/${repoName}/discussions/${dnum}/comments`, {
-    body: `**Tracked in** #${inum}\n\n${issueUrl}`,
-  });
+  const trackedBody = `**Tracked in** #${inum}\n\n${issueUrl}`;
+  if (discussion.node_id) {
+    await addDiscussionCommentGraphql({
+      token: ghToken,
+      discussionNodeId: discussion.node_id,
+      body: trackedBody,
+    });
+  } else {
+    await gh(
+      "POST",
+      `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}/comments`,
+      {
+        body: trackedBody,
+      },
+    );
+  }
 
   try {
     const currentRaw = await gh(
       "GET",
-      `/repos/${owner}/${repoName}/discussions/${dnum}/labels`,
+      `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}/labels`,
       null,
     );
     const currentLabels = Array.isArray(currentRaw)
@@ -168,9 +197,13 @@ async function main(): Promise<void> {
       currentLabels.map((l) => l.name).filter(Boolean) as string[],
     );
     names.add("tracked");
-    await gh("PUT", `/repos/${owner}/${repoName}/discussions/${dnum}/labels`, {
-      labels: [...names],
-    });
+    await gh(
+      "PUT",
+      `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}/labels`,
+      {
+        labels: [...names],
+      },
+    );
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.warn("Could not set tracked label:", msg);
