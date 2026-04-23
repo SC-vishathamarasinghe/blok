@@ -4,6 +4,7 @@
  * Each value: space-separated @mentions, e.g. "@Sitecore/blok-em @Sitecore/blok-dsdt"
  */
 import { readFileSync } from "node:fs";
+import { addDiscussionCommentGraphql } from "./github-discussion-graphql";
 import { postTeamsDiscussionCreated } from "./teams-notify";
 
 const api = process.env.GITHUB_API_URL || "https://api.github.com";
@@ -16,9 +17,11 @@ if (!repo || !token || !eventPath) {
   );
   process.exit(1);
 }
+const ghToken = token;
 const event = JSON.parse(readFileSync(eventPath, "utf8")) as {
   discussion?: {
     number: number;
+    node_id?: string;
     title: string;
     html_url: string;
     body?: string;
@@ -27,6 +30,8 @@ const event = JSON.parse(readFileSync(eventPath, "utf8")) as {
   };
 };
 const [owner, repoName] = repo.split("/");
+const ownerEnc = encodeURIComponent(owner);
+const repoEnc = encodeURIComponent(repoName);
 
 const slugToEnv: Record<string, string> = {
   "bug-reports": "DISCUSSION_MENTIONS_BUG_REPORTS",
@@ -41,10 +46,10 @@ async function gh(
   path: string,
   body: Record<string, unknown> | null,
 ): Promise<unknown> {
-  const res = await fetch(`${api}${path}`, {
+  const res = await fetch(`${api.replace(/\/+$/, "")}${path}`, {
     method,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${ghToken}`,
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
       ...(body ? { "Content-Type": "application/json" } : {}),
@@ -84,20 +89,30 @@ async function main(): Promise<void> {
 
   const commentBody = buildComment(slug, name, mentions);
   const number = discussion.number;
+  const nodeId = discussion.node_id;
 
-  await gh(
-    "POST",
-    `/repos/${owner}/${repoName}/discussions/${number}/comments`,
-    {
+  if (nodeId) {
+    await addDiscussionCommentGraphql({
+      token: ghToken,
+      discussionNodeId: nodeId,
       body: commentBody,
-    },
-  );
-  console.log("Posted triage comment on discussion", number);
+    });
+    console.log("Posted triage comment on discussion", number, "(GraphQL)");
+  } else {
+    await gh(
+      "POST",
+      `/repos/${ownerEnc}/${repoEnc}/discussions/${number}/comments`,
+      {
+        body: commentBody,
+      },
+    );
+    console.log("Posted triage comment on discussion", number, "(REST)");
+  }
 
   try {
     await gh(
       "PUT",
-      `/repos/${owner}/${repoName}/discussions/${number}/labels`,
+      `/repos/${ownerEnc}/${repoEnc}/discussions/${number}/labels`,
       {
         labels: ["needs-triage"],
       },
