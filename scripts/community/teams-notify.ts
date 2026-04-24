@@ -250,40 +250,30 @@ export async function postTeamsDiscussionCreated({
   console.log("Teams notification sent (discussion created)");
 }
 
-export interface TeamsDiscussionApprovedArgs {
+/** First Teams card when a discussion is approved (before Jira follow-up). */
+export interface TeamsDiscussionApprovalNoticeArgs {
   webhookUrl: string;
-  title: string;
-  discussionUrl: string;
-  /** Set when a GitHub issue was created; use `0` when issues are disabled on the repo. */
-  issueNumber: number;
-  /** URL of the GitHub issue when created; otherwise the discussion URL. */
-  issueUrl: string;
-  /** When false, no mirror issue exists (e.g. HTTP 410 — Issues disabled). */
-  githubIssueCreated?: boolean;
   repository?: string;
-  discussionNumber?: number;
-  /** Discussion title (may differ from issue title). */
-  discussionTitle?: string;
-  /** Excerpt of discussion body for context. */
-  discussionBody?: string;
-  issueTitle?: string;
-  issueBody?: string;
+  discussionNumber: number;
+  discussionTitle: string;
+  discussionUrl: string;
+  createdByLogin?: string;
+  approvedByLogin?: string;
+  githubIssueCreated: boolean;
+  issueUrl?: string;
 }
 
-export async function postTeamsDiscussionApproved({
+export async function postTeamsDiscussionApprovalNotice({
   webhookUrl,
-  title,
-  discussionUrl,
-  issueNumber,
-  issueUrl,
-  githubIssueCreated = true,
   repository,
   discussionNumber,
   discussionTitle,
-  discussionBody,
-  issueTitle,
-  issueBody,
-}: TeamsDiscussionApprovedArgs): Promise<void> {
+  discussionUrl,
+  createdByLogin,
+  approvedByLogin,
+  githubIssueCreated,
+  issueUrl,
+}: TeamsDiscussionApprovalNoticeArgs): Promise<void> {
   if (!webhookUrl) return;
 
   const facts: { title: string; value: string }[] = [];
@@ -293,91 +283,39 @@ export async function postTeamsDiscussionApproved({
       value: escapeText(repository.trim()),
     });
   }
-  if (discussionNumber != null) {
-    facts.push({ title: "Discussion", value: `#${discussionNumber}` });
-  }
-  if (githubIssueCreated && issueNumber > 0) {
-    facts.push({ title: "Tracked issue", value: `#${issueNumber}` });
-  } else {
-    facts.push({
-      title: "GitHub issue",
-      value: "Not created (Issues disabled for this repository)",
-    });
-  }
+  facts.push({ title: "Discussion ID", value: `#${discussionNumber}` });
+  facts.push({
+    title: "Title",
+    value: escapeText(truncate(discussionTitle, 500)),
+  });
+  facts.push({
+    title: "Created by",
+    value: escapeText(createdByLogin || "—"),
+  });
+  facts.push({
+    title: "Approved by",
+    value: escapeText(approvedByLogin || "—"),
+  });
 
   const blocks: Record<string, unknown>[] = [
     {
       type: "TextBlock",
-      text: escapeText(title),
+      text: "A community discussion was approved for tracking.",
       wrap: true,
-      weight: "Bolder",
-      size: "Medium",
+      isSubtle: true,
+      spacing: "None",
     },
     { type: "FactSet", facts },
   ];
 
-  if (githubIssueCreated) {
-    blocks.push(
-      {
-        type: "TextBlock",
-        text: "GitHub issue",
-        weight: "Bolder",
-        size: "Medium",
-        spacing: "Medium",
-      },
-      {
-        type: "TextBlock",
-        text: escapeText(issueTitle || title),
-        wrap: true,
-        weight: "Bolder",
-      },
-      {
-        type: "TextBlock",
-        text: escapeText(truncate(issueBody || "", SECTION_BODY_MAX * 2)),
-        wrap: true,
-        spacing: "Small",
-      },
-    );
-  } else {
+  if (!githubIssueCreated) {
     blocks.push({
       type: "TextBlock",
-      text: "No mirror issue was created because **GitHub Issues** are turned off for this repository. Use the discussion thread and your backlog tool (e.g. Jira) for tracking.",
+      text: "No GitHub issue was created (Issues are disabled for this repository).",
       wrap: true,
       spacing: "Medium",
     });
   }
-
-  const discTitle = (discussionTitle || title).trim();
-  const discMd = (discussionBody || "").trim();
-  if (discTitle || discMd) {
-    blocks.push({
-      type: "TextBlock",
-      text: "Original discussion",
-      weight: "Bolder",
-      size: "Medium",
-      spacing: "Medium",
-    });
-    if (discTitle) {
-      blocks.push({
-        type: "TextBlock",
-        text: escapeText(discTitle),
-        wrap: true,
-        weight: "Bolder",
-      });
-    }
-    blocks.push(...markdownSectionBlocks("", discMd));
-  }
-
-  blocks.push({
-    type: "TextBlock",
-    text: githubIssueCreated
-      ? "Use the buttons below to open the discussion or the new GitHub issue."
-      : "Use the button below to open the discussion on GitHub.",
-    wrap: true,
-    isSubtle: true,
-    size: "Small",
-    spacing: "Medium",
-  });
 
   const actions: Record<string, unknown>[] = [
     {
@@ -386,20 +324,81 @@ export async function postTeamsDiscussionApproved({
       url: discussionUrl,
     },
   ];
-  if (githubIssueCreated && issueUrl && issueUrl !== discussionUrl) {
+  if (githubIssueCreated && issueUrl?.trim()) {
     actions.push({
       type: "Action.OpenUrl",
-      title: "Open issue",
-      url: issueUrl,
+      title: "Open GitHub issue",
+      url: issueUrl.trim(),
     });
   }
 
   const payload = adaptiveCardShell(
-    "Blok — Discussion approved",
+    "Discussion approved",
     "Good",
     blocks,
     actions,
   );
   await postAdaptiveTeamsWebhook(webhookUrl, payload);
-  console.log("Teams notification sent (approved)");
+  console.log("Teams notification sent (discussion approved)");
+}
+
+/** Second Teams card after Jira REST created an issue (browse URL known). */
+export interface TeamsJiraGithubCreatedArgs {
+  webhookUrl: string;
+  discussionNumber: number;
+  discussionUrl: string;
+  issueTitle: string;
+  githubIssueCreated: boolean;
+  issueUrl?: string;
+  jiraBrowseUrl: string;
+}
+
+export async function postTeamsJiraAndGithubCreated({
+  webhookUrl,
+  discussionNumber,
+  discussionUrl,
+  issueTitle,
+  githubIssueCreated,
+  issueUrl,
+  jiraBrowseUrl,
+}: TeamsJiraGithubCreatedArgs): Promise<void> {
+  if (!webhookUrl) return;
+
+  const facts: { title: string; value: string }[] = [
+    { title: "Discussion ID", value: `#${discussionNumber}` },
+    {
+      title: "Title",
+      value: escapeText(truncate(issueTitle, 500)),
+    },
+  ];
+
+  const headline = githubIssueCreated
+    ? "GitHub issue and Jira ticket created"
+    : "Jira ticket created";
+
+  const blocks: Record<string, unknown>[] = [{ type: "FactSet", facts }];
+
+  const actions: Record<string, unknown>[] = [
+    {
+      type: "Action.OpenUrl",
+      title: "Open Jira",
+      url: jiraBrowseUrl,
+    },
+    {
+      type: "Action.OpenUrl",
+      title: "Open discussion",
+      url: discussionUrl,
+    },
+  ];
+  if (githubIssueCreated && issueUrl?.trim()) {
+    actions.splice(1, 0, {
+      type: "Action.OpenUrl",
+      title: "Open GitHub issue",
+      url: issueUrl.trim(),
+    });
+  }
+
+  const payload = adaptiveCardShell(headline, "Good", blocks, actions);
+  await postAdaptiveTeamsWebhook(webhookUrl, payload);
+  console.log("Teams notification sent (Jira + GitHub links)");
 }

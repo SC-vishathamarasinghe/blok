@@ -13,7 +13,10 @@ import {
   notifyJira,
   typeFromDiscussionSlug,
 } from "./jira-shared";
-import { postTeamsDiscussionApproved } from "./teams-notify";
+import {
+  postTeamsDiscussionApprovalNotice,
+  postTeamsJiraAndGithubCreated,
+} from "./teams-notify";
 
 const api = process.env.GITHUB_API_URL || "https://api.github.com";
 const token = process.env.GITHUB_TOKEN;
@@ -49,6 +52,7 @@ interface DiscussionEvent {
     html_url: string;
     node_id?: string;
     category?: { slug?: string };
+    user?: { login?: string };
   };
 }
 
@@ -138,25 +142,25 @@ async function main(): Promise<void> {
 
   let discBody = discussion.body || "";
   let discTitle = discussion.title || "Discussion";
+  let discAuthorLogin = discussion.user?.login;
   if (!discussion.body && discussion.node_id) {
     try {
       const full = (await gh(
         "GET",
         `/repos/${ownerEnc}/${repoEnc}/discussions/${dnum}`,
         null,
-      )) as { body?: string; title?: string };
+      )) as { body?: string; title?: string; user?: { login?: string } };
       discBody = full.body || "";
       discTitle = full.title || discTitle;
+      if (!discAuthorLogin && full.user?.login) {
+        discAuthorLogin = full.user.login;
+      }
     } catch {
       /* use event fields */
     }
   }
 
-  const issueTitleRaw = `[from discussion #${dnum}] ${discTitle}`;
-  const issueTitle =
-    issueTitleRaw.length > 250
-      ? `${issueTitleRaw.slice(0, 247)}…`
-      : issueTitleRaw;
+  const issueTitle = `[discussion - ${dnum}]`;
 
   const issueBody = `Created from discussion #${dnum}: ${discussion.html_url}\n\n---\n\n${discBody || "_No description._"}`;
 
@@ -271,43 +275,57 @@ async function main(): Promise<void> {
   const teamsUrl =
     process.env.TEAMS_COMMUNITY_WEBHOOK_URL || process.env.TEAMS_WEBHOOK_URL;
   if (teamsUrl) {
-    await postTeamsDiscussionApproved({
+    await postTeamsDiscussionApprovalNotice({
       webhookUrl: teamsUrl,
-      title: discTitle,
-      discussionUrl: discussion.html_url,
-      issueNumber: githubIssueCreated && inum != null ? inum : 0,
-      issueUrl: issueUrl || discussion.html_url,
-      githubIssueCreated,
       repository: repoFull,
       discussionNumber: dnum,
       discussionTitle: discTitle,
-      discussionBody: discBody,
-      issueTitle: githubIssueCreated
-        ? String(issueJson.title ?? issueTitle)
-        : issueTitle,
-      issueBody: githubIssueCreated
-        ? String(issueJson.body || issueBody)
-        : issueBody,
+      discussionUrl: discussion.html_url,
+      createdByLogin: discAuthorLogin,
+      approvedByLogin: event.sender?.login,
+      githubIssueCreated,
+      issueUrl: githubIssueCreated && issueUrl ? issueUrl : undefined,
     });
   }
 
+  const jiraSummary =
+    discTitle.length > 250 ? `${discTitle.slice(0, 249)}…` : discTitle;
+
+  let jiraResult: { ok: boolean; browseUrl?: string } = { ok: false };
   if (isJiraConfigured()) {
     const slug = discussion.category?.slug || "";
     const jtype = typeFromDiscussionSlug(slug);
-    const summaryPrefix = process.env.JIRA_SUMMARY_PREFIX || "[Blok] ";
-    await notifyJira({
-      summary: `${summaryPrefix}${githubIssueCreated ? String(issueJson.title ?? issueTitle) : issueTitle}`,
+    jiraResult = await notifyJira({
+      summary: jiraSummary,
       description: githubIssueCreated
         ? String(issueJson.body || issueBody)
         : issueBody,
       link: issueUrl || discussion.html_url,
       type: jtype,
+      sourceDiscussionUrl: discussion.html_url,
+      sourceIssueUrl: githubIssueCreated && issueUrl ? issueUrl : undefined,
     });
-    if (githubIssueCreated) {
-      console.log("Jira notified for issue #%s (from discussion)", inum);
-    } else {
-      console.log("Jira notified (discussion link; issues disabled on repo)");
+    if (jiraResult.ok) {
+      if (githubIssueCreated) {
+        console.log("Jira notified for issue #%s (from discussion)", inum);
+      } else {
+        console.log("Jira notified (discussion link; issues disabled on repo)");
+      }
     }
+  }
+
+  if (teamsUrl && jiraResult.ok && jiraResult.browseUrl) {
+    await postTeamsJiraAndGithubCreated({
+      webhookUrl: teamsUrl,
+      discussionNumber: dnum,
+      discussionUrl: discussion.html_url,
+      issueTitle: githubIssueCreated
+        ? String(issueJson.title ?? issueTitle)
+        : jiraSummary,
+      githubIssueCreated,
+      issueUrl: githubIssueCreated && issueUrl ? issueUrl : undefined,
+      jiraBrowseUrl: jiraResult.browseUrl,
+    });
   }
 
   if (githubIssueCreated) {
