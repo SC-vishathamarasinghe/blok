@@ -3,6 +3,10 @@
  * Includes discussion template content (markdown sections) when available.
  */
 import { Buffer } from "node:buffer";
+import {
+  type TeamsMentionUser,
+  sanitizeTeamsAtDisplayName,
+} from "./blok-responsibility-metric";
 
 const TEAMS_PAYLOAD_MAX_BYTES = 256 * 1024;
 const ADAPTIVE_VERSION = "1.5";
@@ -97,6 +101,8 @@ function adaptiveCardShell(
   titleColor: "Default" | "Good" | "Warning" | "Attention",
   body: Record<string, unknown>[],
   actions: Record<string, unknown>[],
+  /** Merged onto the Adaptive Card root (e.g. `msteams` for @mentions). */
+  cardRootExtensions?: Record<string, unknown>,
 ): TeamsAdaptiveMessage {
   const content: Record<string, unknown> = {
     $schema: ADAPTIVE_SCHEMA,
@@ -116,6 +122,9 @@ function adaptiveCardShell(
   if (actions.length) {
     content.actions = actions;
   }
+  if (cardRootExtensions) {
+    Object.assign(content, cardRootExtensions);
+  }
   return {
     type: "message",
     attachments: [
@@ -124,6 +133,30 @@ function adaptiveCardShell(
         content,
       },
     ],
+  };
+}
+
+function teamsMsteamsMentionPayload(
+  mentions: TeamsMentionUser[],
+): Record<string, unknown> | undefined {
+  if (!mentions.length) return undefined;
+  const entities = mentions.map((u) => {
+    const name = sanitizeTeamsAtDisplayName(u.name);
+    const token = `<at>${name}</at>`;
+    return {
+      type: "mention",
+      text: token,
+      mentioned: {
+        id: u.id.trim(),
+        name,
+      },
+    };
+  });
+  return {
+    msteams: {
+      width: "Full",
+      entities,
+    },
   };
 }
 
@@ -197,6 +230,8 @@ export interface TeamsDiscussionCreatedArgs {
   discussionNumber?: number;
   /** Raw markdown from the discussion (form template answers). */
   body?: string;
+  /** Teams @mentions (requires `msteams.entities` on the card — see blok-responsibility-metric). */
+  teamsMentions?: TeamsMentionUser[];
 }
 
 export async function postTeamsDiscussionCreated({
@@ -208,6 +243,7 @@ export async function postTeamsDiscussionCreated({
   repository,
   discussionNumber,
   body,
+  teamsMentions,
 }: TeamsDiscussionCreatedArgs): Promise<void> {
   if (!webhookUrl) return;
   const facts: { title: string; value: string }[] = [];
@@ -231,8 +267,25 @@ export async function postTeamsDiscussionCreated({
       size: "Medium",
     },
     { type: "FactSet", facts },
-    ...markdownSectionBlocks("Discussion details", body || ""),
   ];
+
+  const mentions =
+    teamsMentions?.filter((m) => m.id?.trim() && m.name?.trim()) ?? [];
+  if (mentions.length) {
+    const ping = mentions
+      .map((u) => `<at>${sanitizeTeamsAtDisplayName(u.name)}</at>`)
+      .join(" ");
+    bodyBlocks.push({
+      type: "TextBlock",
+      text: `Please review — ${ping}`,
+      wrap: true,
+      spacing: "Medium",
+    });
+  }
+
+  bodyBlocks.push(...markdownSectionBlocks("Discussion details", body || ""));
+
+  const cardRoot = teamsMsteamsMentionPayload(mentions);
 
   const payload = adaptiveCardShell(
     "Blok — New discussion",
@@ -245,6 +298,7 @@ export async function postTeamsDiscussionCreated({
         url,
       },
     ],
+    cardRoot,
   );
   await postAdaptiveTeamsWebhook(webhookUrl, payload);
   console.log("Teams notification sent (discussion created)");
