@@ -231,6 +231,12 @@ async function main(): Promise<void> {
       discussionUrl: discussion.html_url,
       issueNumber: inum,
       issueUrl,
+      repository: repoFull,
+      discussionNumber: dnum,
+      discussionTitle: discTitle,
+      discussionBody: discBody,
+      issueTitle: String(issue.title ?? ""),
+      issueBody: (issue.body as string) || issueBody,
     });
   }
 

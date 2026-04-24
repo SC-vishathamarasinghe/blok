@@ -1,14 +1,60 @@
+/**
+ * Teams Incoming Webhook — Adaptive Card payload (Power Automate / Workflows).
+ * Includes discussion template content (markdown sections) when available.
+ */
 import { Buffer } from "node:buffer";
 
 const TEAMS_PAYLOAD_MAX_BYTES = 256 * 1024;
 const ADAPTIVE_VERSION = "1.5";
 const ADAPTIVE_SCHEMA = "http://adaptivecards.io/schemas/adaptive-card.json";
+const DISCUSSION_BODY_MAX = 24000;
+const SECTION_BODY_MAX = 4000;
+const MAX_SECTIONS = 14;
 
 function escapeText(s: string | undefined): string {
   return String(s || "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function truncate(s: string, max: number): string {
+  const t = String(s || "");
+  if (t.length <= max) return t;
+  return `${t.slice(0, max - 1)}…`;
+}
+
+/**
+ * Split GitHub discussion body on markdown headings (template fields become ### headings).
+ */
+function splitDiscussionBodyMarkdown(md: string): Array<{
+  heading: string;
+  text: string;
+}> {
+  const t = md.trim();
+  if (!t) return [];
+  const parts = t.split(/\n(?=#{1,6}\s)/);
+  const out: { heading: string; text: string }[] = [];
+  for (const part of parts) {
+    const m = part.match(/^#{1,6}\s+([^\n]+)\n?([\s\S]*)$/);
+    if (m) {
+      const body = (m[2] || "").trim();
+      out.push({
+        heading: m[1].trim(),
+        text: body || "_(empty)_",
+      });
+    } else if (part.trim()) {
+      out.push({ heading: "Details", text: part.trim() });
+    }
+  }
+  return out.length
+    ? out
+    : [
+        {
+          heading: "Discussion content",
+          text: truncate(t, DISCUSSION_BODY_MAX),
+        },
+      ];
 }
 
 /** Office 365 Connector / Power Automate webhook envelope for Adaptive Cards. */
@@ -81,12 +127,76 @@ function adaptiveCardShell(
   };
 }
 
+function markdownSectionBlocks(
+  sectionHeading: string,
+  rawBody: string,
+): Record<string, unknown>[] {
+  const trimmed = truncate(rawBody.trim(), DISCUSSION_BODY_MAX);
+  const blocks: Record<string, unknown>[] = [];
+  if (sectionHeading.trim()) {
+    blocks.push({
+      type: "TextBlock",
+      text: sectionHeading.trim(),
+      weight: "Bolder",
+      size: "Medium",
+      spacing: "Medium",
+    });
+  }
+  if (!trimmed) {
+    blocks.push({
+      type: "TextBlock",
+      text: "_No description was provided on this discussion._",
+      wrap: true,
+      isSubtle: true,
+    });
+    return blocks;
+  }
+  const sections = splitDiscussionBodyMarkdown(trimmed);
+  const shown = sections.slice(0, MAX_SECTIONS);
+  for (const sec of shown) {
+    blocks.push({
+      type: "Container",
+      separator: true,
+      items: [
+        {
+          type: "TextBlock",
+          text: escapeText(sec.heading),
+          weight: "Bolder",
+          wrap: true,
+        },
+        {
+          type: "TextBlock",
+          text: escapeText(truncate(sec.text, SECTION_BODY_MAX)),
+          wrap: true,
+          spacing: "Small",
+        },
+      ],
+    });
+  }
+  if (sections.length > MAX_SECTIONS) {
+    blocks.push({
+      type: "TextBlock",
+      text: escapeText(
+        `… ${sections.length - MAX_SECTIONS} more section(s) omitted (see discussion on GitHub).`,
+      ),
+      isSubtle: true,
+      wrap: true,
+    });
+  }
+  return blocks;
+}
+
 export interface TeamsDiscussionCreatedArgs {
   webhookUrl: string;
   title: string;
   url: string;
   category: string;
   author: string;
+  /** e.g. owner/repo */
+  repository?: string;
+  discussionNumber?: number;
+  /** Raw markdown from the discussion (form template answers). */
+  body?: string;
 }
 
 export async function postTeamsDiscussionCreated({
@@ -95,30 +205,43 @@ export async function postTeamsDiscussionCreated({
   url,
   category,
   author,
+  repository,
+  discussionNumber,
+  body,
 }: TeamsDiscussionCreatedArgs): Promise<void> {
   if (!webhookUrl) return;
+  const facts: { title: string; value: string }[] = [];
+  if (repository?.trim()) {
+    facts.push({ title: "Repository", value: escapeText(repository.trim()) });
+  }
+  facts.push(
+    { title: "Category", value: escapeText(category) },
+    { title: "Author", value: escapeText(author) },
+  );
+  if (discussionNumber != null) {
+    facts.push({ title: "Discussion", value: `#${discussionNumber}` });
+  }
+
+  const bodyBlocks: Record<string, unknown>[] = [
+    {
+      type: "TextBlock",
+      text: escapeText(title),
+      wrap: true,
+      weight: "Bolder",
+      size: "Medium",
+    },
+    { type: "FactSet", facts },
+    ...markdownSectionBlocks("Discussion details (from template)", body || ""),
+  ];
+
   const payload = adaptiveCardShell(
     "Blok — New discussion",
     "Default",
-    [
-      {
-        type: "TextBlock",
-        text: escapeText(title),
-        wrap: true,
-        weight: "Bolder",
-      },
-      {
-        type: "FactSet",
-        facts: [
-          { title: "Category", value: escapeText(category) },
-          { title: "Author", value: escapeText(author) },
-        ],
-      },
-    ],
+    bodyBlocks,
     [
       {
         type: "Action.OpenUrl",
-        title: "Open discussion",
+        title: "Open discussion on GitHub",
         url,
       },
     ],
@@ -133,6 +256,14 @@ export interface TeamsDiscussionApprovedArgs {
   discussionUrl: string;
   issueNumber: number;
   issueUrl: string;
+  repository?: string;
+  discussionNumber?: number;
+  /** Discussion title (may differ from issue title). */
+  discussionTitle?: string;
+  /** Excerpt of discussion body for context. */
+  discussionBody?: string;
+  issueTitle?: string;
+  issueBody?: string;
 }
 
 export async function postTeamsDiscussionApproved({
@@ -141,30 +272,92 @@ export async function postTeamsDiscussionApproved({
   discussionUrl,
   issueNumber,
   issueUrl,
+  repository,
+  discussionNumber,
+  discussionTitle,
+  discussionBody,
+  issueTitle,
+  issueBody,
 }: TeamsDiscussionApprovedArgs): Promise<void> {
   if (!webhookUrl) return;
+
+  const facts: { title: string; value: string }[] = [
+    { title: "Tracked issue", value: `#${issueNumber}` },
+  ];
+  if (repository?.trim()) {
+    facts.unshift({
+      title: "Repository",
+      value: escapeText(repository.trim()),
+    });
+  }
+  if (discussionNumber != null) {
+    facts.push({ title: "Discussion", value: `#${discussionNumber}` });
+  }
+
+  const blocks: Record<string, unknown>[] = [
+    {
+      type: "TextBlock",
+      text: escapeText(title),
+      wrap: true,
+      weight: "Bolder",
+      size: "Medium",
+    },
+    { type: "FactSet", facts },
+    {
+      type: "TextBlock",
+      text: "GitHub issue",
+      weight: "Bolder",
+      size: "Medium",
+      spacing: "Medium",
+    },
+    {
+      type: "TextBlock",
+      text: escapeText(issueTitle || title),
+      wrap: true,
+      weight: "Bolder",
+    },
+    {
+      type: "TextBlock",
+      text: escapeText(truncate(issueBody || "", SECTION_BODY_MAX * 2)),
+      wrap: true,
+      spacing: "Small",
+    },
+  ];
+
+  const discTitle = (discussionTitle || title).trim();
+  const discMd = (discussionBody || "").trim();
+  if (discTitle || discMd) {
+    blocks.push({
+      type: "TextBlock",
+      text: "Original discussion",
+      weight: "Bolder",
+      size: "Medium",
+      spacing: "Medium",
+    });
+    if (discTitle) {
+      blocks.push({
+        type: "TextBlock",
+        text: escapeText(discTitle),
+        wrap: true,
+        weight: "Bolder",
+      });
+    }
+    blocks.push(...markdownSectionBlocks("", discMd));
+  }
+
+  blocks.push({
+    type: "TextBlock",
+    text: "Use the buttons below to open the discussion or the new GitHub issue.",
+    wrap: true,
+    isSubtle: true,
+    size: "Small",
+    spacing: "Medium",
+  });
+
   const payload = adaptiveCardShell(
     "Blok — Discussion approved",
     "Good",
-    [
-      {
-        type: "TextBlock",
-        text: escapeText(title),
-        wrap: true,
-        weight: "Bolder",
-      },
-      {
-        type: "FactSet",
-        facts: [{ title: "Tracked issue", value: `#${issueNumber}` }],
-      },
-      {
-        type: "TextBlock",
-        text: "Use the buttons below to open the discussion or the new GitHub issue.",
-        wrap: true,
-        isSubtle: true,
-        size: "Small",
-      },
-    ],
+    blocks,
     [
       {
         type: "Action.OpenUrl",

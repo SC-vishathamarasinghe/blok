@@ -172,6 +172,20 @@ async function main(): Promise<void> {
     );
   }
 
+  let discussionBody = (discussion.body || "").trim();
+  if (!discussionBody && nodeId) {
+    try {
+      const full = (await gh(
+        "GET",
+        `/repos/${ownerEnc}/${repoEnc}/discussions/${number}`,
+        null,
+      )) as { body?: string };
+      discussionBody = (full.body || "").trim();
+    } catch {
+      /* keep empty */
+    }
+  }
+
   const teamsUrl =
     process.env.TEAMS_COMMUNITY_WEBHOOK_URL || process.env.TEAMS_WEBHOOK_URL;
   if (teamsUrl) {
@@ -181,6 +195,9 @@ async function main(): Promise<void> {
       url: discussion.html_url,
       category: name,
       author: discussion.user?.login || "",
+      repository: repo,
+      discussionNumber: number,
+      body: discussionBody,
     });
   }
 }
