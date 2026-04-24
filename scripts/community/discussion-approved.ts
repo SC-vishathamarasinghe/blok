@@ -98,7 +98,7 @@ async function main(): Promise<void> {
 
   const actors = (process.env.DISCUSSION_APPROVED_ACTORS || "")
     .split(",")
-    .map((s) => s.trim().toLowerCase())
+    .map((s) => s.trim().replace(/^@+/, "").toLowerCase())
     .filter(Boolean);
   const actor = (event.sender?.login || "").toLowerCase();
   if (actors.length && !actors.includes(actor)) {
@@ -126,8 +126,13 @@ async function main(): Promise<void> {
       : [];
     bodies = list.map((c) => c.body || "").join("\n");
   }
-  if (/Tracked in #\d+/i.test(bodies)) {
-    console.log("Discussion already linked to an issue; skipping.");
+  if (
+    /Tracked in #\d+/i.test(bodies) ||
+    /\*\*Approved \(no GitHub issue\)\*\*/i.test(bodies)
+  ) {
+    console.log(
+      "Discussion already linked or approved (no-issue path); skipping.",
+    );
     process.exit(0);
   }
 
@@ -155,20 +160,61 @@ async function main(): Promise<void> {
 
   const issueBody = `Created from discussion #${dnum}: ${discussion.html_url}\n\n---\n\n${discBody || "_No description._"}`;
 
-  const issue = (await gh("POST", `/repos/${ownerEnc}/${repoEnc}/issues`, {
-    title: issueTitle,
-    body: issueBody.slice(0, 65000),
-    labels: ["needs-triage"],
-  })) as { number?: number; html_url?: string; title?: string; body?: string };
-
-  const inum = issue.number;
-  const issueUrl = issue.html_url;
-
-  if (inum === undefined || !issueUrl) {
-    throw new Error("Issue creation response missing number or html_url");
+  const issueRes = await fetch(
+    `${api.replace(/\/+$/, "")}/repos/${ownerEnc}/${repoEnc}/issues`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${ghToken}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: issueTitle,
+        body: issueBody.slice(0, 65000),
+        labels: ["needs-triage"],
+      }),
+    },
+  );
+  const issueResText = await issueRes.text();
+  let issueJson: {
+    number?: number;
+    html_url?: string;
+    title?: string;
+    body?: string;
+    message?: string;
+  };
+  try {
+    issueJson = issueResText ? JSON.parse(issueResText) : {};
+  } catch {
+    issueJson = {};
   }
 
-  const trackedBody = `**Tracked in** #${inum}\n\n${issueUrl}`;
+  let inum: number | undefined;
+  let issueUrl: string | undefined;
+  let githubIssueCreated = true;
+  let trackedBody: string;
+
+  if (issueRes.status === 410) {
+    githubIssueCreated = false;
+    issueUrl = discussion.html_url;
+    trackedBody = `**Approved (no GitHub issue)** — [GitHub Issues are disabled](https://docs.github.com/rest/issues/issues#create-an-issue) for this repository, so no mirror issue was created. Track work from this discussion: ${discussion.html_url}`;
+    console.log(
+      "Issues disabled on repository (HTTP 410); skipping issue creation, posting discussion comment only.",
+    );
+  } else if (!issueRes.ok) {
+    throw new Error(
+      `POST /repos/${ownerEnc}/${repoEnc}/issues → ${issueRes.status}: ${issueResText.slice(0, 800)}`,
+    );
+  } else {
+    inum = issueJson.number;
+    issueUrl = issueJson.html_url;
+    if (inum === undefined || !issueUrl) {
+      throw new Error("Issue creation response missing number or html_url");
+    }
+    trackedBody = `**Tracked in** #${inum}\n\n${issueUrl}`;
+  }
   if (discussion.node_id) {
     await addDiscussionCommentGraphql({
       token: ghToken,
@@ -229,14 +275,19 @@ async function main(): Promise<void> {
       webhookUrl: teamsUrl,
       title: discTitle,
       discussionUrl: discussion.html_url,
-      issueNumber: inum,
-      issueUrl,
+      issueNumber: githubIssueCreated && inum != null ? inum : 0,
+      issueUrl: issueUrl || discussion.html_url,
+      githubIssueCreated,
       repository: repoFull,
       discussionNumber: dnum,
       discussionTitle: discTitle,
       discussionBody: discBody,
-      issueTitle: String(issue.title ?? ""),
-      issueBody: (issue.body as string) || issueBody,
+      issueTitle: githubIssueCreated
+        ? String(issueJson.title ?? issueTitle)
+        : issueTitle,
+      issueBody: githubIssueCreated
+        ? String(issueJson.body || issueBody)
+        : issueBody,
     });
   }
 
@@ -245,15 +296,28 @@ async function main(): Promise<void> {
     const jtype = typeFromDiscussionSlug(slug);
     const summaryPrefix = process.env.JIRA_SUMMARY_PREFIX || "[Blok] ";
     await notifyJira({
-      summary: `${summaryPrefix}${String(issue.title ?? "")}`,
-      description: (issue.body as string) || issueBody,
-      link: issueUrl,
+      summary: `${summaryPrefix}${githubIssueCreated ? String(issueJson.title ?? issueTitle) : issueTitle}`,
+      description: githubIssueCreated
+        ? String(issueJson.body || issueBody)
+        : issueBody,
+      link: issueUrl || discussion.html_url,
       type: jtype,
     });
-    console.log("Jira notified for issue #%s (from discussion)", inum);
+    if (githubIssueCreated) {
+      console.log("Jira notified for issue #%s (from discussion)", inum);
+    } else {
+      console.log("Jira notified (discussion link; issues disabled on repo)");
+    }
   }
 
-  console.log("Created issue #%s from discussion #%s", inum, dnum);
+  if (githubIssueCreated) {
+    console.log("Created issue #%s from discussion #%s", inum, dnum);
+  } else {
+    console.log(
+      "Approved discussion #%s (no GitHub issue — issues disabled on repo)",
+      dnum,
+    );
+  }
 }
 
 main().catch((e) => {

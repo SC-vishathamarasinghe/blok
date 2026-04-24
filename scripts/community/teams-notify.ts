@@ -231,7 +231,7 @@ export async function postTeamsDiscussionCreated({
       size: "Medium",
     },
     { type: "FactSet", facts },
-    ...markdownSectionBlocks("Discussion details (from template)", body || ""),
+    ...markdownSectionBlocks("Discussion details", body || ""),
   ];
 
   const payload = adaptiveCardShell(
@@ -254,8 +254,12 @@ export interface TeamsDiscussionApprovedArgs {
   webhookUrl: string;
   title: string;
   discussionUrl: string;
+  /** Set when a GitHub issue was created; use `0` when issues are disabled on the repo. */
   issueNumber: number;
+  /** URL of the GitHub issue when created; otherwise the discussion URL. */
   issueUrl: string;
+  /** When false, no mirror issue exists (e.g. HTTP 410 — Issues disabled). */
+  githubIssueCreated?: boolean;
   repository?: string;
   discussionNumber?: number;
   /** Discussion title (may differ from issue title). */
@@ -272,6 +276,7 @@ export async function postTeamsDiscussionApproved({
   discussionUrl,
   issueNumber,
   issueUrl,
+  githubIssueCreated = true,
   repository,
   discussionNumber,
   discussionTitle,
@@ -281,17 +286,23 @@ export async function postTeamsDiscussionApproved({
 }: TeamsDiscussionApprovedArgs): Promise<void> {
   if (!webhookUrl) return;
 
-  const facts: { title: string; value: string }[] = [
-    { title: "Tracked issue", value: `#${issueNumber}` },
-  ];
+  const facts: { title: string; value: string }[] = [];
   if (repository?.trim()) {
-    facts.unshift({
+    facts.push({
       title: "Repository",
       value: escapeText(repository.trim()),
     });
   }
   if (discussionNumber != null) {
     facts.push({ title: "Discussion", value: `#${discussionNumber}` });
+  }
+  if (githubIssueCreated && issueNumber > 0) {
+    facts.push({ title: "Tracked issue", value: `#${issueNumber}` });
+  } else {
+    facts.push({
+      title: "GitHub issue",
+      value: "Not created (Issues disabled for this repository)",
+    });
   }
 
   const blocks: Record<string, unknown>[] = [
@@ -303,26 +314,38 @@ export async function postTeamsDiscussionApproved({
       size: "Medium",
     },
     { type: "FactSet", facts },
-    {
-      type: "TextBlock",
-      text: "GitHub issue",
-      weight: "Bolder",
-      size: "Medium",
-      spacing: "Medium",
-    },
-    {
-      type: "TextBlock",
-      text: escapeText(issueTitle || title),
-      wrap: true,
-      weight: "Bolder",
-    },
-    {
-      type: "TextBlock",
-      text: escapeText(truncate(issueBody || "", SECTION_BODY_MAX * 2)),
-      wrap: true,
-      spacing: "Small",
-    },
   ];
+
+  if (githubIssueCreated) {
+    blocks.push(
+      {
+        type: "TextBlock",
+        text: "GitHub issue",
+        weight: "Bolder",
+        size: "Medium",
+        spacing: "Medium",
+      },
+      {
+        type: "TextBlock",
+        text: escapeText(issueTitle || title),
+        wrap: true,
+        weight: "Bolder",
+      },
+      {
+        type: "TextBlock",
+        text: escapeText(truncate(issueBody || "", SECTION_BODY_MAX * 2)),
+        wrap: true,
+        spacing: "Small",
+      },
+    );
+  } else {
+    blocks.push({
+      type: "TextBlock",
+      text: "No mirror issue was created because **GitHub Issues** are turned off for this repository. Use the discussion thread and your backlog tool (e.g. Jira) for tracking.",
+      wrap: true,
+      spacing: "Medium",
+    });
+  }
 
   const discTitle = (discussionTitle || title).trim();
   const discMd = (discussionBody || "").trim();
@@ -347,29 +370,35 @@ export async function postTeamsDiscussionApproved({
 
   blocks.push({
     type: "TextBlock",
-    text: "Use the buttons below to open the discussion or the new GitHub issue.",
+    text: githubIssueCreated
+      ? "Use the buttons below to open the discussion or the new GitHub issue."
+      : "Use the button below to open the discussion on GitHub.",
     wrap: true,
     isSubtle: true,
     size: "Small",
     spacing: "Medium",
   });
 
+  const actions: Record<string, unknown>[] = [
+    {
+      type: "Action.OpenUrl",
+      title: "Open discussion",
+      url: discussionUrl,
+    },
+  ];
+  if (githubIssueCreated && issueUrl && issueUrl !== discussionUrl) {
+    actions.push({
+      type: "Action.OpenUrl",
+      title: "Open issue",
+      url: issueUrl,
+    });
+  }
+
   const payload = adaptiveCardShell(
     "Blok — Discussion approved",
     "Good",
     blocks,
-    [
-      {
-        type: "Action.OpenUrl",
-        title: "Open discussion",
-        url: discussionUrl,
-      },
-      {
-        type: "Action.OpenUrl",
-        title: "Open issue",
-        url: issueUrl,
-      },
-    ],
+    actions,
   );
   await postAdaptiveTeamsWebhook(webhookUrl, payload);
   console.log("Teams notification sent (approved)");
