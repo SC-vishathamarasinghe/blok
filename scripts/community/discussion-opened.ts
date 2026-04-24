@@ -1,9 +1,8 @@
-/**
- * discussion action "created" — welcome comment (@mentions from env) and set needs-triage label.
- * Env (repository Variables): DISCUSSION_MENTIONS_BUG_REPORTS, _FEATURE_REQUESTS, _IDEAS, _GENERAL_Q_A, _DESIGN_FEEDBACK
- * Each value: space-separated @handles for the CC line, e.g. "@Sitecore/blok-em @Sitecore/blok-dsdt"
- */
 import { readFileSync } from "node:fs";
+import {
+  loadBlokResponsibilityMetric,
+  routingForDiscussionSlug,
+} from "./blok-responsibility-metric";
 import {
   addDiscussionCommentGraphql,
   addDiscussionLabelsByName,
@@ -35,14 +34,6 @@ const event = JSON.parse(readFileSync(eventPath, "utf8")) as {
 const [owner, repoName] = repo.split("/");
 const ownerEnc = encodeURIComponent(owner);
 const repoEnc = encodeURIComponent(repoName);
-
-const slugToEnv: Record<string, string> = {
-  "bug-reports": "DISCUSSION_MENTIONS_BUG_REPORTS",
-  "feature-requests": "DISCUSSION_MENTIONS_FEATURE_REQUESTS",
-  ideas: "DISCUSSION_MENTIONS_IDEAS",
-  "general-q-a": "DISCUSSION_MENTIONS_GENERAL_Q_A",
-  "design-feedback": "DISCUSSION_MENTIONS_DESIGN_FEEDBACK",
-};
 
 async function gh(
   method: string,
@@ -119,8 +110,9 @@ async function main(): Promise<void> {
 
   const slug = discussion.category?.slug || "";
   const name = discussion.category?.name || slug;
-  const envKey = slugToEnv[slug];
-  const mentions = envKey ? process.env[envKey] || "" : "";
+  const metric = loadBlokResponsibilityMetric();
+  const routing = routingForDiscussionSlug(slug, metric);
+  const mentions = (routing.githubCc || "").trim();
 
   const commentBody = buildComment(slug, name, mentions);
   const number = discussion.number;
@@ -198,6 +190,7 @@ async function main(): Promise<void> {
       repository: repo,
       discussionNumber: number,
       body: discussionBody,
+      teamsMentions: routing.teamsMentions,
     });
   }
 }

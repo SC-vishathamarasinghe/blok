@@ -94,8 +94,10 @@ async function main(): Promise<void> {
     }
   }
 
-  const summaryPrefix = process.env.JIRA_SUMMARY_PREFIX || "[Blok] ";
-  const summary = `${summaryPrefix}${eventEntity.title}`;
+  const summaryPrefix = (process.env.JIRA_SUMMARY_PREFIX ?? "").trim();
+  const summary = summaryPrefix
+    ? `${summaryPrefix} ${eventEntity.title}`.trim()
+    : eventEntity.title || "";
 
   try {
     await notifyJira({

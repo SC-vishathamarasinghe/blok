@@ -101,6 +101,59 @@ export function typeFromDiscussionSlug(slug: string): string {
   return SLUG_TO_TYPE[slug] || "task";
 }
 
+export function mirrorIssueInitialWorkflowLabels(): string[] {
+  const trimmed = (
+    process.env.GITHUB_MIRROR_ISSUE_INITIAL_WORKFLOW_LABELS ?? ""
+  ).trim();
+  if (trimmed.toLowerCase() === "none" || trimmed === "-") {
+    return [];
+  }
+  if (!trimmed) {
+    return ["tracked"];
+  }
+  return [
+    ...new Set(
+      trimmed
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+/** Category-derived type labels (bug, enhancement, …) for mirror issues. */
+export function mirrorIssueLabelsForDiscussionSlug(slug: string): string[] {
+  const logical = typeFromDiscussionSlug(slug);
+  switch (logical) {
+    case "bug":
+      return ["bug"];
+    case "feature":
+      return ["enhancement"];
+    case "support":
+      return ["help"];
+    case "doc":
+      return ["documentation"];
+    default:
+      return [];
+  }
+}
+
+/** True when GitHub returned 422 because one or more label names are invalid / missing. */
+export function isGithubIssueLabelsValidationError(
+  status: number,
+  responseText: string,
+): boolean {
+  if (status !== 422) return false;
+  try {
+    const j = JSON.parse(responseText) as {
+      errors?: Array<{ field?: string; resource?: string }>;
+    };
+    return Boolean(j.errors?.some((e) => e.field === "labels"));
+  } catch {
+    return false;
+  }
+}
+
 type AdfMark = { type: string; attrs?: Record<string, string> };
 type AdfText = { type: "text"; text: string; marks?: AdfMark[] };
 type AdfBlock = Record<string, unknown>;

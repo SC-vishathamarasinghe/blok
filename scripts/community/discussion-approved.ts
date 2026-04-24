@@ -1,15 +1,15 @@
-/**
- * discussion labeled "approved" — create GitHub issue, comment on discussion, optional Teams.
- * Optional: DISCUSSION_APPROVED_ACTORS=comma,list,of,logins (lowercase) — if set, only those users may trigger.
- */
 import { readFileSync } from "node:fs";
+import { loadBlokResponsibilityConfig } from "./blok-responsibility-metric";
 import {
   addDiscussionCommentGraphql,
   addDiscussionLabelsByName,
   getDiscussionCommentBodiesGraphql,
 } from "./github-discussion-graphql";
 import {
+  isGithubIssueLabelsValidationError,
   isJiraConfigured,
+  mirrorIssueInitialWorkflowLabels,
+  mirrorIssueLabelsForDiscussionSlug,
   notifyJira,
   typeFromDiscussionSlug,
 } from "./jira-shared";
@@ -103,13 +103,12 @@ async function main(): Promise<void> {
     process.exit(0);
   }
 
-  const actors = (process.env.DISCUSSION_APPROVED_ACTORS || "")
-    .split(",")
-    .map((s) => s.trim().replace(/^@+/, "").toLowerCase())
-    .filter(Boolean);
+  const { discussionApprovedActors: actors } = loadBlokResponsibilityConfig();
   const actor = (event.sender?.login || "").toLowerCase();
   if (actors.length && !actors.includes(actor)) {
-    console.log(`Skip: ${actor} is not in DISCUSSION_APPROVED_ACTORS`);
+    console.log(
+      `Skip: ${actor} is not in discussionApprovedActors (metric or DISCUSSION_APPROVED_ACTORS override)`,
+    );
     process.exit(0);
   }
 
@@ -164,28 +163,73 @@ async function main(): Promise<void> {
     }
   }
 
-  const issueTitle = `[discussion - ${dnum}]`;
+  const discussionTitlePart = discTitle.trim() || "Discussion";
+  const issueTitlePrefix = `[discussion - ${dnum}] `;
+  const issueTitleRaw = `${issueTitlePrefix}${discussionTitlePart}`;
+  /** GitHub issue titles are limited to 256 characters. */
+  const issueTitle =
+    issueTitleRaw.length > 256
+      ? `${issueTitleRaw.slice(0, 255)}…`
+      : issueTitleRaw;
 
   const issueBody = `Created from discussion #${dnum}: ${discussion.html_url}\n\n---\n\n${discBody || "_No description._"}`;
 
-  const issueRes = await fetch(
-    `${api.replace(/\/+$/, "")}/repos/${ownerEnc}/${repoEnc}/issues`,
-    {
+  const categorySlug = discussion.category?.slug || "";
+  const typeLabels = mirrorIssueLabelsForDiscussionSlug(categorySlug);
+  const workflowLabels = mirrorIssueInitialWorkflowLabels();
+  const issueCreateUrl = `${api.replace(/\/+$/, "")}/repos/${ownerEnc}/${repoEnc}/issues`;
+  const issueCreateHeaders = {
+    Authorization: `Bearer ${ghToken}`,
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+    "Content-Type": "application/json",
+  } as const;
+
+  const baseWorkflowTriage = [...new Set([...workflowLabels, "needs-triage"])];
+  const withTypes = [...new Set([...baseWorkflowTriage, ...typeLabels])];
+  const labelAttempts: string[][] = [];
+  const pushLabelAttempt = (labels: string[]) => {
+    const normalized = [...new Set(labels)];
+    const key = normalized.join("\0");
+    if (labelAttempts.some((a) => [...new Set(a)].join("\0") === key)) {
+      return;
+    }
+    labelAttempts.push(normalized);
+  };
+  pushLabelAttempt(withTypes);
+  if (withTypes.length > baseWorkflowTriage.length) {
+    pushLabelAttempt(baseWorkflowTriage);
+  }
+  pushLabelAttempt(["needs-triage"]);
+
+  let issueRes!: Response;
+  let issueResText = "";
+  for (let ai = 0; ai < labelAttempts.length; ai++) {
+    const labels = labelAttempts[ai];
+    issueRes = await fetch(issueCreateUrl, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${ghToken}`,
-        Accept: "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-        "Content-Type": "application/json",
-      },
+      headers: issueCreateHeaders,
       body: JSON.stringify({
         title: issueTitle,
         body: issueBody.slice(0, 65000),
-        labels: ["needs-triage"],
+        labels,
       }),
-    },
-  );
-  const issueResText = await issueRes.text();
+    });
+    issueResText = await issueRes.text();
+    if (issueRes.ok || issueRes.status === 410) {
+      break;
+    }
+    const canRetry =
+      ai < labelAttempts.length - 1 &&
+      isGithubIssueLabelsValidationError(issueRes.status, issueResText);
+    if (canRetry) {
+      console.warn(
+        `Mirror issue: label validation failed (attempt ${ai + 1}). Retrying with: ${labelAttempts[ai + 1]?.join(", ") ?? "needs-triage"}`,
+      );
+      continue;
+    }
+    break;
+  }
   let issueJson: {
     number?: number;
     html_url?: string;
